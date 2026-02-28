@@ -1,5 +1,7 @@
 # 第1周：课程介绍与仿真环境搭建
 
+![ROS2 Logo](https://www.ros.org/wp-content/uploads/2016/05/ros2-logo-1-300x300.png)
+
 **课时**: 6小时（第一次课3小时 + 第二次课3小时）
 
 ---
@@ -846,6 +848,8 @@ subscription = node.create_subscription(
 ---
 
 ## 2.1 Docker原理与安装（50分钟）
+
+![Docker Logo](https://www.docker.com/wp-content/uploads/2022/03/Moby-logo.png)
 
 ### 2.1.1 为什么要用Docker？
 

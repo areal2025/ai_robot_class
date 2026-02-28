@@ -1,5 +1,7 @@
 # 第2周：ROS2通信机制基础
 
+![ROS2 Communication](https://docs.ros.org/en/humble/_images/topic__single_1.png)
+
 **课时**: 6小时（第一次课3小时 + 第二次课3小时）
 
 ---

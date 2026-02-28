@@ -1,5 +1,7 @@
 # 第3周：Python编程与机器人控制入门
 
+![Python Logo](https://www.python.org/static/community_logos/python-logo-master-v3-TM.png)
+
 **课时**: 6小时（第一次课3小时 + 第二次课3小时）
 
 ---
