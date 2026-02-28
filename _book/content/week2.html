@@ -916,6 +916,38 @@ ros2 topic pub --rate 1 /turtle1/cmd_vel geometry_msgs/Twist \
 └─────────────────────────────────────────────────────────────┘
 </code></pre><hr></hr>
 <h2 id="下周预告">下周预告</h2>
+<hr></hr>
+<h2 id="🆙-进阶内容：用消息应用控制机器人（rosclaw）">🆙 进阶内容：用消息应用控制机器人（RosClaw）</h2>
+<blockquote>
+<p>想用Telegram/Discord/WhatsApp控制机器人吗？</p>
+</blockquote>
+<h3 id="rosclaw快速入门">RosClaw快速入门</h3>
+<pre><code class="lang-bash"><span class="hljs-comment"># 克隆RosClaw</span>
+git <span class="hljs-built_in">clone</span> https://github.com/PlaiPin/rosclaw.git
+<span class="hljs-built_in">cd</span> rosclaw
+
+<span class="hljs-comment"># 安装依赖</span>
+pnpm install
+pnpm build
+
+<span class="hljs-comment"># 启动ROS2 + rosbridge</span>
+<span class="hljs-built_in">cd</span> docker
+docker compose up
+
+<span class="hljs-comment"># 配置OpenClaw连接</span>
+<span class="hljs-comment"># 在OpenClaw中配置 ws://localhost:9090</span>
+</code></pre>
+<h3 id="自然语言控制示例">自然语言控制示例</h3>
+<pre><code>用户发送              →    机器人执行
+─────────────────────────────────────
+"Move forward 1m"    →    /cmd_vel 发布速度
+"Turn left 90"       →    /cmd_vel 发布角速度
+"Stop"               →    /cmd_vel 全零
+"Take a photo"       →    /camera/capture
+</code></pre><h3 id="更多资源">更多资源</h3>
+<ul>
+<li>GitHub: <a href="https://github.com/PlaiPin/rosclaw" target="_blank">https://github.com/PlaiPin/rosclaw</a></li>
+</ul>
 <blockquote>
 <p><strong>第3周：Python编程与机器人控制</strong></p>
 <ul>
@@ -969,7 +1001,7 @@ ros2 topic pub --rate 1 /turtle1/cmd_vel geometry_msgs/Twist \
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"第2周：ROS2通信机制基础","level":"2.2","depth":1,"next":{"title":"第3周：Python编程与机器人控制入门","level":"2.3","depth":1,"path":"content/week3.md","ref":"content/week3.md","articles":[]},"previous":{"title":"第1周：课程介绍与仿真环境搭建","level":"2.1","depth":1,"path":"content/week1.md","ref":"content/week1.md","articles":[]},"dir":"ltr"},"config":{"plugins":[],"root":".","styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","author":"Your Name","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56},"embedFonts":false},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"ROS2机器人编程基础课程","language":"zh-hans","gitbook":"*","description":"第一阶段：基础与环境搭建"},"file":{"path":"content/week2.md","mtime":"2026-02-28T04:40:07.119Z","type":"markdown"},"gitbook":{"version":"6.1.6","time":"2026-02-28T04:40:13.550Z"},"basePath":"..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"第2周：ROS2通信机制基础","level":"2.2","depth":1,"next":{"title":"第3周：Python编程与机器人控制入门","level":"2.3","depth":1,"path":"content/week3.md","ref":"content/week3.md","articles":[]},"previous":{"title":"第1周：课程介绍与仿真环境搭建","level":"2.1","depth":1,"path":"content/week1.md","ref":"content/week1.md","articles":[]},"dir":"ltr"},"config":{"plugins":[],"root":".","styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","author":"Your Name","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56},"embedFonts":false},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"ROS2机器人编程基础课程","language":"zh-hans","gitbook":"*","description":"第一阶段：基础与环境搭建"},"file":{"path":"content/week2.md","mtime":"2026-02-28T11:01:54.404Z","type":"markdown"},"gitbook":{"version":"6.1.6","time":"2026-02-28T11:02:32.247Z"},"basePath":"..","book":{"language":""}});
         });
     </script>
 </div>

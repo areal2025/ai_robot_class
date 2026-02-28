@@ -639,6 +639,99 @@ def main(args=None):
 
 ## 第一阶段完成！
 
+---
+
+## 🆕 进阶：用Python控制ROS2 + 集成OpenClaw
+
+### RosClaw Python节点
+
+```python
+#!/usr/bin/env python3
+"""
+RosClaw Discovery Node - 自动发现ROS2能力
+"""
+
+import rclpy
+from rclpy.node import Node
+from rosclaw_msgs.srv import GetCapabilities, CallService, PublishMessage
+
+class RosClawDiscovery(Node):
+    """自动发现机器人能力"""
+    
+    def __init__(self):
+        super().__init__('rosclaw_discovery')
+        
+        # 创建服务
+        self.get_capabilities = self.create_service(
+            GetCapabilities, 
+            '/rosclaw/get_capabilities',
+            self.handle_get_capabilities
+        )
+        
+        self.get_logger().info('RosClaw Discovery Node 已启动')
+    
+    def handle_get_capabilities(self, request, response):
+        """返回机器人能力列表"""
+        response.capabilities = [
+            'navigation',
+            'camera',
+            'speak',
+            'battery'
+        ]
+        return response
+
+def main(args=None):
+    rclpy.init(args=args)
+    node = RosClawDiscovery()
+    rclpy.spin(node)
+    node.destroy_node()
+    rclpy.shutdown()
+
+if __name__ == '__main__':
+    main()
+```
+
+### 集成OpenClaw
+
+```bash
+# 1. 安装OpenClaw
+git clone https://github.com/openclaw/openclaw.git
+cd openclaw && pnpm install
+
+# 2. 安装RosClaw插件
+pnpm add @rosclaw/openclaw-plugin
+
+# 3. 配置
+# openclaw.config.js
+export default {
+  plugins: [
+    ['@rosclaw/openclaw-plugin', {
+      wsUrl: 'ws://localhost:9090'
+    }]
+  ]
+}
+
+# 4. 启动
+pnpm start
+```
+
+### 完整控制流程
+
+```
+用户: "让机器人走正方形"
+   ↓
+OpenClaw AI Agent 理解意图
+   ↓
+RosClaw 插件调用 ros2_publish
+   ↓
+Python节点发布 /cmd_vel
+   ↓
+机器人执行（走正方形）
+   ↓
+Agent 发送反馈给用户
+```
+
+
 > **第1-3周成就**：
 > - ✅ 搭建ROS2开发环境
 > - ✅ 理解节点和话题通信机制  

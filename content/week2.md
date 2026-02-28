@@ -432,6 +432,47 @@ ros2 topic pub --rate 1 /turtle1/cmd_vel geometry_msgs/Twist \
 
 ## 下周预告
 
+---
+
+## 🆙 进阶内容：用消息应用控制机器人（RosClaw）
+
+> 想用Telegram/Discord/WhatsApp控制机器人吗？
+
+### RosClaw快速入门
+
+```bash
+# 克隆RosClaw
+git clone https://github.com/PlaiPin/rosclaw.git
+cd rosclaw
+
+# 安装依赖
+pnpm install
+pnpm build
+
+# 启动ROS2 + rosbridge
+cd docker
+docker compose up
+
+# 配置OpenClaw连接
+# 在OpenClaw中配置 ws://localhost:9090
+```
+
+### 自然语言控制示例
+
+```
+用户发送              →    机器人执行
+─────────────────────────────────────
+"Move forward 1m"    →    /cmd_vel 发布速度
+"Turn left 90"       →    /cmd_vel 发布角速度
+"Stop"               →    /cmd_vel 全零
+"Take a photo"       →    /camera/capture
+```
+
+### 更多资源
+
+- GitHub: https://github.com/PlaiPin/rosclaw
+
+
 > **第3周：Python编程与机器人控制**
 > - 编写第一个Python ROS2节点
 > - 用代码控制小乌龟

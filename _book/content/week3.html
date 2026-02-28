@@ -1079,7 +1079,87 @@ TURN_TIME_PENTAGON = <span class="hljs-number">1.257</span> / TURN_SPEED
 </ul>
 <hr></hr>
 <h2 id="第一阶段完成！">第一阶段完成！</h2>
-<blockquote>
+<hr></hr>
+<h2 id="🆕-进阶：用python控制ros2--集成openclaw">🆕 进阶：用Python控制ROS2 + 集成OpenClaw</h2>
+<h3 id="rosclaw-python节点">RosClaw Python节点</h3>
+<pre><code class="lang-python"><span class="hljs-comment">#!/usr/bin/env python3</span>
+<span class="hljs-string">"""
+RosClaw Discovery Node - 自动发现ROS2能力
+"""</span>
+
+<span class="hljs-keyword">import</span> rclpy
+<span class="hljs-keyword">from</span> rclpy.node <span class="hljs-keyword">import</span> Node
+<span class="hljs-keyword">from</span> rosclaw_msgs.srv <span class="hljs-keyword">import</span> GetCapabilities, CallService, PublishMessage
+
+<span class="hljs-keyword">class</span> <span class="hljs-title class_">RosClawDiscovery</span>(<span class="hljs-title class_ inherited__">Node</span>):
+    <span class="hljs-string">"""自动发现机器人能力"""</span>
+
+    <span class="hljs-keyword">def</span> <span class="hljs-title function_">__init__</span>(<span class="hljs-params">self</span>):
+        <span class="hljs-built_in">super</span>().__init__(<span class="hljs-string">'rosclaw_discovery'</span>)
+
+        <span class="hljs-comment"># 创建服务</span>
+        <span class="hljs-variable language_">self</span>.get_capabilities = <span class="hljs-variable language_">self</span>.create_service(
+            GetCapabilities, 
+            <span class="hljs-string">'/rosclaw/get_capabilities'</span>,
+            <span class="hljs-variable language_">self</span>.handle_get_capabilities
+        )
+
+        <span class="hljs-variable language_">self</span>.get_logger().info(<span class="hljs-string">'RosClaw Discovery Node 已启动'</span>)
+
+    <span class="hljs-keyword">def</span> <span class="hljs-title function_">handle_get_capabilities</span>(<span class="hljs-params">self, request, response</span>):
+        <span class="hljs-string">"""返回机器人能力列表"""</span>
+        response.capabilities = [
+            <span class="hljs-string">'navigation'</span>,
+            <span class="hljs-string">'camera'</span>,
+            <span class="hljs-string">'speak'</span>,
+            <span class="hljs-string">'battery'</span>
+        ]
+        <span class="hljs-keyword">return</span> response
+
+<span class="hljs-keyword">def</span> <span class="hljs-title function_">main</span>(<span class="hljs-params">args=<span class="hljs-literal">None</span></span>):
+    rclpy.init(args=args)
+    node = RosClawDiscovery()
+    rclpy.spin(node)
+    node.destroy_node()
+    rclpy.shutdown()
+
+<span class="hljs-keyword">if</span> __name__ == <span class="hljs-string">'__main__'</span>:
+    main()
+</code></pre>
+<h3 id="集成openclaw">集成OpenClaw</h3>
+<pre><code class="lang-bash"><span class="hljs-comment"># 1. 安装OpenClaw</span>
+git <span class="hljs-built_in">clone</span> https://github.com/openclaw/openclaw.git
+<span class="hljs-built_in">cd</span> openclaw &amp;&amp; pnpm install
+
+<span class="hljs-comment"># 2. 安装RosClaw插件</span>
+pnpm add @rosclaw/openclaw-plugin
+
+<span class="hljs-comment"># 3. 配置</span>
+<span class="hljs-comment"># openclaw.config.js</span>
+<span class="hljs-built_in">export</span> default {
+  plugins: [
+    [<span class="hljs-string">'@rosclaw/openclaw-plugin'</span>, {
+      wsUrl: <span class="hljs-string">'ws://localhost:9090'</span>
+    }]
+  ]
+}
+
+<span class="hljs-comment"># 4. 启动</span>
+pnpm start
+</code></pre>
+<h3 id="完整控制流程">完整控制流程</h3>
+<pre><code>用户: "让机器人走正方形"
+   ↓
+OpenClaw AI Agent 理解意图
+   ↓
+RosClaw 插件调用 ros2_publish
+   ↓
+Python节点发布 /cmd_vel
+   ↓
+机器人执行（走正方形）
+   ↓
+Agent 发送反馈给用户
+</code></pre><blockquote>
 <p><strong>第1-3周成就</strong>：</p>
 <ul>
 <li>✅ 搭建ROS2开发环境</li>
@@ -1134,7 +1214,7 @@ TURN_TIME_PENTAGON = <span class="hljs-number">1.257</span> / TURN_SPEED
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"第3周：Python编程与机器人控制入门","level":"2.3","depth":1,"next":{"title":"第4周：机器人运动学基础（二维）","level":"3.1","depth":1,"path":"content/week4.md","ref":"content/week4.md","articles":[]},"previous":{"title":"第2周：ROS2通信机制基础","level":"2.2","depth":1,"path":"content/week2.md","ref":"content/week2.md","articles":[]},"dir":"ltr"},"config":{"plugins":[],"root":".","styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","author":"Your Name","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56},"embedFonts":false},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"ROS2机器人编程基础课程","language":"zh-hans","gitbook":"*","description":"第一阶段：基础与环境搭建"},"file":{"path":"content/week3.md","mtime":"2026-02-28T04:39:55.691Z","type":"markdown"},"gitbook":{"version":"6.1.6","time":"2026-02-28T04:40:13.550Z"},"basePath":"..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"第3周：Python编程与机器人控制入门","level":"2.3","depth":1,"next":{"title":"第4周：机器人运动学基础（二维）","level":"3.1","depth":1,"path":"content/week4.md","ref":"content/week4.md","articles":[]},"previous":{"title":"第2周：ROS2通信机制基础","level":"2.2","depth":1,"path":"content/week2.md","ref":"content/week2.md","articles":[]},"dir":"ltr"},"config":{"plugins":[],"root":".","styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","author":"Your Name","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56},"embedFonts":false},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"ROS2机器人编程基础课程","language":"zh-hans","gitbook":"*","description":"第一阶段：基础与环境搭建"},"file":{"path":"content/week3.md","mtime":"2026-02-28T11:02:24.661Z","type":"markdown"},"gitbook":{"version":"6.1.6","time":"2026-02-28T11:02:32.247Z"},"basePath":"..","book":{"language":""}});
         });
     </script>
 </div>
