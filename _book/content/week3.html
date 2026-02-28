@@ -1,0 +1,1212 @@
+
+<!DOCTYPE HTML>
+<html lang="zh-hans" >
+    <head>
+        <meta charset="UTF-8">
+        <title>第3周：Python编程与机器人控制入门 · ROS2机器人编程基础课程</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="description" content="">
+        <meta name="generator" content="HonKit 6.1.6">
+        <meta name="author" content="Your Name">
+        
+        
+    
+    <link rel="stylesheet" href="../gitbook/style.css">
+
+    
+            
+                
+                <link rel="stylesheet" href="../gitbook/@honkit/honkit-plugin-highlight/website.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-search/search.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/@honkit/honkit-plugin-fontsettings/website.css">
+                
+            
+        
+
+    
+
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+        
+    
+    
+    <meta name="HandheldFriendly" content="true"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="apple-touch-icon-precomposed" sizes="152x152" href="../gitbook/images/apple-touch-icon-precomposed-152.png">
+    <link rel="shortcut icon" href="../gitbook/images/favicon.ico" type="image/x-icon">
+
+    
+    <link rel="next" href="week4.md" />
+    
+    
+    <link rel="prev" href="week2.html" />
+    
+
+    </head>
+    <body>
+        
+<div class="book honkit-cloak">
+    <div class="book-summary">
+        
+            
+<div id="book-search-input" role="search">
+    <input type="text" placeholder="输入并搜索" />
+</div>
+
+            
+                <nav role="navigation">
+                
+
+
+<ul class="summary">
+    
+    
+
+    
+
+    
+        
+        
+    
+        <li class="chapter " data-level="1.1" data-path="../">
+            
+                <a href="../">
+            
+                    
+                    课程简介
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+    
+        
+        <li class="header">第一阶段：基础与环境搭建</li>
+        
+        
+    
+        <li class="chapter " data-level="2.1" data-path="week1.html">
+            
+                <a href="week1.html">
+            
+                    
+                    第1周：课程介绍与仿真环境搭建
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="2.2" data-path="week2.html">
+            
+                <a href="week2.html">
+            
+                    
+                    第2周：ROS2通信机制基础
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter active" data-level="2.3" data-path="week3.html">
+            
+                <a href="week3.html">
+            
+                    
+                    第3周：Python编程与机器人控制入门
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+    
+        
+        <li class="header">第二阶段：运动学与空间感知</li>
+        
+        
+    
+        <li class="chapter " data-level="3.1" data-path="week4.md">
+            
+                <span>
+            
+                    
+                    第4周：机器人运动学基础（二维）
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="3.2" data-path="week5.md">
+            
+                <span>
+            
+                    
+                    第5周：传感器与感知基础
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="3.3" data-path="week6.md">
+            
+                <span>
+            
+                    
+                    第6周：闭环控制初探
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="3.4" data-path="week7.md">
+            
+                <span>
+            
+                    
+                    第7周：复习与实操演练
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+    
+        
+        <li class="header">第三阶段：AI应用与Sim2Real</li>
+        
+        
+    
+        <li class="chapter " data-level="4.1" data-path="week9.md">
+            
+                <span>
+            
+                    
+                    第9周：机器视觉与AI工具入门
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="4.2" data-path="week10.md">
+            
+                <span>
+            
+                    
+                    第10周：AI感知实战1 - QR Code识别
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="4.3" data-path="week11.md">
+            
+                <span>
+            
+                    
+                    第11周：AI感知实战2 - 视觉巡线与跟随
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="4.4" data-path="week12.md">
+            
+                <span>
+            
+                    
+                    第12周：Sim2Real - 从仿真到现实
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+    
+        
+        <li class="header">第四阶段：综合项目</li>
+        
+        
+    
+        <li class="chapter " data-level="5.1" data-path="week13.md">
+            
+                <span>
+            
+                    
+                    第13周：期末项目设计与开发(1)
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="5.2" data-path="week14.md">
+            
+                <span>
+            
+                    
+                    第14周：期末项目设计与开发(2)
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="5.3" data-path="week15.md">
+            
+                <span>
+            
+                    
+                    第15周：期末项目展示与评价
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+    
+
+    <li class="divider"></li>
+
+    <li>
+        <a href="https://github.com/honkit/honkit" target="blank" class="gitbook-link">
+            本书使用 HonKit 发布
+        </a>
+    </li>
+</ul>
+
+
+                </nav>
+            
+        
+    </div>
+
+    <div class="book-body">
+        
+            <div class="body-inner">
+                
+                    
+
+<div class="book-header" role="navigation">
+    
+
+    <!-- Title -->
+    <h1>
+        <i class="fa fa-circle-o-notch fa-spin"></i>
+        <a href=".." >第3周：Python编程与机器人控制入门</a>
+    </h1>
+</div>
+
+
+
+
+                    <div class="page-wrapper" tabindex="-1" role="main">
+                        <div class="page-inner">
+                            
+<div id="book-search-results">
+    <div class="search-noresults">
+    
+                                <section class="normal markdown-section">
+                                
+                                <h1 id="第3周：python编程与机器人控制入门">第3周：Python编程与机器人控制入门</h1>
+<p><strong>课时</strong>: 6小时（第一次课3小时 + 第二次课3小时）</p>
+<hr></hr>
+<h2 id="📋-本周课程表">📋 本周课程表</h2>
+<table>
+<thead>
+<tr>
+<th>次序</th>
+<th>时间</th>
+<th>主题</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>第1次</td>
+<td>3小时</td>
+<td>Python基础与节点</td>
+<td>Python、第一个基础ROS2节点</td>
+</tr>
+<tr>
+<td>第2次</td>
+<td>3小时</td>
+<td>机器人控制</td>
+<td>速度控制、走正方形</td>
+</tr>
+</tbody>
+</table>
+<hr></hr>
+<h2 id="第一次课：python基础与节点（3小时）">第一次课：Python基础与节点（3小时）</h2>
+<h3 id="⏱️-时间分配">⏱️ 时间分配</h3>
+<table>
+<thead>
+<tr>
+<th>环节</th>
+<th>时间</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>讲解</td>
+<td>40分钟</td>
+<td>Python基础回顾</td>
+</tr>
+<tr>
+<td>讲解</td>
+<td>50分钟</td>
+<td>ROS2 Python库介绍</td>
+</tr>
+<tr>
+<td>演示</td>
+<td>30分钟</td>
+<td>第一个Hello World节点</td>
+</tr>
+<tr>
+<td>茶歇</td>
+<td>10分钟</td>
+<td>休息</td>
+</tr>
+<tr>
+<td>实践</td>
+<td>40分钟</td>
+<td>编写第一个节点</td>
+</tr>
+<tr>
+<td>总结</td>
+<td>10分钟</td>
+<td>本次课小结</td>
+</tr>
+</tbody>
+</table>
+<hr></hr>
+<h2 id="11-python基础回顾（40分钟）">1.1 Python基础回顾（40分钟）</h2>
+<h3 id="111-变量和数据类型">1.1.1 变量和数据类型</h3>
+<pre><code class="lang-python"><span class="hljs-comment"># 整数</span>
+age = <span class="hljs-number">25</span>
+
+<span class="hljs-comment"># 浮点数（小数）</span>
+speed = <span class="hljs-number">1.5</span>
+
+<span class="hljs-comment"># 字符串</span>
+name = <span class="hljs-string">"turtle"</span>
+
+<span class="hljs-comment"># 布尔值</span>
+is_moving = <span class="hljs-literal">True</span>
+
+<span class="hljs-comment"># 列表</span>
+colors = [<span class="hljs-string">"red"</span>, <span class="hljs-string">"green"</span>, <span class="hljs-string">"blue"</span>]
+
+<span class="hljs-comment"># 字典</span>
+robot = {
+    <span class="hljs-string">"name"</span>: <span class="hljs-string">"TurtleBot"</span>,
+    <span class="hljs-string">"speed"</span>: <span class="hljs-number">1.0</span>,
+    <span class="hljs-string">"battery"</span>: <span class="hljs-number">80</span>
+}
+</code></pre>
+<h3 id="112-函数">1.1.2 函数</h3>
+<pre><code class="lang-python"><span class="hljs-keyword">def</span> <span class="hljs-title function_">say_hello</span>():
+    <span class="hljs-string">"""这是一个简单的函数"""</span>
+    <span class="hljs-built_in">print</span>(<span class="hljs-string">"Hello, Robot!"</span>)
+
+<span class="hljs-comment"># 带参数的函数</span>
+<span class="hljs-keyword">def</span> <span class="hljs-title function_">move_robot</span>(<span class="hljs-params">speed, direction</span>):
+    <span class="hljs-string">"""移动机器人"""</span>
+    <span class="hljs-built_in">print</span>(<span class="hljs-string">f"Moving at <span class="hljs-subst">{speed}</span> m/s, direction: <span class="hljs-subst">{direction}</span>"</span>)
+
+<span class="hljs-comment"># 调用</span>
+say_hello()
+move_robot(<span class="hljs-number">1.0</span>, <span class="hljs-string">"forward"</span>)
+</code></pre>
+<h3 id="113-类（面向对象）">1.1.3 类（面向对象）</h3>
+<pre><code class="lang-python"><span class="hljs-keyword">class</span> <span class="hljs-title class_">Robot</span>:
+    <span class="hljs-string">"""机器人小类"""</span>
+
+    <span class="hljs-comment"># 初始化方法（构造函数）</span>
+    <span class="hljs-keyword">def</span> <span class="hljs-title function_">__init__</span>(<span class="hljs-params">self, name</span>):
+        <span class="hljs-variable language_">self</span>.name = name  <span class="hljs-comment"># 实例属性</span>
+        <span class="hljs-variable language_">self</span>.speed = <span class="hljs-number">0</span>   <span class="hljs-comment"># 初始速度为0</span>
+
+    <span class="hljs-comment"># 方法</span>
+    <span class="hljs-keyword">def</span> <span class="hljs-title function_">move</span>(<span class="hljs-params">self, speed</span>):
+        <span class="hljs-string">"""移动方法"""</span>
+        <span class="hljs-variable language_">self</span>.speed = speed
+        <span class="hljs-built_in">print</span>(<span class="hljs-string">f"<span class="hljs-subst">{self.name}</span> is moving at <span class="hljs-subst">{speed}</span> m/s"</span>)
+
+    <span class="hljs-keyword">def</span> <span class="hljs-title function_">stop</span>(<span class="hljs-params">self</span>):
+        <span class="hljs-string">"""停止"""</span>
+        <span class="hljs-variable language_">self</span>.speed = <span class="hljs-number">0</span>
+        <span class="hljs-built_in">print</span>(<span class="hljs-string">f"<span class="hljs-subst">{self.name}</span> stopped"</span>)
+
+<span class="hljs-comment"># 创建实例</span>
+my_robot = Robot(<span class="hljs-string">"TurtleBot"</span>)
+my_robot.move(<span class="hljs-number">1.0</span>)  <span class="hljs-comment"># 输出：TurtleBot is moving at 1.0 m/s</span>
+my_robot.stop()     <span class="hljs-comment"># 输出：TurtleBot stopped</span>
+</code></pre>
+<hr></hr>
+<h2 id="12-ros2-python库（50分钟）">1.2 ROS2 Python库（50分钟）</h2>
+<h3 id="121-rclpy简介">1.2.1 rclpy简介</h3>
+<blockquote>
+<p><strong>rclpy</strong> = ROS2 Client Library for Python</p>
+<p>ROS2的Python客户端库，让我们能用Python写ROS2程序</p>
+</blockquote>
+<pre><code>rclpy 结构：
+
+┌─────────────────────────────────────────────┐
+│              应用程序                        │
+├─────────────────────────────────────────────┤
+│                                             │
+│   ┌─────────────────────────────────────┐  │
+│   │          rclpy (Python库)            │  │
+│   │  • Node         • Publisher         │  │
+│   │  • Subscription  • Timer             │  │
+│   │  • Service      • Action             │  │
+│   └─────────────────────────────────────┘  │
+│                     │                        │
+│                     ▼                        │
+│   ┌─────────────────────────────────────┐  │
+│   │        rcl (C库)                    │  │
+│   └─────────────────────────────────────┘  │
+│                     │                        │
+│                     ▼                        │
+│   ┌─────────────────────────────────────┐  │
+│   │         DDS 中间件                   │  │
+│   └─────────────────────────────────────┘  │
+│                                             │
+└─────────────────────────────────────────────┘
+</code></pre><h3 id="122-常用模块">1.2.2 常用模块</h3>
+<pre><code class="lang-python"><span class="hljs-comment"># 导入ROS2 Python库</span>
+<span class="hljs-keyword">import</span> rclpy
+<span class="hljs-keyword">from</span> rclpy.node <span class="hljs-keyword">import</span> Node
+
+<span class="hljs-comment"># 导入消息类型</span>
+<span class="hljs-keyword">from</span> geometry_msgs.msg <span class="hljs-keyword">import</span> Twist
+<span class="hljs-keyword">from</span> sensor_msgs.msg <span class="hljs-keyword">import</span> Image
+<span class="hljs-keyword">from</span> nav_msgs.msg <span class="hljs-keyword">import</span> Odometry
+
+<span class="hljs-comment"># 导入时间</span>
+<span class="hljs-keyword">from</span> rclpy.duration <span class="hljs-keyword">import</span> Duration
+<span class="hljs-keyword">import</span> time
+</code></pre>
+<hr></hr>
+<h2 id="13-第一个ros2-python节点（30分钟）">1.3 第一个ROS2 Python节点（30分钟）</h2>
+<h3 id="代码模板">代码模板</h3>
+<pre><code class="lang-python"><span class="hljs-comment">#!/usr/bin/env python3</span>
+<span class="hljs-string">"""
+第一个ROS2 Python节点：Hello World
+"""</span>
+
+<span class="hljs-keyword">import</span> rclpy
+<span class="hljs-keyword">from</span> rclpy.node <span class="hljs-keyword">import</span> Node
+
+
+<span class="hljs-keyword">class</span> <span class="hljs-title class_">HelloNode</span>(<span class="hljs-title class_ inherited__">Node</span>):
+    <span class="hljs-string">"""最简单的ROS2节点"""</span>
+
+    <span class="hljs-keyword">def</span> <span class="hljs-title function_">__init__</span>(<span class="hljs-params">self</span>):
+        <span class="hljs-comment"># 调用父类初始化，节点名为 'hello_node'</span>
+        <span class="hljs-built_in">super</span>().__init__(<span class="hljs-string">'hello_node'</span>)
+
+        <span class="hljs-comment"># 打印日志（ROS2的print）</span>
+        <span class="hljs-variable language_">self</span>.get_logger().info(<span class="hljs-string">'🎉 Hello ROS2! 我是第一个Python节点！'</span>)
+
+
+<span class="hljs-keyword">def</span> <span class="hljs-title function_">main</span>(<span class="hljs-params">args=<span class="hljs-literal">None</span></span>):
+    <span class="hljs-string">"""主函数：入口点"""</span>
+
+    <span class="hljs-comment"># 1. 初始化ROS2（必须的第一步）</span>
+    rclpy.init(args=args)
+
+    <span class="hljs-comment"># 2. 创建节点</span>
+    node = HelloNode()
+
+    <span class="hljs-comment"># 3. 让节点保持运行（spin = 保持监听回调）</span>
+    <span class="hljs-keyword">try</span>:
+        rclpy.spin(node)
+    <span class="hljs-keyword">except</span> KeyboardInterrupt:
+        <span class="hljs-comment"># Ctrl+C 优雅退出</span>
+        <span class="hljs-keyword">pass</span>
+    <span class="hljs-keyword">finally</span>:
+        <span class="hljs-comment"># 4. 清理资源</span>
+        node.destroy_node()
+        rclpy.shutdown()
+
+
+<span class="hljs-keyword">if</span> __name__ == <span class="hljs-string">'__main__'</span>:
+    main()
+</code></pre>
+<h3 id="运行">运行</h3>
+<pre><code class="lang-bash"><span class="hljs-comment"># 保存文件为 hello_node.py</span>
+<span class="hljs-comment"># 添加执行权限</span>
+<span class="hljs-built_in">chmod</span> +x hello_node.py
+
+<span class="hljs-comment"># 运行</span>
+python3 hello_node.py
+
+<span class="hljs-comment"># 应该看到输出：</span>
+<span class="hljs-comment"># [INFO] [hello_node]: 🎉 Hello ROS2! 我是第一个Python节点！</span>
+</code></pre>
+<hr></hr>
+<h2 id="14-发布速度命令（40分钟）">1.4 发布速度命令（40分钟）</h2>
+<h3 id="完整代码">完整代码</h3>
+<pre><code class="lang-python"><span class="hljs-comment">#!/usr/bin/env python3</span>
+<span class="hljs-string">"""
+让小乌龟直行的Python节点
+"""</span>
+
+<span class="hljs-keyword">import</span> rclpy
+<span class="hljs-keyword">from</span> rclpy.node <span class="hljs-keyword">import</span> Node
+<span class="hljs-keyword">from</span> geometry_msgs.msg <span class="hljs-keyword">import</span> Twist
+
+
+<span class="hljs-keyword">class</span> <span class="hljs-title class_">StraightMover</span>(<span class="hljs-title class_ inherited__">Node</span>):
+    <span class="hljs-string">"""控制小乌龟直行的节点"""</span>
+
+    <span class="hljs-keyword">def</span> <span class="hljs-title function_">__init__</span>(<span class="hljs-params">self</span>):
+        <span class="hljs-comment"># 节点名</span>
+        <span class="hljs-built_in">super</span>().__init__(<span class="hljs-string">'straight_mover'</span>)
+
+        <span class="hljs-comment"># 创建发布者：发布到 /turtle1/cmd_vel</span>
+        <span class="hljs-comment"># Twist 是速度消息类型</span>
+        <span class="hljs-comment"># 10 是队列大小</span>
+        <span class="hljs-variable language_">self</span>.cmd_vel_pub = <span class="hljs-variable language_">self</span>.create_publisher(
+            Twist, 
+            <span class="hljs-string">'/turtle1/cmd_vel'</span>, 
+            <span class="hljs-number">10</span>
+        )
+
+        <span class="hljs-comment"># 创建定时器：每0.1秒调用一次 callback</span>
+        <span class="hljs-variable language_">self</span>.timer = <span class="hljs-variable language_">self</span>.create_timer(<span class="hljs-number">0.1</span>, <span class="hljs-variable language_">self</span>.timer_callback)
+
+        <span class="hljs-variable language_">self</span>.get_logger().info(<span class="hljs-string">'🚀 直行控制节点已启动！'</span>)
+
+    <span class="hljs-keyword">def</span> <span class="hljs-title function_">timer_callback</span>(<span class="hljs-params">self</span>):
+        <span class="hljs-string">"""定时器回调函数：每0.1秒执行一次"""</span>
+
+        <span class="hljs-comment"># 创建速度消息</span>
+        msg = Twist()
+        msg.linear.x = <span class="hljs-number">1.0</span>    <span class="hljs-comment"># 前进 1 m/s</span>
+        msg.angular.z = <span class="hljs-number">0.0</span>   <span class="hljs-comment"># 不旋转</span>
+
+        <span class="hljs-comment"># 发布消息</span>
+        <span class="hljs-variable language_">self</span>.cmd_vel_pub.publish(msg)
+
+        <span class="hljs-comment"># 打印日志</span>
+        <span class="hljs-variable language_">self</span>.get_logger().info(<span class="hljs-string">'Published: linear.x=1.0'</span>)
+
+
+<span class="hljs-keyword">def</span> <span class="hljs-title function_">main</span>(<span class="hljs-params">args=<span class="hljs-literal">None</span></span>):
+    rclpy.init(args=args)
+    node = StraightMover()
+
+    <span class="hljs-keyword">try</span>:
+        rclpy.spin(node)
+    <span class="hljs-keyword">except</span> KeyboardInterrupt:
+        <span class="hljs-keyword">pass</span>
+    <span class="hljs-keyword">finally</span>:
+        node.destroy_node()
+        rclpy.shutdown()
+
+
+<span class="hljs-keyword">if</span> __name__ == <span class="hljs-string">'__main__'</span>:
+    main()
+</code></pre>
+<h3 id="代码详解">代码详解</h3>
+<pre><code class="lang-python"><span class="hljs-comment"># ┌─────────────────────────────────────────────────────────────┐</span>
+<span class="hljs-comment"># │                   代码结构解析                              │</span>
+<span class="hljs-comment"># ├─────────────────────────────────────────────────────────────┤</span>
+<span class="hljs-comment"># │                                                             │</span>
+<span class="hljs-comment"># │  1. 导入库                                                  │</span>
+<span class="hljs-comment"># │     import rclpy              # ROS2 Python库               │</span>
+<span class="hljs-comment"># │     from rclpy.node import Node  # 节点基类                 │</span>
+<span class="hljs-comment"># │     from geometry_msgs.msg import Twist  # 速度消息         │</span>
+<span class="hljs-comment"># │                                                             │</span>
+<span class="hljs-comment"># │  2. 定义节点类                                              │</span>
+<span class="hljs-comment"># │     class StraightMover(Node):      # 继承Node类           │</span>
+<span class="hljs-comment"># │         def __init__(self):         # 初始化               │</span>
+<span class="hljs-comment"># │             self.create_publisher() # 创建发布者            │</span>
+<span class="hljs-comment"># │             self.create_timer()     # 创建定时器            │</span>
+<span class="hljs-comment"># │         def timer_callback(self):   # 回调函数             │</span>
+<span class="hljs-comment"># │                                                             │</span>
+<span class="hljs-comment"># │  3. 主函数                                                  │</span>
+<span class="hljs-comment"># │     rclpy.init()             # 初始化ROS2                  │</span>
+<span class="hljs-comment"># │     rclpy.spin(node)        # 保持运行                    │</span>
+<span class="hljs-comment"># │     rclpy.shutdown()        # 关闭ROS2                    │</span>
+<span class="hljs-comment"># │                                                             │</span>
+<span class="hljs-comment"># └─────────────────────────────────────────────────────────────┘</span>
+</code></pre>
+<hr></hr>
+<h2 id="第二次课：机器人控制（3小时）">第二次课：机器人控制（3小时）</h2>
+<h3 id="⏱️-时间分配">⏱️ 时间分配</h3>
+<table>
+<thead>
+<tr>
+<th>环节</th>
+<th>时间</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>复习</td>
+<td>20分钟</td>
+<td>提问巩固</td>
+</tr>
+<tr>
+<td>讲解</td>
+<td>40分钟</td>
+<td>走正方形原理</td>
+</tr>
+<tr>
+<td>演示</td>
+<td>20分钟</td>
+<td>完整代码演示</td>
+</tr>
+<tr>
+<td>实践</td>
+<td>60分钟</td>
+<td>走正方形实验</td>
+</tr>
+<tr>
+<td>茶歇</td>
+<td>10分钟</td>
+<td>休息</td>
+</tr>
+<tr>
+<td>实践</td>
+<td>60分钟</td>
+<td>挑战任务</td>
+</tr>
+</tbody>
+</table>
+<hr></hr>
+<h2 id="21-走正方形原理（40分钟）">2.1 走正方形原理（40分钟）</h2>
+<h3 id="211-运动分解">2.1.1 运动分解</h3>
+<pre><code>走正方形 = 4条直线 + 4次90°转弯
+
+         ┌───────────┐
+         │           │
+    ③    │    ②      │    ①
+         │           │
+         │           │
+         │    ④      │
+         └───────────┘
+              ↑
+           起点/终点
+
+步骤分解：
+1. 直行 → 右转90°
+2. 直行 → 右转90°  
+3. 直行 → 右转90°
+4. 直行 → 右转90°（回到起点）
+</code></pre><h3 id="212-参数计算">2.1.2 参数计算</h3>
+<pre><code class="lang-python"><span class="hljs-comment"># ┌─────────────────────────────────────────────────────────────┐</span>
+<span class="hljs-comment"># │                    参数计算                                  │</span>
+<span class="hljs-comment"># ├─────────────────────────────────────────────────────────────┤</span>
+<span class="hljs-comment"># │                                                             │</span>
+<span class="hljs-comment"># │  设定参数：                                                  │</span>
+<span class="hljs-comment"># │  • 边长 SIDE_LENGTH = 2.0 米                               │</span>
+<span class="hljs-comment"># │  • 线速度 SPEED = 1.0 m/s                                 │</span>
+<span class="hljs-comment"># │  • 角速度 TURN_SPEED = 1.0 rad/s                          │</span>
+<span class="hljs-comment"># │                                                             │</span>
+<span class="hljs-comment"># │  计算：                                                     │</span>
+<span class="hljs-comment"># │  ┌─────────────────────────────────────────────────────┐   │</span>
+<span class="hljs-comment"># │  │ 直行时间 = 距离 / 速度                               │   │</span>
+<span class="hljs-comment"># │  │ MOVE_TIME = SIDE_LENGTH / SPEED                     │   │</span>
+<span class="hljs-comment"># │  │           = 2.0 / 1.0 = 2.0 秒                       │   │</span>
+<span class="hljs-comment"># │  └─────────────────────────────────────────────────────┘   │</span>
+<span class="hljs-comment"># │                                                             │</span>
+<span class="hljs-comment"># │  ┌─────────────────────────────────────────────────────┐   │</span>
+<span class="hljs-comment"># │  │ 转弯时间 = 角度(弧度) / 角速度                       │   │</span>
+<span class="hljs-comment"># │  │ 90° = π/2 ≈ 1.5708 弧度                             │   │</span>
+<span class="hljs-comment"># │  │ TURN_TIME = (π/2) / TURN_SPEED                      │   │</span>
+<span class="hljs-comment"># │  │           = 1.5708 / 1.0 = 1.5708 秒                 │   │</span>
+<span class="hljs-comment"># │  └─────────────────────────────────────────────────────┘   │</span>
+<span class="hljs-comment"># │                                                             │</span>
+<span class="hljs-comment"># │  总时间 = 4 × (2.0 + 1.5708) = 14.28 秒                   │</span>
+<span class="hljs-comment"># │                                                             │</span>
+<span class="hljs-comment"># └─────────────────────────────────────────────────────────────┘</span>
+</code></pre>
+<h3 id="213-常用多边形参数">2.1.3 常用多边形参数</h3>
+<table>
+<thead>
+<tr>
+<th>图形</th>
+<th>边数</th>
+<th>外角</th>
+<th>外角(弧度)</th>
+<th>转弯时间(rad/s=1)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>三角形</td>
+<td>3</td>
+<td>120°</td>
+<td>2.094</td>
+<td>2.094秒</td>
+</tr>
+<tr>
+<td>正方形</td>
+<td>4</td>
+<td>90°</td>
+<td>1.571</td>
+<td>1.571秒</td>
+</tr>
+<tr>
+<td>五边形</td>
+<td>5</td>
+<td>72°</td>
+<td>1.257</td>
+<td>1.257秒</td>
+</tr>
+<tr>
+<td>六边形</td>
+<td>6</td>
+<td>60°</td>
+<td>1.047</td>
+<td>1.047秒</td>
+</tr>
+<tr>
+<td>八边形</td>
+<td>8</td>
+<td>45°</td>
+<td>0.785</td>
+<td>0.785秒</td>
+</tr>
+</tbody>
+</table>
+<hr></hr>
+<h2 id="22-完整代码（20分钟）">2.2 完整代码（20分钟）</h2>
+<pre><code class="lang-python"><span class="hljs-comment">#!/usr/bin/env python3</span>
+<span class="hljs-string">"""
+让小乌龟走正方形的控制脚本
+"""</span>
+
+<span class="hljs-keyword">import</span> rclpy
+<span class="hljs-keyword">from</span> rclpy.node <span class="hljs-keyword">import</span> Node
+<span class="hljs-keyword">from</span> geometry_msgs.msg <span class="hljs-keyword">import</span> Twist
+<span class="hljs-keyword">import</span> time
+
+
+<span class="hljs-keyword">class</span> <span class="hljs-title class_">SquareMover</span>(<span class="hljs-title class_ inherited__">Node</span>):
+    <span class="hljs-string">"""走正方形的控制节点"""</span>
+
+    <span class="hljs-keyword">def</span> <span class="hljs-title function_">__init__</span>(<span class="hljs-params">self</span>):
+        <span class="hljs-built_in">super</span>().__init__(<span class="hljs-string">'square_mover'</span>)
+
+        <span class="hljs-comment"># 创建发布者</span>
+        <span class="hljs-variable language_">self</span>.cmd_vel_pub = <span class="hljs-variable language_">self</span>.create_publisher(
+            Twist, 
+            <span class="hljs-string">'/turtle1/cmd_vel'</span>, 
+            <span class="hljs-number">10</span>
+        )
+
+        <span class="hljs-comment"># ============ 参数设置 ============</span>
+        <span class="hljs-variable language_">self</span>.SPEED = <span class="hljs-number">1.0</span>              <span class="hljs-comment"># 线速度 m/s</span>
+        <span class="hljs-variable language_">self</span>.TURN_SPEED = <span class="hljs-number">1.0</span>          <span class="hljs-comment"># 角速度 rad/s</span>
+        <span class="hljs-variable language_">self</span>.SIDE_LENGTH = <span class="hljs-number">2.0</span>         <span class="hljs-comment"># 边长 m</span>
+
+        <span class="hljs-comment"># 计算运动时间</span>
+        <span class="hljs-variable language_">self</span>.MOVE_TIME = <span class="hljs-variable language_">self</span>.SIDE_LENGTH / <span class="hljs-variable language_">self</span>.SPEED
+        <span class="hljs-variable language_">self</span>.TURN_TIME = <span class="hljs-number">1.5708</span> / <span class="hljs-variable language_">self</span>.TURN_SPEED  <span class="hljs-comment"># 90° = π/2</span>
+
+        <span class="hljs-variable language_">self</span>.get_logger().info(<span class="hljs-string">'🎯 正方形控制节点启动！'</span>)
+        <span class="hljs-variable language_">self</span>.get_logger().info(<span class="hljs-string">f'📐 边长: <span class="hljs-subst">{self.SIDE_LENGTH}</span>m, 速度: <span class="hljs-subst">{self.SPEED}</span>m/s'</span>)
+
+    <span class="hljs-keyword">def</span> <span class="hljs-title function_">move_straight</span>(<span class="hljs-params">self, duration</span>):
+        <span class="hljs-string">"""直行指定时间"""</span>
+        <span class="hljs-variable language_">self</span>.get_logger().info(<span class="hljs-string">'→ 直行...'</span>)
+
+        msg = Twist()
+        msg.linear.x = <span class="hljs-built_in">float</span>(<span class="hljs-variable language_">self</span>.SPEED)
+        msg.angular.z = <span class="hljs-number">0.0</span>
+
+        <span class="hljs-comment"># 记录开始时间</span>
+        start_time = <span class="hljs-variable language_">self</span>.get_clock().now()
+
+        <span class="hljs-comment"># 持续发布命令</span>
+        <span class="hljs-keyword">while</span> (<span class="hljs-variable language_">self</span>.get_clock().now() - start_time).nanoseconds &lt; duration * <span class="hljs-number">1e9</span>:
+            <span class="hljs-variable language_">self</span>.cmd_vel_pub.publish(msg)
+            time.sleep(<span class="hljs-number">0.01</span>)
+
+        <span class="hljs-comment"># 停止</span>
+        <span class="hljs-variable language_">self</span>.stop()
+        <span class="hljs-variable language_">self</span>.get_logger().info(<span class="hljs-string">'✓ 直行完成'</span>)
+
+    <span class="hljs-keyword">def</span> <span class="hljs-title function_">turn</span>(<span class="hljs-params">self, duration</span>):
+        <span class="hljs-string">"""旋转指定时间"""</span>
+        <span class="hljs-variable language_">self</span>.get_logger().info(<span class="hljs-string">'↻ 旋转...'</span>)
+
+        msg = Twist()
+        msg.linear.x = <span class="hljs-number">0.0</span>
+        msg.angular.z = <span class="hljs-built_in">float</span>(<span class="hljs-variable language_">self</span>.TURN_SPEED)
+
+        start_time = <span class="hljs-variable language_">self</span>.get_clock().now()
+
+        <span class="hljs-keyword">while</span> (<span class="hljs-variable language_">self</span>.get_clock().now() - start_time).nanoseconds &lt; duration * <span class="hljs-number">1e9</span>:
+            <span class="hljs-variable language_">self</span>.cmd_vel_pub.publish(msg)
+            time.sleep(<span class="hljs-number">0.01</span>)
+
+        <span class="hljs-variable language_">self</span>.stop()
+        <span class="hljs-variable language_">self</span>.get_logger().info(<span class="hljs-string">'✓ 旋转完成'</span>)
+
+    <span class="hljs-keyword">def</span> <span class="hljs-title function_">stop</span>(<span class="hljs-params">self</span>):
+        <span class="hljs-string">"""停止运动"""</span>
+        msg = Twist()
+        msg.linear.x = <span class="hljs-number">0.0</span>
+        msg.angular.z = <span class="hljs-number">0.0</span>
+        <span class="hljs-variable language_">self</span>.cmd_vel_pub.publish(msg)
+        time.sleep(<span class="hljs-number">0.1</span>)
+
+    <span class="hljs-keyword">def</span> <span class="hljs-title function_">move_square</span>(<span class="hljs-params">self</span>):
+        <span class="hljs-string">"""执行走正方形"""</span>
+        <span class="hljs-variable language_">self</span>.get_logger().info(<span class="hljs-string">'🏁 开始走正方形！'</span>)
+
+        <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">4</span>):
+            <span class="hljs-variable language_">self</span>.get_logger().info(<span class="hljs-string">f'━━━ 第 <span class="hljs-subst">{i+<span class="hljs-number">1</span>}</span>/4 条边 ━━━'</span>)
+            <span class="hljs-variable language_">self</span>.move_straight(<span class="hljs-variable language_">self</span>.MOVE_TIME)
+
+            <span class="hljs-variable language_">self</span>.get_logger().info(<span class="hljs-string">f'━━━ 第 <span class="hljs-subst">{i+<span class="hljs-number">1</span>}</span>/4 次转弯 ━━━'</span>)
+            <span class="hljs-variable language_">self</span>.turn(<span class="hljs-variable language_">self</span>.TURN_TIME)
+
+        <span class="hljs-variable language_">self</span>.get_logger().info(<span class="hljs-string">'🎉 正方形走完！回到起点！'</span>)
+
+
+<span class="hljs-keyword">def</span> <span class="hljs-title function_">main</span>(<span class="hljs-params">args=<span class="hljs-literal">None</span></span>):
+    rclpy.init(args=args)
+    node = SquareMover()
+
+    <span class="hljs-comment"># 给系统一点准备时间</span>
+    time.sleep(<span class="hljs-number">1</span>)
+
+    <span class="hljs-comment"># 执行走正方形</span>
+    node.move_square()
+
+    node.destroy_node()
+    rclpy.shutdown()
+
+
+<span class="hljs-keyword">if</span> __name__ == <span class="hljs-string">'__main__'</span>:
+    main()
+</code></pre>
+<hr></hr>
+<h2 id="23-挑战任务（60分钟）">2.3 挑战任务（60分钟）</h2>
+<h3 id="任务1：走三角形">任务1：走三角形</h3>
+<pre><code class="lang-python"><span class="hljs-comment"># 三角形参数</span>
+<span class="hljs-comment"># 内角 = 60°</span>
+<span class="hljs-comment"># 外角 = 180° - 60° = 120° = 2π/3 ≈ 2.094 rad</span>
+
+TURN_TIME_TRIANGLE = <span class="hljs-number">2.094</span> / TURN_SPEED
+</code></pre>
+<h3 id="任务2：走五边形">任务2：走五边形</h3>
+<pre><code class="lang-python"><span class="hljs-comment"># 五边形参数</span>
+<span class="hljs-comment"># 内角 = 108°</span>
+<span class="hljs-comment"># 外角 = 180° - 108° = 72° = 0.4π ≈ 1.257 rad</span>
+
+TURN_TIME_PENTAGON = <span class="hljs-number">1.257</span> / TURN_SPEED
+</code></pre>
+<h3 id="任务3：可配置边长">任务3：可配置边长</h3>
+<pre><code class="lang-python"><span class="hljs-keyword">def</span> <span class="hljs-title function_">main</span>(<span class="hljs-params">args=<span class="hljs-literal">None</span></span>):
+    rclpy.init(args=args)
+    node = SquareMover()
+
+    <span class="hljs-comment"># 让用户输入边长</span>
+    side = <span class="hljs-built_in">input</span>(<span class="hljs-string">"请输入边长(米): "</span>)
+    node.SIDE_LENGTH = <span class="hljs-built_in">float</span>(side)
+    node.MOVE_TIME = node.SIDE_LENGTH / node.SPEED
+
+    node.move_square()
+</code></pre>
+<hr></hr>
+<h2 id="本周实验报告">本周实验报告</h2>
+<h3 id="✅-验收清单">✅ 验收清单</h3>
+<table>
+<thead>
+<tr>
+<th>序号</th>
+<th>实验</th>
+<th>要求</th>
+<th>完成</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Hello World</td>
+<td>运行第一个节点</td>
+<td>☐</td>
+</tr>
+<tr>
+<td>2</td>
+<td>直行</td>
+<td>小乌龟前进</td>
+<td>☐</td>
+</tr>
+<tr>
+<td>3</td>
+<td>后退</td>
+<td>小乌龟后退</td>
+<td>☐</td>
+</tr>
+<tr>
+<td>4</td>
+<td>旋转</td>
+<td>原地转圈</td>
+<td>☐</td>
+</tr>
+<tr>
+<td>5</td>
+<td>正方形</td>
+<td>走正方形</td>
+<td>☐</td>
+</tr>
+<tr>
+<td>6</td>
+<td>三角形</td>
+<td>走三角形</td>
+<td>☐</td>
+</tr>
+<tr>
+<td>7</td>
+<td>五边形</td>
+<td>走五边形</td>
+<td>☐</td>
+</tr>
+</tbody>
+</table>
+<hr></hr>
+<h2 id="本周作业">本周作业</h2>
+<h3 id="📝-理论题">📝 理论题</h3>
+<ol>
+<li>解释 <code>create_publisher</code> 和 <code>create_timer</code> 的作用</li>
+<li>为什么在循环中要持续发布命令？</li>
+</ol>
+<h3 id="📐-计算题">📐 计算题</h3>
+<ul>
+<li>正方形边长3米，速度1m/s，走完需要多少秒？</li>
+</ul>
+<h3 id="💻-实践题">💻 实践题</h3>
+<ol>
+<li>修改代码，实现走长方形（长3m，宽2m）</li>
+<li>尝试让边长可配置</li>
+</ol>
+<hr></hr>
+<h2 id="知识点速查表">知识点速查表</h2>
+<pre><code>┌─────────────────────────────────────────────────────────────┐
+│                    第3周知识点速查                           │
+├─────────────────────────────────────────────────────────────┤
+│  概念                                                          │
+│  ├── rclpy = ROS2 Python客户端库                            │
+│  ├── Node = ROS2节点                                        │
+│  ├── Publisher = 发布者                                     │
+│  ├── Timer = 定时器                                         │
+│  └── Twist = 速度消息类型                                   │
+│      ├── linear.x = 线速度 (m/s)                           │
+│      └── angular.z = 角速度 (rad/s)                        │
+├─────────────────────────────────────────────────────────────┤
+│  公式                                                          │
+│  ├── 直行时间 = 距离 / 速度                                  │
+│  ├── 转弯时间 = 角度(弧度) / 角速度                         │
+│  └── 90° = π/2 ≈ 1.57 rad                                 │
+├─────────────────────────────────────────────────────────────┤
+│  代码结构                                                      │
+│  ├── import rclpy, Node, Twist                              │
+│  ├── class MyNode(Node):                                    │
+│  ├── def __init__(self):                                    │
+│  │   ├── self.create_publisher()                          │
+│  │   └── self.create_timer()                               │
+│  └── def main():                                            │
+│      ├── rclpy.init()                                       │
+│      ├── rclpy.spin(node)                                   │
+│      └── rclpy.shutdown()                                   │
+└─────────────────────────────────────────────────────────────┘
+</code></pre><hr></hr>
+<h2 id="📚-课后阅读">📚 课后阅读</h2>
+<ul>
+<li><a href="https://docs.ros.org/en/humble/Tutorials/Beginner-Client-Libraries/Writing-A-Simple-Py-Publisher-And-Subscriber.html" target="_blank">ROS2 Python教程</a></li>
+<li><a href="https://docs.python.org/3/" target="_blank">Python官方文档</a></li>
+</ul>
+<hr></hr>
+<h2 id="第一阶段完成！">第一阶段完成！</h2>
+<blockquote>
+<p><strong>第1-3周成就</strong>：</p>
+<ul>
+<li>✅ 搭建ROS2开发环境</li>
+<li>✅ 理解节点和话题通信机制  </li>
+<li>✅ 用命令行控制机器人</li>
+<li>✅ 用Python编写机器人控制程序</li>
+<li>✅ 实现机器人走正方形</li>
+</ul>
+</blockquote>
+<hr></hr>
+<p><em>第一阶段（基础与环境搭建）完成！🎊</em></p>
+
+                                
+                                </section>
+                            
+    </div>
+    <div class="search-results">
+        <div class="has-results">
+            
+            <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+            <ul class="search-results-list"></ul>
+            
+        </div>
+        <div class="no-results">
+            
+            <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+            
+        </div>
+    </div>
+</div>
+
+                        </div>
+                    </div>
+                
+            </div>
+
+            
+                
+                <a href="week2.html" class="navigation navigation-prev " aria-label="Previous page: 第2周：ROS2通信机制基础">
+                    <i class="fa fa-angle-left"></i>
+                </a>
+                
+                
+                <a href="week4.md" class="navigation navigation-next " aria-label="Next page: 第4周：机器人运动学基础（二维）">
+                    <i class="fa fa-angle-right"></i>
+                </a>
+                
+            
+        
+    </div>
+
+    <script>
+        var gitbook = gitbook || [];
+        gitbook.push(function() {
+            gitbook.page.hasChanged({"page":{"title":"第3周：Python编程与机器人控制入门","level":"2.3","depth":1,"next":{"title":"第4周：机器人运动学基础（二维）","level":"3.1","depth":1,"path":"content/week4.md","ref":"content/week4.md","articles":[]},"previous":{"title":"第2周：ROS2通信机制基础","level":"2.2","depth":1,"path":"content/week2.md","ref":"content/week2.md","articles":[]},"dir":"ltr"},"config":{"plugins":[],"root":".","styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","author":"Your Name","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56},"embedFonts":false},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"ROS2机器人编程基础课程","language":"zh-hans","gitbook":"*","description":"第一阶段：基础与环境搭建"},"file":{"path":"content/week3.md","mtime":"2026-02-28T03:50:53.434Z","type":"markdown"},"gitbook":{"version":"6.1.6","time":"2026-02-28T04:17:02.644Z"},"basePath":"..","book":{"language":""}});
+        });
+    </script>
+</div>
+
+        
+    <noscript>
+        <style>
+            .honkit-cloak {
+                display: block !important;
+            }
+        </style>
+    </noscript>
+    <script>
+        // Restore sidebar state as critical path for prevent layout shift
+        function __init__getSidebarState(defaultValue){
+            var baseKey = "";
+            var key = baseKey + ":sidebar";
+            try {
+                var value = localStorage[key];
+                if (value === undefined) {
+                    return defaultValue;
+                }
+                var parsed = JSON.parse(value);
+                return parsed == null ? defaultValue : parsed;
+            } catch (e) {
+                return defaultValue;
+            }
+        }
+        function __init__restoreLastSidebarState() {
+            var isMobile = window.matchMedia("(max-width: 600px)").matches;
+            if (isMobile) {
+                // Init last state if not mobile
+                return;
+            }
+            var sidebarState = __init__getSidebarState(true);
+            var book = document.querySelector(".book");
+            // Show sidebar if it enabled
+            if (sidebarState && book) {
+                book.classList.add("without-animation", "with-summary");
+            }
+        }
+
+        try {
+            __init__restoreLastSidebarState();
+        } finally {
+            var book = document.querySelector(".book");
+            book.classList.remove("honkit-cloak");
+        }
+    </script>
+    <script src="../gitbook/gitbook.js"></script>
+    <script src="../gitbook/theme.js"></script>
+    
+        
+        <script src="../gitbook/gitbook-plugin-search/search-engine.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-search/search.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-lunr/lunr.min.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-lunr/search-lunr.js"></script>
+        
+    
+        
+        <script src="../gitbook/@honkit/honkit-plugin-fontsettings/fontsettings.js"></script>
+        
+    
+
+    </body>
+</html>
+

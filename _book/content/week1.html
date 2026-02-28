@@ -1,0 +1,1944 @@
+
+<!DOCTYPE HTML>
+<html lang="zh-hans" >
+    <head>
+        <meta charset="UTF-8">
+        <title>第1周：课程介绍与仿真环境搭建 · ROS2机器人编程基础课程</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="description" content="">
+        <meta name="generator" content="HonKit 6.1.6">
+        <meta name="author" content="Your Name">
+        
+        
+    
+    <link rel="stylesheet" href="../gitbook/style.css">
+
+    
+            
+                
+                <link rel="stylesheet" href="../gitbook/@honkit/honkit-plugin-highlight/website.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-search/search.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/@honkit/honkit-plugin-fontsettings/website.css">
+                
+            
+        
+
+    
+
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+        
+    
+    
+    <meta name="HandheldFriendly" content="true"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="apple-touch-icon-precomposed" sizes="152x152" href="../gitbook/images/apple-touch-icon-precomposed-152.png">
+    <link rel="shortcut icon" href="../gitbook/images/favicon.ico" type="image/x-icon">
+
+    
+    <link rel="next" href="week2.html" />
+    
+    
+    <link rel="prev" href="../" />
+    
+
+    </head>
+    <body>
+        
+<div class="book honkit-cloak">
+    <div class="book-summary">
+        
+            
+<div id="book-search-input" role="search">
+    <input type="text" placeholder="输入并搜索" />
+</div>
+
+            
+                <nav role="navigation">
+                
+
+
+<ul class="summary">
+    
+    
+
+    
+
+    
+        
+        
+    
+        <li class="chapter " data-level="1.1" data-path="../">
+            
+                <a href="../">
+            
+                    
+                    课程简介
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+    
+        
+        <li class="header">第一阶段：基础与环境搭建</li>
+        
+        
+    
+        <li class="chapter active" data-level="2.1" data-path="week1.html">
+            
+                <a href="week1.html">
+            
+                    
+                    第1周：课程介绍与仿真环境搭建
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="2.2" data-path="week2.html">
+            
+                <a href="week2.html">
+            
+                    
+                    第2周：ROS2通信机制基础
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="2.3" data-path="week3.html">
+            
+                <a href="week3.html">
+            
+                    
+                    第3周：Python编程与机器人控制入门
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+    
+        
+        <li class="header">第二阶段：运动学与空间感知</li>
+        
+        
+    
+        <li class="chapter " data-level="3.1" data-path="week4.md">
+            
+                <span>
+            
+                    
+                    第4周：机器人运动学基础（二维）
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="3.2" data-path="week5.md">
+            
+                <span>
+            
+                    
+                    第5周：传感器与感知基础
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="3.3" data-path="week6.md">
+            
+                <span>
+            
+                    
+                    第6周：闭环控制初探
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="3.4" data-path="week7.md">
+            
+                <span>
+            
+                    
+                    第7周：复习与实操演练
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+    
+        
+        <li class="header">第三阶段：AI应用与Sim2Real</li>
+        
+        
+    
+        <li class="chapter " data-level="4.1" data-path="week9.md">
+            
+                <span>
+            
+                    
+                    第9周：机器视觉与AI工具入门
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="4.2" data-path="week10.md">
+            
+                <span>
+            
+                    
+                    第10周：AI感知实战1 - QR Code识别
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="4.3" data-path="week11.md">
+            
+                <span>
+            
+                    
+                    第11周：AI感知实战2 - 视觉巡线与跟随
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="4.4" data-path="week12.md">
+            
+                <span>
+            
+                    
+                    第12周：Sim2Real - 从仿真到现实
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+    
+        
+        <li class="header">第四阶段：综合项目</li>
+        
+        
+    
+        <li class="chapter " data-level="5.1" data-path="week13.md">
+            
+                <span>
+            
+                    
+                    第13周：期末项目设计与开发(1)
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="5.2" data-path="week14.md">
+            
+                <span>
+            
+                    
+                    第14周：期末项目设计与开发(2)
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="5.3" data-path="week15.md">
+            
+                <span>
+            
+                    
+                    第15周：期末项目展示与评价
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+    
+
+    <li class="divider"></li>
+
+    <li>
+        <a href="https://github.com/honkit/honkit" target="blank" class="gitbook-link">
+            本书使用 HonKit 发布
+        </a>
+    </li>
+</ul>
+
+
+                </nav>
+            
+        
+    </div>
+
+    <div class="book-body">
+        
+            <div class="body-inner">
+                
+                    
+
+<div class="book-header" role="navigation">
+    
+
+    <!-- Title -->
+    <h1>
+        <i class="fa fa-circle-o-notch fa-spin"></i>
+        <a href=".." >第1周：课程介绍与仿真环境搭建</a>
+    </h1>
+</div>
+
+
+
+
+                    <div class="page-wrapper" tabindex="-1" role="main">
+                        <div class="page-inner">
+                            
+<div id="book-search-results">
+    <div class="search-noresults">
+    
+                                <section class="normal markdown-section">
+                                
+                                <h1 id="第1周：课程介绍与仿真环境搭建">第1周：课程介绍与仿真环境搭建</h1>
+<p><strong>课时</strong>: 6小时（第一次课3小时 + 第二次课3小时）</p>
+<hr></hr>
+<h2 id="📋-本周课程表">📋 本周课程表</h2>
+<table>
+<thead>
+<tr>
+<th>次序</th>
+<th>时间</th>
+<th>主题</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>第1次</td>
+<td>3小时</td>
+<td>课程导论与理论</td>
+<td>机器人与AI、ROS2概念、理论讲解</td>
+</tr>
+<tr>
+<td>第2次</td>
+<td>3小时</td>
+<td>环境搭建实战</td>
+<td>Docker安装、仿真环境配置、第一个实验</td>
+</tr>
+</tbody>
+</table>
+<hr></hr>
+<h2 id="第一次课：课程导论与理论（3小时）">第一次课：课程导论与理论（3小时）</h2>
+<h3 id="⏱️-时间分配">⏱️ 时间分配</h3>
+<table>
+<thead>
+<tr>
+<th>环节</th>
+<th>时间</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>开场</td>
+<td>15分钟</td>
+<td>课程介绍、互相认识</td>
+</tr>
+<tr>
+<td>理论讲解1</td>
+<td>45分钟</td>
+<td>机器人与AI的区别与联系</td>
+</tr>
+<tr>
+<td>理论讲解2</td>
+<td>60分钟</td>
+<td>ROS2系统概述</td>
+</tr>
+<tr>
+<td>茶歇</td>
+<td>10分钟</td>
+<td>休息交流</td>
+</tr>
+<tr>
+<td>理论讲解3</td>
+<td>40分钟</td>
+<td>核心概念：节点与话题</td>
+</tr>
+<tr>
+<td>演示</td>
+<td>15分钟</td>
+<td>演示Turtlesim</td>
+</tr>
+<tr>
+<td>小结</td>
+<td>15分钟</td>
+<td>本周总结、布置任务</td>
+</tr>
+</tbody>
+</table>
+<hr></hr>
+<h2 id="11-开场与课程介绍（15分钟）">1.1 开场与课程介绍（15分钟）</h2>
+<h3 id="👋-欢迎来到ai机器人课程！">👋 欢迎来到AI机器人课程！</h3>
+<blockquote>
+<p><strong>教师开场白</strong>：
+"欢迎大家来到AI机器人课程！在接下来的15周里，我们将一起探索机器人的世界。从零开始，学会如何让机器人听你的话，如何给机器人装上'眼睛'，如何让它自主导航。最终，你们将完成一个完整的机器人项目！"</p>
+</blockquote>
+<h3 id="📚-课程信息">📚 课程信息</h3>
+<ul>
+<li><strong>课程名称</strong>: AI机器人（AI Robotics）</li>
+<li><strong>总课时</strong>: 90小时（15周 × 6小时/周）</li>
+<li><strong>前置要求</strong>: 零基础！只要会用电脑</li>
+<li><strong>授课方式</strong>: 理论40% + 演示20% + 实践40%</li>
+</ul>
+<h3 id="🎯-学习路径">🎯 学习路径</h3>
+<pre><code>15周学习路径：
+
+Week 1-3    Week 4-7      Week 8-12    Week 13-15
+   │           │            │            │
+   ▼           ▼            ▼            ▼
+──┌────┐   ┌──────┐    ┌──────┐    ┌──────┐
+│ 基础 │ → │ 运动 │ → │  AI  │ → │ 项目 │
+│ 环境 │   │ 感知 │   │ 应用 │   │ 实战 │
+└──────┘   └──────┘    └──────┘    └──────┘
+  (18h)     (21h)       (21h)       (30h)
+</code></pre><hr></hr>
+<h2 id="12-机器人与ai的区别与联系（45分钟）">1.2 机器人与AI的区别与联系（45分钟）</h2>
+<h3 id="🤖-思考问题">🤖 思考问题</h3>
+<blockquote>
+<p><strong>提问</strong>：同学们，你们印象中的机器人是什么样的？</p>
+<p><strong>引导</strong>：从电影中的机器人、生活中遇到的机器人、新闻里的机器人开始讨论</p>
+</blockquote>
+<h3 id="121-什么是机器人？">1.2.1 什么是机器人？</h3>
+<h4 id="📖-定义">📖 定义</h4>
+<blockquote>
+<p><strong>机器人</strong>（Robot）是一种能够自动执行任务的<strong>物理机器</strong>，它通常具有：</p>
+<ul>
+<li>传感器（感知环境）</li>
+<li>执行器（执行动作）</li>
+<li>控制器（处理信息）</li>
+</ul>
+</blockquote>
+<h4 id="🏭-机器人发展历程">🏭 机器人发展历程</h4>
+<pre><code>时间线：
+┌─────────────────────────────────────────────────────────────┐
+│                                                             │
+│  1920    1950    1980    2000    2020    现在              │
+│   │        │       │       │       │       │               │
+│   ▼        ▼       ▼       ▼       ▼       ▼               │
+│ ┌────┐  ┌────┐  ┌────┐  ┌────┐  ┌────┐  ┌────┐           │
+│ │Robot│  │工业 │  │服务 │  │自动 │  │智能 │  │...   │        │
+│ │词汇 │  │机器 │  │机器 │  │驾驶 │  │机器人│          │
+│ │诞生 │  │人   │  │人   │  │     │  │     │           │
+│ └────┘  └────┘  └────┘  └────┘  └────┘  └────┘           │
+│                                                             │
+└─────────────────────────────────────────────────────────────┘
+</code></pre><h4 id="🔬-现代机器人的分类">🔬 现代机器人的分类</h4>
+<table>
+<thead>
+<tr>
+<th>类型</th>
+<th>示例</th>
+<th>应用场景</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>工业机器人</td>
+<td>焊接机械臂、装配机器人</td>
+<td>工厂生产线</td>
+</tr>
+<tr>
+<td>服务机器人</td>
+<td>扫地机器人、送餐机器人</td>
+<td>餐饮、酒店</td>
+</tr>
+<tr>
+<td>特种机器人</td>
+<td>无人机、深海探测器</td>
+<td>危险环境</td>
+</tr>
+<tr>
+<td>人形机器人</td>
+<td>Atlas、ASIMO</td>
+<td>研究、展示</td>
+</tr>
+<tr>
+<td>自动驾驶汽车</td>
+<td>Tesla、Waymo</td>
+<td>交通出行</td>
+</tr>
+</tbody>
+</table>
+<h3 id="122-什么是人工智能？">1.2.2 什么是人工智能？</h3>
+<h4 id="📖-定义">📖 定义</h4>
+<blockquote>
+<p><strong>人工智能</strong>（Artificial Intelligence, AI）是计算机科学的一个分支，致力于开发能够<strong>模拟、延伸和扩展人类智能</strong>的理论、方法、技术和应用系统。</p>
+</blockquote>
+<h4 id="🏠-你身边的ai助手">🏠 你身边的AI助手</h4>
+<blockquote>
+<p><strong>提问</strong>：同学们，你们日常生活中有没有接触过AI？</p>
+</blockquote>
+<pre><code>┌─────────────────────────────────────────────────────────────┐
+│                    常见的AI助手                              │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│  📱 手机助手                                                │
+│  ├── Siri (苹果)     ──► "Hey Siri, 帮我打开灯"           │
+│  ├── 小爱同学 (小米)  ──► "小爱同学，播放音乐"             │
+│  ├── 小艺 (华为)     ──► "小艺，今天天气怎么样"            │
+│  └── Google Assistant ──► "Hey Google, 设置闹钟"           │
+│                                                             │
+│  🏠 智能音箱                                                │
+│  ├── 小度 (百度)     ──► "小度小度，播放新闻"              │
+│  ├── 天猫精灵 (阿里) ──► "天猫精灵，开空调"                │
+│  └── HomePod (苹果)  ──► 语音控制HomeKit设备              │
+│                                                             │
+│  🤖 AI机器人助手                                            │
+│  ├── OpenCLAW      ──► 多平台AI助手，可控制机器人          │
+│  ├── 接待机器人   ──► 酒店/银行大堂的引导机器人             │
+│  └── 家庭陪护机器人 ──► 儿童教育、老人陪伴                 │
+│                                                             │
+└─────────────────────────────────────────────────────────────┘
+</code></pre><h4 id="ai助手的构成">AI助手的构成</h4>
+<pre><code>AI助手 = 语音识别(ASR) + 自然语言理解(NLU) + 对话管理 + 自然语言生成(NLG) + 语音合成(TTS)
+
+以"小爱同学"为例：
+┌─────────────────────────────────────────────────────────────┐
+│  用户说 "小爱同学，帮我打开灯"                              │
+│                      │                                      │
+│                      ▼                                      │
+│  ┌─────────────────────────────────────────────────────┐   │
+│  │  1. ASR: 语音 → 文字                                 │   │
+│  │     "帮我打开灯"                                     │   │
+│  └─────────────────────────────────────────────────────┘   │
+│                      │                                      │
+│                      ▼                                      │
+│  ┌─────────────────────────────────────────────────────┐   │
+│  │  2. NLU: 理解意图 + 提取实体                        │   │
+│  │     意图=打开设备, 设备=灯                          │   │
+│  └─────────────────────────────────────────────────────┘   │
+│                      │                                      │
+│                      ▼                                      │
+│  ┌─────────────────────────────────────────────────────┐   │
+│  │  3. 执行: 调用智能家居API                            │   │
+│  │     发送指令到米家平台                               │   │
+│  └─────────────────────────────────────────────────────┘   │
+│                      │                                      │
+│                      ▼                                      │
+│  ┌─────────────────────────────────────────────────────┐   │
+│  │  4. TTS: 文字 → 语音                                │   │
+│  │     "好的，灯已经打开了"                             │   │
+│  └─────────────────────────────────────────────────────┘   │
+└─────────────────────────────────────────────────────────────┘
+</code></pre><h4 id="🧠-人工智能的层次">🧠 人工智能的层次</h4>
+<pre><code>AI智能层次：
+┌─────────────────────────────────────────────────────────────┐
+│                                                             │
+│  ┌─────────────────────────────────────────────────────┐   │
+│  │           通用人工智能 (AGI)                        │   │
+│  │    像人类一样思考、学习、推理的机器智能                │   │
+│  └─────────────────────────────────────────────────────┘   │
+│                            ▲                                │
+│  ┌─────────────────────────────────────────────────────┐   │
+│  │           狭义人工智能 (ANI)                        │   │
+│  │    专注于特定任务的智能系统                           │   │
+│  │    ┌─────────┐  ┌─────────┐  ┌─────────┐          │   │
+│  │    │ 语音    │  │ 图像    │  │ 推荐    │          │   │
+│  │    │ 识别    │  │ 识别    │  │ 系统    │          │   │
+│  │    └─────────┘  └─────────┘  └─────────┘          │   │
+│  └─────────────────────────────────────────────────────┘   │
+│                            ▲                                │
+│  ┌─────────────────────────────────────────────────────┐   │
+│  │           机器学习 (ML)                              │   │
+│  │    从数据中学习规律的方法                             │   │
+│  └─────────────────────────────────────────────────────┘   │
+│                            ▲                                │
+│  ┌─────────────────────────────────────────────────────┐   │
+│  │           深度学习 (DL)                              │   │
+│  │    基于神经网络的学习方法                             │   │
+│  └─────────────────────────────────────────────────────┘   │
+│                                                             │
+└─────────────────────────────────────────────────────────────┘
+</code></pre><h4 id="🛠️-常见ai技术">🛠️ 常见AI技术</h4>
+<table>
+<thead>
+<tr>
+<th>技术</th>
+<th>说明</th>
+<th>示例</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>计算机视觉</td>
+<td>让机器"看"懂图像</td>
+<td>人脸识别、自动驾驶</td>
+</tr>
+<tr>
+<td>自然语言处理</td>
+<td>理解人类语言</td>
+<td>聊天机器人、翻译</td>
+</tr>
+<tr>
+<td>语音识别</td>
+<td>将语音转为文字</td>
+<td>语音助手</td>
+</tr>
+<tr>
+<td>强化学习</td>
+<td>通过试错学习</td>
+<td>AlphaGo、游戏AI</td>
+</tr>
+<tr>
+<td>推荐系统</td>
+<td>个性化推荐</td>
+<td>Netflix、抖音</td>
+</tr>
+</tbody>
+</table>
+<h3 id="123-机器人与ai的关系">1.2.3 机器人与AI的关系</h3>
+<h4 id="🔑-核心理解">🔑 核心理解</h4>
+<blockquote>
+<p><strong>一句话总结</strong>：<strong>AI是大脑，机器人是身体</strong></p>
+</blockquote>
+<pre><code>                    ┌─────────────────────────────────┐
+                    │          智能机器人              │
+                    └────────────────┬────────────────┘
+                                     │
+              ┌──────────────────────┼──────────────────────┐
+              │                      │                      │
+              ▼                      ▼                      ▼
+    ┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
+    │      AI         │    │    ROS2         │    │     机械        │
+    │    (软件/大脑)  │    │  (框架/神经)    │    │   (硬件/身体)   │
+    ├─────────────────┤    ├─────────────────┤    ├─────────────────┤
+    │ • 算法          │◄──►│ • 通信          │◄──►│ • 电机          │
+    │ • 模型          │    │ • 节点          │    │ • 传感器        │
+    │ • 决策          │    │ • 消息          │    │ • 执行器        │
+    └─────────────────┘    └─────────────────┘    └─────────────────┘
+</code></pre><h4 id="📊-对比表">📊 对比表</h4>
+<table>
+<thead>
+<tr>
+<th>方面</th>
+<th>纯机器人</th>
+<th>纯AI</th>
+<th>智能机器人</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>形态</td>
+<td>物理实体</td>
+<td>虚拟程序</td>
+<td>实体+智能</td>
+</tr>
+<tr>
+<td>能力</td>
+<td>执行固定任务</td>
+<td>处理特定信息</td>
+<td>自主决策+执行</td>
+</tr>
+<tr>
+<td>例子</td>
+<td>工业机械臂</td>
+<td>ChatGPT</td>
+<td>自动驾驶汽车</td>
+</tr>
+</tbody>
+</table>
+<h4 id="🌟-ai--机器人--智能机器人">🌟 AI + 机器人 = 智能机器人</h4>
+<blockquote>
+<p><strong>本课程的核心</strong>：让AI助手控制ROS2机器人！</p>
+</blockquote>
+<pre><code>┌─────────────────────────────────────────────────────────────┐
+│                    AI控制机器人架构                          │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│    用户语音/文字                                            │
+│         │                                                   │
+│         ▼                                                   │
+│  ┌──────────────┐     ┌──────────────┐                   │
+│  │  AI助手      │     │  OpenCLAW    │                   │
+│  │ (Siri/小爱) │────►│ (多平台中枢) │                   │
+│  └──────────────┘     └──────┬───────┘                   │
+│                               │                            │
+│                               ▼                            │
+│                        ┌──────────────┐                    │
+│                        │   ROS2       │                    │
+│                        │   机器人      │                    │
+│                        └──────────────┘                    │
+│                               │                            │
+│                               ▼                            │
+│                        ┌──────────────┐                    │
+│                        │  执行动作    │                    │
+│                        │  移动/抓取   │                    │
+│                        └──────────────┘                    │
+│                                                             │
+└─────────────────────────────────────────────────────────────┘
+</code></pre><h4 id="🎯-本课程的ai机器人实战">🎯 本课程的AI+机器人实战</h4>
+<pre><code>课程中的AI控制场景：
+
+┌─────────────────────────────────────────────────────────────┐
+│                                                             │
+│  场景1: 语音控制机器人                                       │
+│  "小爱同学，让机器人走正方形"                                │
+│       │                                                      │
+│       ▼                                                      │
+│  AI识别意图 → ROS2节点接收 → 控制机器人执行                   │
+│                                                             │
+│  ─────────────────────────────────────────────────────────  │
+│                                                             │
+│  场景2: 视觉识别后执行                                       │
+│  机器人看到QR码 → 识别内容 → 执行对应任务                    │
+│       │                                                      │
+│       ▼                                                      │
+│  OpenCV识别 → ROS2话题发布 → 动作节点执行                    │
+│                                                             │
+│  ─────────────────────────────────────────────────────────  │
+│                                                             │
+│  场景3: AI对话+机器人控制                                    │
+│  "机器人，去把桌子上的水拿过来"                              │
+│       │                                                      │
+│       ▼                                                      │
+│  NLP理解 → 路径规划 → 自主导航 → 完成任务                    │
+│                                                             │
+└─────────────────────────────────────────────────────────────┘
+</code></pre><h4 id="🏠-智能家居-vs-智能机器人">🏠 智能家居 vs 智能机器人</h4>
+<table>
+<thead>
+<tr>
+<th>智能家居</th>
+<th>智能机器人</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>灯/空调/窗帘</td>
+<td>移动底盘/机械臂</td>
+</tr>
+<tr>
+<td>开关量(开/关)</td>
+<td>连续量(速度/位置)</td>
+</tr>
+<tr>
+<td>静态环境</td>
+<td>动态环境</td>
+</tr>
+<tr>
+<td>室内固定位置</td>
+<td>自主导航</td>
+</tr>
+<tr>
+<td>例子</td>
+<td>工业机械臂</td>
+<td>ChatGPT</td>
+<td>自动驾驶汽车</td>
+</tr>
+<tr>
+<td>灵活性</td>
+<td>低</td>
+<td>高</td>
+<td>高</td>
+</tr>
+</tbody>
+</table>
+<h4 id="🌰-举例说明">🌰 举例说明</h4>
+<table>
+<thead>
+<tr>
+<th>产品</th>
+<th>有AI吗？</th>
+<th>有身体吗？</th>
+<th>属于？</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>扫拖一体机</td>
+<td>✅ 路线规划</td>
+<td>✅ 轮子+刷子</td>
+<td>智能机器人</td>
+</tr>
+<tr>
+<td>酒店送餐机器人</td>
+<td>✅ 导航避障</td>
+<td>✅ 轮子+托盘</td>
+<td>智能机器人</td>
+</tr>
+<tr>
+<td>ChatGPT</td>
+<td>✅ 对话能力</td>
+<td>❌ 无</td>
+<td>纯AI</td>
+</tr>
+<tr>
+<td>工业焊接机械臂</td>
+<td>❌ 固定程序</td>
+<td>✅ 机械臂</td>
+<td>传统机器人</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>重要结论</strong>：本课程要教的就是如何把<strong>AI（大脑）</strong>和<strong>机器人（身体）</strong>结合起来！</p>
+</blockquote>
+<hr></hr>
+<h2 id="13-ros2系统概述（60分钟）">1.3 ROS2系统概述（60分钟）</h2>
+<h3 id="131-什么是ros？">1.3.1 什么是ROS？</h3>
+<h4 id="📖-历史">📖 历史</h4>
+<blockquote>
+<p><strong>ROS = Robot Operating System</strong>（机器人操作系统）</p>
+<p>2007年诞生于斯坦福大学人工智能实验室，后来由 Willow Garage 公司维护发展，至今已成为机器人领域最流行的开源框架。</p>
+</blockquote>
+<h4 id="🐢-ros版本（乌龟家族）">🐢 ROS版本（乌龟家族）</h4>
+<table>
+<thead>
+<tr>
+<th>版本</th>
+<th>代号</th>
+<th>年份</th>
+<th>状态</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ROS 1</td>
+<td>各种乌龟</td>
+<td>2010-2020</td>
+<td>已停止维护</td>
+</tr>
+<tr>
+<td>ROS 2</td>
+<td>各种乌龟</td>
+<td>2015-至今</td>
+<td><strong>当前使用</strong> ⭐</td>
+</tr>
+</tbody>
+</table>
+<p><strong>为什么用乌龟？</strong></p>
+<ul>
+<li>创始人Morgan Quigley喜欢小乌龟</li>
+<li>Turtlesim是经典入门教程</li>
+</ul>
+<h3 id="132-ros2-vs-ros1">1.3.2 ROS2 vs ROS1</h3>
+<h4 id="📊-对比表">📊 对比表</h4>
+<table>
+<thead>
+<tr>
+<th>特性</th>
+<th>ROS 1</th>
+<th>ROS 2</th>
+<th>为什么重要？</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>实时性</strong></td>
+<td>尽力而为</td>
+<td>原生支持</td>
+<td>机器人需要确定性响应</td>
+</tr>
+<tr>
+<td><strong>多机器人</strong></td>
+<td>困难</td>
+<td>原生支持</td>
+<td>未来是集群协作时代</td>
+</tr>
+<tr>
+<td><strong>安全性</strong></td>
+<td>无</td>
+<td>DDS安全</td>
+<td>商业化必备</td>
+</tr>
+<tr>
+<td><strong>跨平台</strong></td>
+<td>仅Linux</td>
+<td>Win/Mac/Linux</td>
+<td>方便开发者</td>
+</tr>
+<tr>
+<td><strong>可靠性</strong></td>
+<td>一般</td>
+<td>高</td>
+<td>工业应用要求</td>
+</tr>
+<tr>
+<td><strong>持续性</strong></td>
+<td>2025年停止</td>
+<td>长期支持</td>
+<td>不用担心过时</td>
+</tr>
+</tbody>
+</table>
+<h4 id="🔧-技术架构">🔧 技术架构</h4>
+<pre><code>ROS2 架构：
+┌─────────────────────────────────────────────────────────────┐
+│                      应用层 (Application Layer)            │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│   Node A      Node B      Node C      Node D              │
+│  (感知)       (决策)      (控制)      (显示)               │
+│                                                             │
+└────────────────────────┬────────────────────────────────────┘
+                         │
+                         ▼
+┌─────────────────────────────────────────────────────────────┐
+│                    通信层 (Communication Layer)            │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│   ┌──────────┐   ┌──────────┐   ┌──────────┐             │
+│   │  Topic   │   │ Service  │   │  Action  │             │
+│   │ (话题)   │   │ (服务)   │   │  (动作)  │             │
+│   │ 异步/Pub │   │ 同步/Req │   │ 长期任务 │             │
+│   └──────────┘   └──────────┘   └──────────┘             │
+│                                                             │
+└────────────────────────┬────────────────────────────────────┘
+                         │
+                         ▼
+┌─────────────────────────────────────────────────────────────┐
+│                     中间件 (Middleware)                     │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│               DDS (Data Distribution Service)              │
+│            实时数据分发服务 - 负责网络通信                   │
+│                                                             │
+│   ┌──────────────────────────────────────────────────┐    │
+│   │  • RTPS协议  • 数据安全  • 服务质量(QoS)          │    │
+│   └──────────────────────────────────────────────────┘    │
+│                                                             │
+└─────────────────────────────────────────────────────────────┘
+</code></pre><hr></hr>
+<h2 id="14-网络基础知识（ros2通信前置）">1.4 网络基础知识（ROS2通信前置）</h2>
+<blockquote>
+<p>在学习ROS2节点之前，我们需要了解一些网络基础知识，因为<strong>ROS2节点之间通过网络通信</strong>！</p>
+</blockquote>
+<h3 id="141-ip地址">1.4.1 IP地址</h3>
+<h4 id="📍-什么是ip地址？">📍 什么是IP地址？</h4>
+<blockquote>
+<p><strong>IP地址</strong> = 网络中每个设备的"门牌号"</p>
+</blockquote>
+<pre><code>类比：IP地址就像电话号码
+
+┌─────────────────────────────────────────────────────────────┐
+│                                                             │
+│   现实世界：                                               │
+│   你要打电话给小明 → 拨打电话号码 "138-xxxx-xxxx"          │
+│                                                             │
+│   网络世界：                                               │
+│   你要发消息给另一台电脑 → IP地址 "192.168.1.100"         │
+│                                                             │
+└─────────────────────────────────────────────────────────────┘
+</code></pre><h4 id="🔢-ip地址格式">🔢 IP地址格式</h4>
+<pre><code>IPv4地址格式：xxx.xxx.xxx.xxx
+
+┌─────────────────────────────────────────────────────────────┐
+│  示例：192.168.1.100                                      │
+│                                                             │
+│  ├── 192.168.1   → 网络号（同一个局域网内相同）             │
+│  └── 100       → 主机号（同一网络内唯一）                  │
+└─────────────────────────────────────────────────────────────┘
+</code></pre><h4 id="🌐-查看ip地址">🌐 查看IP地址</h4>
+<pre><code class="lang-bash"><span class="hljs-comment"># Windows:</span>
+ipconfig
+
+<span class="hljs-comment"># Mac/Linux:</span>
+ifconfig
+<span class="hljs-comment"># 或者</span>
+ip addr
+</code></pre>
+<h4 id="📋-ip地址类型">📋 IP地址类型</h4>
+<table>
+<thead>
+<tr>
+<th>类型</th>
+<th>范围</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>私有IP</td>
+<td>192.168.x.x</td>
+<td>局域网</td>
+</tr>
+<tr>
+<td>私有IP</td>
+<td>10.x.x.x</td>
+<td>大型局域网</td>
+</tr>
+<tr>
+<td>环回IP</td>
+<td>127.0.0.1</td>
+<td>本机 localhost</td>
+</tr>
+</tbody>
+</table>
+<h3 id="142-mac地址">1.4.2 MAC地址</h3>
+<h4 id="🏭-什么是mac地址？">🏭 什么是MAC地址？</h4>
+<blockquote>
+<p><strong>MAC地址</strong> = 网卡的"身份证号"，出厂时烧录，<strong>全球唯一</strong></p>
+</blockquote>
+<pre><code>IP VS MAC：
+
+IP地址   : 可配置，像门牌号（搬家后可换）
+MAC地址  : 永久固定，像身份证号（出生即确定）
+
+示例：00:1B:44:11:3A:B7 （48位，6字节）
+</code></pre><h4 id="🔍-查看mac地址">🔍 查看MAC地址</h4>
+<pre><code class="lang-bash"><span class="hljs-comment"># Windows</span>
+ipconfig /all | findstr <span class="hljs-string">"物理地址"</span>
+
+<span class="hljs-comment"># Mac</span>
+ifconfig | grep <span class="hljs-string">"ether"</span>
+
+<span class="hljs-comment"># Linux</span>
+ip <span class="hljs-built_in">link</span> show
+</code></pre>
+<h3 id="143-ping命令">1.4.3 Ping命令</h3>
+<h4 id="🎯-什么是ping？">🎯 什么是Ping？</h4>
+<blockquote>
+<p><strong>Ping</strong> = 测试两台设备之间<strong>网络是否连通</strong></p>
+</blockquote>
+<pre><code>原理：
+电脑A ──Ping包──► 电脑B ──回显reply──► 电脑A
+
+收到回复 = 网络通
+超时 = 网络不通
+</code></pre><h4 id="💻-ping命令用法">💻 Ping命令用法</h4>
+<pre><code class="lang-bash"><span class="hljs-comment"># 测试网络连通性</span>
+ping www.baidu.com
+
+<span class="hljs-comment"># 测试局域网设备</span>
+ping 192.168.1.1
+
+<span class="hljs-comment"># 测试本机</span>
+ping localhost
+<span class="hljs-comment"># 或</span>
+ping 127.0.0.1
+
+<span class="hljs-comment"># 持续ping（Ctrl+C停止）</span>
+ping -c 4 192.168.1.1  <span class="hljs-comment"># Linux/Mac</span>
+ping -n 4 192.168.1.1  <span class="hljs-comment"># Windows</span>
+</code></pre>
+<h3 id="144-端口号">1.4.4 端口号</h3>
+<h4 id="🚪-什么是端口号？">🚪 什么是端口号？</h4>
+<blockquote>
+<p><strong>端口号</strong> = 同一台设备上的<strong>不同服务入口</strong></p>
+</blockquote>
+<pre><code>类比：一栋大楼（电脑）
+
+IP地址 = 大楼地址（192.168.1.100）
+
+大楼内房间（端口）：
+├── 80    → HTTP网站
+├── 443   → HTTPS加密网站
+├── 22     → SSH远程登录
+├── 6080   → ROS2 VNC仿真
+├── 8888   → 本课程GitBook
+└── ...
+</code></pre><h4 id="常用端口">常用端口</h4>
+<table>
+<thead>
+<tr>
+<th>端口</th>
+<th>服务</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>22</td>
+<td>SSH</td>
+</tr>
+<tr>
+<td>80</td>
+<td>HTTP</td>
+</tr>
+<tr>
+<td>443</td>
+<td>HTTPS</td>
+</tr>
+<tr>
+<td>6080</td>
+<td>VNC Web</td>
+</tr>
+<tr>
+<td>8888</td>
+<td>Jupyter/文档</td>
+</tr>
+</tbody>
+</table>
+<hr></hr>
+<h2 id="15-ros2核心概念">1.5 ROS2核心概念</h2>
+<pre><code>ROS2 核心概念层级：
+
+┌─────────────────────────────────────────────────────────────┐
+│                      机器人应用                              │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│  ┌─────────────┐    ┌─────────────┐    ┌─────────────┐    │
+│  │   节点      │    │   话题      │    │   消息      │    │
+│  │   (Node)   │◄──►│  (Topic)    │───►│  (Message)  │    │
+│  │  独立程序   │    │  通信频道   │    │   数据格式   │    │
+│  └─────────────┘    └─────────────┘    └─────────────┘    │
+│                                                             │
+└─────────────────────────────────────────────────────────────┘
+</code></pre><h4 id="①-节点-node">① 节点 (Node)</h4>
+<blockquote>
+<p><strong>定义</strong>：节点是ROS2中的<strong>基本执行单元</strong>，每个节点是一个独立运行的程序</p>
+</blockquote>
+<pre><code>例子：自动驾驶汽车的节点分布
+
+┌─────────────────────────────────────────────────────────┐
+│                    自动驾驶汽车                           │
+├─────────────────────────────────────────────────────────┤
+│                                                          │
+│   📷 /camera_front_node     ──►  🧠 /detection_node    │
+│   │                              (目标检测)              │
+│   │                                                      │
+│   📡 /lidar_node            ──►  🗺️ /mapping_node      │
+│   │                              (建图)                  │
+│   │                                                      │
+│   📍 /gps_node              ──►  📍 /localization_node │
+│   │                              (定位)                  │
+│   │                                                      │
+│   🗺️ /mapping_node         ──►  🛤️ /planning_node     │
+│   │                              (路径规划)              │
+│   │                                                      │
+│   🛤️ /planning_node        ──►  🎮 /control_node       │
+│   │                              (控制)                  │
+│   │                                                      │
+│   🎮 /control_node         ──►  ⚙️ /motor_node         │
+│   │                              (电机驱动)              │
+│   │                                                      │
+└─────────────────────────────────────────────────────────┘
+
+这就是6个节点！每个专注做一件事
+</code></pre><p><strong>节点特点</strong>：</p>
+<ul>
+<li>✅ 单一职责（每个节点只做一件事）</li>
+<li>✅ 独立运行（节点间互不干扰）</li>
+<li>✅ 松耦合（通过话题连接，不需要知道对方在哪）</li>
+<li>✅ 可复用（写一次，能在多个机器人上用）</li>
+</ul>
+<h4 id="②-话题-topic">② 话题 (Topic)</h4>
+<blockquote>
+<p><strong>定义</strong>：话题是节点之间<strong>异步通信</strong>的通道</p>
+</blockquote>
+<pre><code>类比：话题 = YouTube频道
+
+┌─────────────────────────────────────────────────────────┐
+│                    YouTube 频道                         │
+├─────────────────────────────────────────────────────────┤
+│                                                         │
+│   上传者 (Publisher)                                   │
+│       │                                                 │
+│       │  上传视频                                       │
+│       ▼                                                 │
+│   ┌─────────────────────────────────────────────┐      │
+│   │  /robot/cmd_vel  速度命令频道                  │      │
+│   │  (话题名称)                                   │      │
+│   └─────────────────────────────────────────────┘      │
+│       │                                                 │
+│       │  订阅者收到更新                                 │
+│       ▼                                                 │
+│   订阅者 (Subscriber)                                  │
+│                                                         │
+└─────────────────────────────────────────────────────────┘
+</code></pre><h4 id="③-消息-message">③ 消息 (Message)</h4>
+<blockquote>
+<p><strong>定义</strong>：消息是话题传输的<strong>数据格式</strong></p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th>消息类型</th>
+<th>用途</th>
+<th>字段</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>geometry_msgs/Twist</td>
+<td>速度控制</td>
+<td>linear.x, linear.y, linear.z, angular.x, angular.y, angular.z</td>
+</tr>
+<tr>
+<td>sensor_msgs/Image</td>
+<td>相机图像</td>
+<td>header, height, width, data</td>
+</tr>
+<tr>
+<td>sensor_msgs/LaserScan</td>
+<td>激光雷达</td>
+<td>angle_min, angle_max, ranges</td>
+</tr>
+<tr>
+<td>nav_msgs/Odometry</td>
+<td>里程计</td>
+<td>pose, twist</td>
+</tr>
+</tbody>
+</table>
+<hr></hr>
+<h2 id="14-核心概念详解（40分钟）">1.4 核心概念详解（40分钟）</h2>
+<h3 id="161-发布订阅模型">1.6.1 发布/订阅模型</h3>
+<pre><code>发布/订阅通信流程：
+
+   Node A (发布者)              Node B (订阅者)
+   ┌──────────────┐           ┌──────────────┐
+   │              │           │              │
+   │ create_pub() │           │ create_sub() │
+   └──────┬───────┘           └──────┬───────┘
+          │                         │
+          │   订阅话题               │
+          │ ───────────────────────►│
+          │                         │
+          │   发布消息               │
+          │ ◄─────────────────────── │
+          │                         │
+          │   回调函数               │
+          │   on_message()         │
+          │ ───────────────────────►│
+          │                         │
+</code></pre><h4 id="代码示例（概念）">代码示例（概念）</h4>
+<pre><code class="lang-python"><span class="hljs-comment"># 发布者</span>
+publisher = node.create_publisher(Twist, <span class="hljs-string">'/cmd_vel'</span>, <span class="hljs-number">10</span>)
+msg = Twist()
+msg.linear.x = <span class="hljs-number">1.0</span>
+publisher.publish(msg)
+
+<span class="hljs-comment"># 订阅者</span>
+subscription = node.create_subscription(
+    Twist,
+    <span class="hljs-string">'/cmd_vel'</span>,
+    <span class="hljs-keyword">lambda</span> msg: <span class="hljs-built_in">print</span>(<span class="hljs-string">f"收到: <span class="hljs-subst">{msg.linear.x}</span>"</span>)
+)
+</code></pre>
+<h3 id="142-话题与服务对比">1.4.2 话题与服务对比</h3>
+<table>
+<thead>
+<tr>
+<th>特性</th>
+<th>话题 (Topic)</th>
+<th>服务 (Service)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>通信模式</td>
+<td>异步发布/订阅</td>
+<td>同步请求/响应</td>
+</tr>
+<tr>
+<td>适用场景</td>
+<td>持续数据流</td>
+<td>一次性任务</td>
+</tr>
+<tr>
+<td>示例</td>
+<td>持续发布传感器数据</td>
+<td>查询机器人状态</td>
+</tr>
+<tr>
+<td>是否有响应</td>
+<td>否</td>
+<td>是</td>
+</tr>
+</tbody>
+</table>
+<hr></hr>
+<h2 id="15-演示：turtlesim（15分钟）">1.5 演示：Turtlesim（15分钟）</h2>
+<h3 id="🎬-教师演示">🎬 教师演示</h3>
+<blockquote>
+<p><strong>教师操作</strong>：在屏幕上展示Turtlesim</p>
+</blockquote>
+<ol>
+<li>启动Turtlesim</li>
+<li>启动键盘控制</li>
+<li>用键盘控制小乌龟移动</li>
+</ol>
+<h3 id="📺-展示内容">📺 展示内容</h3>
+<ul>
+<li>窗口中的小乌龟</li>
+<li>坐标系（X向右，Y向上）</li>
+<li>键盘控制的效果</li>
+<li>解释：这就是我们第一个机器人仿真！</li>
+</ul>
+<hr></hr>
+<h2 id="16-小结（15分钟）">1.6 小结（15分钟）</h2>
+<h3 id="✅-今日要点">✅ 今日要点</h3>
+<ol>
+<li><p><strong>机器人 = 身体 + 大脑</strong></p>
+<ul>
+<li>身体：机械结构、传感器、执行器</li>
+<li>大脑：人工智能、算法、软件</li>
+</ul>
+</li>
+<li><p><strong>AI是软件，ROS2是连接两者的桥梁</strong></p>
+<ul>
+<li>ROS2提供通信框架</li>
+<li>让AI算法能和机器人硬件对话</li>
+</ul>
+</li>
+<li><p><strong>核心概念</strong></p>
+<ul>
+<li>节点(Node)：独立程序</li>
+<li>话题(Topic)：通信频道</li>
+<li>消息(Message)：数据格式</li>
+</ul>
+</li>
+</ol>
+<h3 id="📝-课后任务">📝 课后任务</h3>
+<ol>
+<li><strong>思考题</strong>：你身边有哪些设备可以算是"机器人"？它们有"大脑"吗？</li>
+<li><strong>了解Docker</strong>：下节课要用Docker搭建环境，可以先看看Docker是什么</li>
+</ol>
+<hr></hr>
+<h2 id="第二次课：环境搭建实战（3小时）">第二次课：环境搭建实战（3小时）</h2>
+<h3 id="⏱️-时间分配">⏱️ 时间分配</h3>
+<table>
+<thead>
+<tr>
+<th>环节</th>
+<th>时间</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>复习</td>
+<td>15分钟</td>
+<td>提问巩固</td>
+</tr>
+<tr>
+<td>讲解</td>
+<td>30分钟</td>
+<td>Docker原理与安装</td>
+</tr>
+<tr>
+<td>演示</td>
+<td>20分钟</td>
+<td>Docker操作演示</td>
+</tr>
+<tr>
+<td>实践</td>
+<td>80分钟</td>
+<td>学生动手操作</td>
+</tr>
+<tr>
+<td>茶歇</td>
+<td>10分钟</td>
+<td>休息</td>
+</tr>
+<tr>
+<td>实践</td>
+<td>60分钟</td>
+<td>运行Turtlesim</td>
+</tr>
+<tr>
+<td>总结</td>
+<td>15分钟</td>
+<td>本周总结</td>
+</tr>
+</tbody>
+</table>
+<hr></hr>
+<h2 id="21-docker原理与安装（50分钟）">2.1 Docker原理与安装（50分钟）</h2>
+<h3 id="211-为什么要用docker？">2.1.1 为什么要用Docker？</h3>
+<h4 id="🐳-docker是什么？">🐳 Docker是什么？</h4>
+<blockquote>
+<p><strong>Docker</strong> = 轻量级的<strong>虚拟机</strong> + 打包好的<strong>运行环境</strong></p>
+</blockquote>
+<pre><code>传统方式 vs Docker方式：
+
+传统方式：              Docker方式：
+┌─────────────┐        ┌─────────────┐
+│   你的电脑   │        │   Docker    │
+│             │        │   集装箱    │
+│ ┌─────────┐ │        │ ┌─────────┐ │
+│ │ 安装ROS │ │  ←头痛 │ │ 整个打包  │ │
+│ │ 配置环境 │ │        │ │ 一起带走  │ │
+│ │ 装依赖  │ │        │ │         │ │
+│ └─────────┘ │        │ └─────────┘ │
+└─────────────┘        └─────────────┘
+</code></pre><h4 id="📦-docker核心概念">📦 Docker核心概念</h4>
+<table>
+<thead>
+<tr>
+<th>概念</th>
+<th>说明</th>
+<th>类比</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>镜像 (Image)</td>
+<td>打包好的模板</td>
+<td>建筑图纸</td>
+</tr>
+<tr>
+<td>容器 (Container)</td>
+<td>镜像的运行实例</td>
+<td>建筑出来的房子</td>
+</tr>
+<tr>
+<td>仓库 (Registry)</td>
+<td>存放镜像的地方</td>
+<td>文件库</td>
+</tr>
+</tbody>
+</table>
+<h4 id="🚀-为什么ros2要用docker？">🚀 为什么ROS2要用Docker？</h4>
+<table>
+<thead>
+<tr>
+<th>优势</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>🛡️ 环境隔离</td>
+<td>不污染主机系统</td>
+</tr>
+<tr>
+<td>🚀 一键部署</td>
+<td>拉取镜像就能跑</td>
+</tr>
+<tr>
+<td>🔄 跨平台</td>
+<td>Win/Mac/Linux都能用</td>
+</tr>
+<tr>
+<td>💾 节省空间</td>
+<td>比虚拟机轻量</td>
+</tr>
+<tr>
+<td>🎯 环境一致</td>
+<td>避免"在我电脑上能跑"问题</td>
+</tr>
+</tbody>
+</table>
+<h3 id="212-docker安装">2.1.2 Docker安装</h3>
+<h4 id="windowsmac">Windows/Mac</h4>
+<pre><code class="lang-bash"><span class="hljs-comment"># 访问官网下载</span>
+https://www.docker.com/products/docker-desktop
+
+<span class="hljs-comment"># 安装步骤：</span>
+<span class="hljs-comment"># 1. 双击安装包</span>
+<span class="hljs-comment"># 2. 同意条款</span>
+<span class="hljs-comment"># 3. 等待安装完成</span>
+<span class="hljs-comment"># 4. 启动Docker Desktop</span>
+
+<span class="hljs-comment"># 验证安装</span>
+docker --version
+docker ps
+</code></pre>
+<h4 id="linux-ubuntu">Linux (Ubuntu)</h4>
+<pre><code class="lang-bash"><span class="hljs-comment"># 1. 更新apt源</span>
+<span class="hljs-built_in">sudo</span> apt update
+<span class="hljs-built_in">sudo</span> apt install apt-transport-https ca-certificates curl software-properties-common
+
+<span class="hljs-comment"># 2. 添加Docker GPG密钥</span>
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | <span class="hljs-built_in">sudo</span> gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+
+<span class="hljs-comment"># 3. 添加Docker仓库</span>
+<span class="hljs-built_in">echo</span> <span class="hljs-string">"deb [arch=<span class="hljs-subst">$(dpkg --print-architecture)</span> signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu <span class="hljs-subst">$(lsb_release -cs)</span> stable"</span> | <span class="hljs-built_in">sudo</span> <span class="hljs-built_in">tee</span> /etc/apt/sources.list.d/docker.list &gt; /dev/null
+
+<span class="hljs-comment"># 4. 安装Docker</span>
+<span class="hljs-built_in">sudo</span> apt update
+<span class="hljs-built_in">sudo</span> apt install docker-ce docker-ce-cli containerd.io docker-compose-plugin
+
+<span class="hljs-comment"># 5. 启动Docker</span>
+<span class="hljs-built_in">sudo</span> systemctl start docker
+<span class="hljs-built_in">sudo</span> systemctl <span class="hljs-built_in">enable</span> docker
+
+<span class="hljs-comment"># 6. 验证</span>
+docker --version
+</code></pre>
+<h4 id="⚠️-常见问题">⚠️ 常见问题</h4>
+<table>
+<thead>
+<tr>
+<th>问题</th>
+<th>解决方法</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Docker启动失败</td>
+<td>检查BIOS中虚拟化是否开启</td>
+</tr>
+<tr>
+<td>权限被拒绝</td>
+<td>命令前加sudo，或执行sudo usermod -aG docker $USER</td>
+</tr>
+<tr>
+<td>下载太慢</td>
+<td>配置国内镜像源（稍后演示）</td>
+</tr>
+</tbody>
+</table>
+<hr></hr>
+<h2 id="22-docker操作演示（20分钟）">2.2 Docker操作演示（20分钟）</h2>
+<h3 id="常用命令">常用命令</h3>
+<pre><code class="lang-bash"><span class="hljs-comment"># 镜像操作</span>
+docker images                    <span class="hljs-comment"># 查看本地镜像</span>
+docker pull &lt;镜像名&gt;             <span class="hljs-comment"># 拉取镜像</span>
+docker rmi &lt;镜像名&gt;              <span class="hljs-comment"># 删除镜像</span>
+
+<span class="hljs-comment"># 容器操作</span>
+docker ps                        <span class="hljs-comment"># 查看运行中的容器</span>
+docker ps -a                     <span class="hljs-comment"># 查看所有容器</span>
+docker run &lt;镜像名&gt;              <span class="hljs-comment"># 运行容器</span>
+docker stop &lt;容器名&gt;              <span class="hljs-comment"># 停止容器</span>
+docker <span class="hljs-built_in">rm</span> &lt;容器名&gt;               <span class="hljs-comment"># 删除容器</span>
+
+<span class="hljs-comment"># 交互式操作</span>
+docker run -it &lt;镜像名&gt; /bin/bash  <span class="hljs-comment"># 进入容器shell</span>
+</code></pre>
+<hr></hr>
+<h2 id="23-拉取ros2镜像（80分钟）">2.3 拉取ROS2镜像（80分钟）</h2>
+<h3 id="231-镜像选择">2.3.1 镜像选择</h3>
+<blockquote>
+<p><strong>选择</strong>：Tiryoh/ros2-desktop-vnc</p>
+<p><strong>特点</strong>：自带VNC桌面，无需配置显卡驱动，浏览器直接访问</p>
+</blockquote>
+<pre><code class="lang-bash"><span class="hljs-comment"># 拉取镜像（约3GB，需要几分钟）</span>
+docker pull tiryoh/ros2-desktop-vnc:humble
+</code></pre>
+<h3 id="232-启动容器">2.3.2 启动容器</h3>
+<pre><code class="lang-bash"><span class="hljs-comment"># 运行ROS2容器</span>
+docker run -it --<span class="hljs-built_in">rm</span> \
+    -p 6080:80 \
+    -p 5900:5900 \
+    -v /tmp/.X11-unix:/tmp/.X11-unix \
+    -e DISPLAY=0 \
+    --name ros2_sim \
+    tiryoh/ros2-desktop-vnc:humble
+</code></pre>
+<h4 id="参数说明">参数说明</h4>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>含义</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>-it</code></td>
+<td>交互式终端</td>
+<td>保持容器运行</td>
+</tr>
+<tr>
+<td><code>--rm</code></td>
+<td>自动删除</td>
+<td>退出时删除容器</td>
+</tr>
+<tr>
+<td><code>-p 6080:80</code></td>
+<td>端口映射</td>
+<td>浏览器访问</td>
+</tr>
+<tr>
+<td><code>-p 5900:5900</code></td>
+<td>VNC端口</td>
+<td>VNC客户端访问</td>
+</tr>
+<tr>
+<td><code>-v ...X11-unix</code></td>
+<td>共享显示</td>
+<td>图形界面传输</td>
+</tr>
+<tr>
+<td><code>-e DISPLAY=0</code></td>
+<td>显示环境</td>
+<td>设置显示变量</td>
+</tr>
+<tr>
+<td><code>--name ros2_sim</code></td>
+<td>容器名</td>
+<td>方便识别</td>
+</tr>
+</tbody>
+</table>
+<h3 id="233-访问方式">2.3.3 访问方式</h3>
+<table>
+<thead>
+<tr>
+<th>方式</th>
+<th>地址</th>
+<th>工具</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>浏览器</strong> ⭐</td>
+<td><a href="http://localhost:6080" target="_blank">http://localhost:6080</a></td>
+<td>Chrome/Edge</td>
+</tr>
+<tr>
+<td>VNC客户端</td>
+<td>localhost:5900</td>
+<td>VNC Viewer</td>
+</tr>
+</tbody>
+</table>
+<hr></hr>
+<h2 id="24-运行turtlesim（60分钟）">2.4 运行Turtlesim（60分钟）</h2>
+<h3 id="241-启动turtlesim">2.4.1 启动Turtlesim</h3>
+<pre><code class="lang-bash"><span class="hljs-comment"># 在Docker容器的终端中</span>
+ros2 run turtlesim turtlesim_node
+</code></pre>
+<p><strong>应该看到</strong>：</p>
+<ul>
+<li>弹出一个窗口</li>
+<li>窗口中间有一只小乌龟🐢</li>
+<li>终端输出：<code>[INFO] [turtlesim]: Starting turtlesim with node name /turtlesim</code></li>
+</ul>
+<h3 id="242-启动键盘控制">2.4.2 启动键盘控制</h3>
+<pre><code class="lang-bash"><span class="hljs-comment"># 打开第二个终端（在浏览器中右键 → Open Terminal）</span>
+ros2 run turtlesim turtle_teleop_key
+</code></pre>
+<h3 id="243-控制移动">2.4.3 控制移动</h3>
+<table>
+<thead>
+<tr>
+<th>按键</th>
+<th>动作</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>↑</td>
+<td>前进</td>
+</tr>
+<tr>
+<td>↓</td>
+<td>后退</td>
+</tr>
+<tr>
+<td>←</td>
+<td>左转</td>
+</tr>
+<tr>
+<td>→</td>
+<td>右转</td>
+</tr>
+</tbody>
+</table>
+<hr></hr>
+<h2 id="25-ros2命令实战（课后自行练习）">2.5 ROS2命令实战（课后自行练习）</h2>
+<pre><code class="lang-bash"><span class="hljs-comment"># 查看运行中的节点</span>
+ros2 node list
+
+<span class="hljs-comment"># 查看话题列表</span>
+ros2 topic list
+
+<span class="hljs-comment"># 查看服务列表</span>
+ros2 service list
+
+<span class="hljs-comment"># 查看系统状态</span>
+ros2 doctor
+</code></pre>
+<hr></hr>
+<h2 id="本周实验报告">本周实验报告</h2>
+<h3 id="✅-验收标准">✅ 验收标准</h3>
+<table>
+<thead>
+<tr>
+<th>序号</th>
+<th>任务</th>
+<th>要求</th>
+<th>完成</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Docker安装</td>
+<td>docker --version 有输出</td>
+<td>☐</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Docker配置</td>
+<td>能运行hello-world</td>
+<td>☐</td>
+</tr>
+<tr>
+<td>3</td>
+<td>拉取镜像</td>
+<td>ROS2镜像拉取成功</td>
+<td>☐</td>
+</tr>
+<tr>
+<td>4</td>
+<td>启动容器</td>
+<td>浏览器访问6080成功</td>
+<td>☐</td>
+</tr>
+<tr>
+<td>5</td>
+<td>运行Turtlesim</td>
+<td>小乌龟窗口出现</td>
+<td>☐</td>
+</tr>
+<tr>
+<td>6</td>
+<td>键盘控制</td>
+<td>能控制小乌龟移动</td>
+<td>☐</td>
+</tr>
+<tr>
+<td>7</td>
+<td>ros2命令</td>
+<td>会用node/topic/list</td>
+<td>☐</td>
+</tr>
+</tbody>
+</table>
+<hr></hr>
+<h2 id="本周作业">本周作业</h2>
+<h3 id="📝-理论题">📝 理论题</h3>
+<ol>
+<li>简述机器人与人工智能的区别与联系</li>
+<li>为什么要用ROS2而不是从零开始写代码？</li>
+<li>Docker和传统虚拟机有什么区别？</li>
+</ol>
+<h3 id="📸-实践题">📸 实践题</h3>
+<ol>
+<li>截取Turtlesim运行时的截图</li>
+<li>用键盘控制小乌龟画一个圆，截图保存</li>
+<li>尝试让小乌龟走"S"形</li>
+</ol>
+<h3 id="💭-思考题">💭 思考题</h3>
+<ol>
+<li>如果要同时运行两只小乌龟，需要什么条件？</li>
+<li>ROS2的"话题"和微信群有什么相似之处？</li>
+</ol>
+<hr></hr>
+<h2 id="知识点速查表">知识点速查表</h2>
+<pre><code>┌─────────────────────────────────────────────────────────────┐
+│                    第1周知识点速查                           │
+├─────────────────────────────────────────────────────────────┤
+│  概念                                                          │
+│  ├── 机器人 = 身体(执行器+传感器) + 大脑(AI/算法)             │
+│  ├── AI = 人工智能，让机器有智能                               │
+│  ├── ROS2 = 机器人操作系统(通信框架)                          │
+│  ├── Node = 独立运行的程序                                    │
+│  ├── Topic = 异步通信频道                                     │
+│  ├── Message = 传输的数据格式                                 │
+│  └── Docker = 打包好的运行环境                                │
+├─────────────────────────────────────────────────────────────┤
+│  Docker命令                                                    │
+│  ├── docker pull &lt;镜像名&gt;      拉取镜像                      │
+│  ├── docker run ...           运行容器                       │
+│  ├── docker ps                查看容器                       │
+│  └── docker stop &lt;容器名&gt;     停止容器                      │
+├─────────────────────────────────────────────────────────────┤
+│  ROS2命令                                                      │
+│  ├── ros2 run pkg node         运行节点                      │
+│  ├── ros2 node list           查看节点                       │
+│  ├── ros2 topic list          查看话题                       │
+│  └── ros2 doctor              系统诊断                       │
+└─────────────────────────────────────────────────────────────┘
+</code></pre><hr></hr>
+<h2 id="📚-课后阅读">📚 课后阅读</h2>
+<ul>
+<li><a href="https://docs.ros.org/en/humble/Installation.html" target="_blank">ROS2官方安装指南</a></li>
+<li><a href="https://docs.docker.com/get-started/" target="_blank">Docker官方文档</a></li>
+<li><a href="https://docs.ros.org/en/humble/Tutorials/Beginner-CLI-Tools/Introducing-Turtlesim/Introducing-Turtlesim.html" target="_blank">Turtlesim官方教程</a></li>
+</ul>
+<hr></hr>
+<h2 id="下周预告">下周预告</h2>
+<blockquote>
+<p><strong>第2周：ROS2通信机制基础</strong></p>
+<ul>
+<li>深入理解节点(Node)和话题(Topic)</li>
+<li>用命令行控制小乌龟画圆</li>
+<li>发布者/订阅者模型详解</li>
+</ul>
+</blockquote>
+<hr></hr>
+<p><em>第1周结束！🎉 下周我们将学习ROS2的通信机制</em></p>
+
+                                
+                                </section>
+                            
+    </div>
+    <div class="search-results">
+        <div class="has-results">
+            
+            <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+            <ul class="search-results-list"></ul>
+            
+        </div>
+        <div class="no-results">
+            
+            <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+            
+        </div>
+    </div>
+</div>
+
+                        </div>
+                    </div>
+                
+            </div>
+
+            
+                
+                <a href="../" class="navigation navigation-prev " aria-label="Previous page: 课程简介">
+                    <i class="fa fa-angle-left"></i>
+                </a>
+                
+                
+                <a href="week2.html" class="navigation navigation-next " aria-label="Next page: 第2周：ROS2通信机制基础">
+                    <i class="fa fa-angle-right"></i>
+                </a>
+                
+            
+        
+    </div>
+
+    <script>
+        var gitbook = gitbook || [];
+        gitbook.push(function() {
+            gitbook.page.hasChanged({"page":{"title":"第1周：课程介绍与仿真环境搭建","level":"2.1","depth":1,"next":{"title":"第2周：ROS2通信机制基础","level":"2.2","depth":1,"path":"content/week2.md","ref":"content/week2.md","articles":[]},"previous":{"title":"课程简介","level":"1.1","depth":1,"path":"README.md","ref":"README.md","articles":[]},"dir":"ltr"},"config":{"plugins":[],"root":".","styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","author":"Your Name","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56},"embedFonts":false},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"ROS2机器人编程基础课程","language":"zh-hans","gitbook":"*","description":"第一阶段：基础与环境搭建"},"file":{"path":"content/week1.md","mtime":"2026-02-28T04:16:57.513Z","type":"markdown"},"gitbook":{"version":"6.1.6","time":"2026-02-28T04:17:02.644Z"},"basePath":"..","book":{"language":""}});
+        });
+    </script>
+</div>
+
+        
+    <noscript>
+        <style>
+            .honkit-cloak {
+                display: block !important;
+            }
+        </style>
+    </noscript>
+    <script>
+        // Restore sidebar state as critical path for prevent layout shift
+        function __init__getSidebarState(defaultValue){
+            var baseKey = "";
+            var key = baseKey + ":sidebar";
+            try {
+                var value = localStorage[key];
+                if (value === undefined) {
+                    return defaultValue;
+                }
+                var parsed = JSON.parse(value);
+                return parsed == null ? defaultValue : parsed;
+            } catch (e) {
+                return defaultValue;
+            }
+        }
+        function __init__restoreLastSidebarState() {
+            var isMobile = window.matchMedia("(max-width: 600px)").matches;
+            if (isMobile) {
+                // Init last state if not mobile
+                return;
+            }
+            var sidebarState = __init__getSidebarState(true);
+            var book = document.querySelector(".book");
+            // Show sidebar if it enabled
+            if (sidebarState && book) {
+                book.classList.add("without-animation", "with-summary");
+            }
+        }
+
+        try {
+            __init__restoreLastSidebarState();
+        } finally {
+            var book = document.querySelector(".book");
+            book.classList.remove("honkit-cloak");
+        }
+    </script>
+    <script src="../gitbook/gitbook.js"></script>
+    <script src="../gitbook/theme.js"></script>
+    
+        
+        <script src="../gitbook/gitbook-plugin-search/search-engine.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-search/search.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-lunr/lunr.min.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-lunr/search-lunr.js"></script>
+        
+    
+        
+        <script src="../gitbook/@honkit/honkit-plugin-fontsettings/fontsettings.js"></script>
+        
+    
+
+    </body>
+</html>
+

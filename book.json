@@ -1,0 +1,11 @@
+{
+  "root": ".",
+  "title": "ROS2机器人编程基础课程",
+  "description": "第一阶段：基础与环境搭建",
+  "author": "Your Name",
+  "language": "zh-hans",
+  "structure": {
+    "readme": "README.md",
+    "summary": "SUMMARY.md"
+  }
+}
