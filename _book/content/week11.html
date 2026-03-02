@@ -356,7 +356,7 @@
     
                                 <section class="normal markdown-section">
                                 
-                                <h1 id="第11周：视觉追踪与光流法">第11周：视觉追踪与光流法</h1>
+                                <h1 id="第11周：目标追踪">第11周：目标追踪</h1>
 <p><strong>课时</strong>: 6小时（第一次课3小时 + 第二次课3小时）</p>
 <hr></hr>
 <h2 id="📋-本周课程表">📋 本周课程表</h2>
@@ -373,19 +373,19 @@
 <tr>
 <td>第1次</td>
 <td>3小时</td>
-<td>经典光流法</td>
-<td>Lucas-Kanade算法</td>
+<td>简单追踪</td>
+<td>颜色追踪 + 框追踪</td>
 </tr>
 <tr>
 <td>第2次</td>
 <td>3小时</td>
-<td>目标追踪</td>
-<td>卡尔曼滤波 + DeepSORT</td>
+<td>多目标追踪</td>
+<td>Sort算法 + ROS2</td>
 </tr>
 </tbody>
 </table>
 <hr></hr>
-<h2 id="第一次课：经典光流法（3小时）">第一次课：经典光流法（3小时）</h2>
+<h2 id="第一次课：简单追踪方法（3小时）">第一次课：简单追踪方法（3小时）</h2>
 <h3 id="⏱️-时间分配">⏱️ 时间分配</h3>
 <table>
 <thead>
@@ -404,12 +404,12 @@
 <tr>
 <td>讲解</td>
 <td>60分钟</td>
-<td>光流法原理</td>
+<td>颜色追踪</td>
 </tr>
 <tr>
 <td>讲解</td>
 <td>60分钟</td>
-<td>Lucas-Kanade实现</td>
+<td>框追踪（IOU）</td>
 </tr>
 <tr>
 <td>茶歇</td>
@@ -424,153 +424,149 @@
 </tbody>
 </table>
 <hr></hr>
-<h2 id="331-光流法简介">3.3.1 光流法简介</h2>
+<h2 id="331-颜色追踪">3.3.1 颜色追踪</h2>
 <blockquote>
-<p><strong>光流</strong> = 物体表面像素的表观运动模式 [1]。</p>
+<p>根据颜色定位物体，最简单的追踪方法！</p>
 </blockquote>
-<pre><code>光流定义：
+<h3 id="原理">原理</h3>
+<pre><code>颜色追踪流程：
 
 ┌─────────────────────────────────────────────────────────────┐
 │                                                             │
-│  连续帧中像素的位移场：                                   │
-│                                                             │
-│  Frame t         Frame t+1                                 │
-│  ┌───┬───┐    ┌───┬───┐                                  │
-│  │ A │ B │ →  │ A'│ B'│  A移动到A'                        │
-│  │ C │ D │    │ C'│ D'│  C移动到C'                        │
-│  └───┴───┘    └───┴───┘                                  │
-│                                                             │
-│  光流向量： A→A' = (dx, dy)                             │
-│                                                             │
-└─────────────────────────────────────────────────────────────┘
-</code></pre><h3 id="光流的应用">光流的应用</h3>
-<table>
-<thead>
-<tr>
-<th>应用</th>
-<th>说明</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>运动估计</td>
-<td>估计相机/物体运动</td>
-</tr>
-<tr>
-<td>目标追踪</td>
-<td>追踪移动物体</td>
-</tr>
-<tr>
-<td>动作识别</td>
-<td>识别行为模式</td>
-</tr>
-<tr>
-<td>视频 stabilization</td>
-<td>稳定视频</td>
-</tr>
-</tbody>
-</table>
-<hr></hr>
-<h2 id="332-lucas-kanade算法">3.3.2 Lucas-Kanade算法</h2>
-<blockquote>
-<p>Lucas-Kanade算法是最常用的稀疏光流算法 [2]。</p>
-</blockquote>
-<h3 id="lk算法原理">LK算法原理</h3>
-<pre><code>Lucas-Kanade 基本假设：
-
-1. 亮度恒定：I(x,y,t) = I(x+dx, y+dy, t+dt)
-2. 小运动：相邻帧间位移很小
-3. 空间一致性：相邻像素有相似运动
-
-┌─────────────────────────────────────────────────────────────┐
-│                                                             │
-│  优化目标：                                                 │
-│                                                             │
-│  最小化: Σ[I_x(u,v)·dx + I_y(u,v)·dy + I_t]²             │
-│                                                             │
-│  其中：                                                    │
-│  I_x = ∂I/∂x  (x方向梯度)                              │
-│  I_y = ∂I/∂y  (y方向梯度)                              │
-│  I_t = ∂I/∂t  (时间梯度)                               │
-│                                                             │
-│  求解：                                                   │
-│  [dx, dy] = (A^T A)^(-1) A^T b                         │
+│  摄像头图像                                                 │
+│       ↓                                                     │
+│  转HSV颜色空间                                             │
+│       ↓                                                     │
+│  颜色范围过滤 (inRange)                                    │
+│       ↓                                                     │
+│  找轮廓 (findContours)                                    │
+│       ↓                                                     │
+│  取最大轮廓的中心点                                        │
 │                                                             │
 └─────────────────────────────────────────────────────────────┘
-</code></pre><h3 id="lk-python实现">LK Python实现</h3>
+</code></pre><h3 id="代码实现">代码实现</h3>
 <pre><code class="lang-python"><span class="hljs-keyword">import</span> cv2
 <span class="hljs-keyword">import</span> numpy <span class="hljs-keyword">as</span> np
 
+<span class="hljs-comment"># 打开摄像头</span>
+cap = cv2.VideoCapture(<span class="hljs-number">0</span>)
 
-<span class="hljs-keyword">def</span> <span class="hljs-title function_">lucas_kanade</span>(<span class="hljs-params">prev_gray, curr_gray, prev_points</span>):
-    <span class="hljs-string">"""Lucas-Kanade光流"""</span>
-
-    <span class="hljs-comment"># Lucas-Kanade参数</span>
-    lk_params = <span class="hljs-built_in">dict</span>(
-        winSize=(<span class="hljs-number">15</span>, <span class="hljs-number">15</span>),
-        maxLevel=<span class="hljs-number">2</span>,
-        criteria=(cv2.TERM_CRITERIA_EPS | cv2.TERM_CRITERIA_COUNT, <span class="hljs-number">10</span>, <span class="hljs-number">0.03</span>)
-    )
-
-    <span class="hljs-comment"># 计算光流</span>
-    curr_points, status, error = cv2.calcOpticalFlowPyrLK(
-        prev_gray, 
-        curr_gray, 
-        prev_points,
-        <span class="hljs-literal">None</span>,
-        **lk_params
-    )
-
-    <span class="hljs-keyword">return</span> curr_points, status
-
-
-<span class="hljs-comment"># 使用示例</span>
-cap = cv2.VideoCapture(<span class="hljs-string">'video.mp4'</span>)
-
-<span class="hljs-comment"># 读取第一帧</span>
-ret, frame1 = cap.read()
-prev_gray = cv2.cvtColor(frame1, cv2.COLOR_BGR2GRAY)
-
-<span class="hljs-comment"># 选择要追踪的角点</span>
-prev_points = cv2.goodFeaturesToTrack(
-    prev_gray, 
-    maxCorners=<span class="hljs-number">100</span>,
-    qualityLevel=<span class="hljs-number">0.3</span>,
-    minDistance=<span class="hljs-number">7</span>
-)
+<span class="hljs-comment"># 红色范围（HSV）</span>
+lower_red = np.array([<span class="hljs-number">0</span>, <span class="hljs-number">120</span>, <span class="hljs-number">70</span>])
+upper_red = np.array([<span class="hljs-number">10</span>, <span class="hljs-number">255</span>, <span class="hljs-number">255</span>])
 
 <span class="hljs-keyword">while</span> <span class="hljs-literal">True</span>:
-    ret, frame2 = cap.read()
+    ret, frame = cap.read()
     <span class="hljs-keyword">if</span> <span class="hljs-keyword">not</span> ret:
         <span class="hljs-keyword">break</span>
 
-    curr_gray = cv2.cvtColor(frame2, cv2.COLOR_BGR2GRAY)
+    <span class="hljs-comment"># 转HSV</span>
+    hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
 
-    <span class="hljs-comment"># 计算光流</span>
-    curr_points, status, error = lucas_kanade(
-        prev_gray, 
-        curr_gray, 
-        prev_points
-    )
+    <span class="hljs-comment"># 颜色过滤</span>
+    mask = cv2.inRange(hsv, lower_red, upper_red)
 
-    <span class="hljs-comment"># 绘制追踪结果</span>
-    <span class="hljs-keyword">for</span> i, (prev, curr) <span class="hljs-keyword">in</span> <span class="hljs-built_in">enumerate</span>(<span class="hljs-built_in">zip</span>(prev_points, curr_points)):
-        a, b = curr.ravel()
-        c, d = prev.ravel()
-        frame2 = cv2.circle(frame2, (a, b), <span class="hljs-number">5</span>, (<span class="hljs-number">0</span>, <span class="hljs-number">255</span>, <span class="hljs-number">0</span>), -<span class="hljs-number">1</span>)
+    <span class="hljs-comment"># 找轮廓</span>
+    contours, _ = cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 
-    cv2.imshow(<span class="hljs-string">'Optical Flow'</span>, frame2)
-    <span class="hljs-keyword">if</span> cv2.waitKey(<span class="hljs-number">30</span>) &amp; <span class="hljs-number">0xFF</span> == <span class="hljs-built_in">ord</span>(<span class="hljs-string">'q'</span>):
+    <span class="hljs-comment"># 追踪最大轮廓</span>
+    <span class="hljs-keyword">if</span> contours:
+        largest = <span class="hljs-built_in">max</span>(contours, key=cv2.contourArea)
+        x, y, w, h = cv2.boundingRect(largest)
+        cv2.rectangle(frame, (x, y), (x+w, y+h), (<span class="hljs-number">0</span>, <span class="hljs-number">255</span>, <span class="hljs-number">0</span>), <span class="hljs-number">2</span>)
+        cv2.circle(frame, (x+w//<span class="hljs-number">2</span>, y+h//<span class="hljs-number">2</span>), <span class="hljs-number">5</span>, (<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">255</span>), -<span class="hljs-number">1</span>)
+
+    cv2.imshow(<span class="hljs-string">'Color Tracking'</span>, frame)
+    <span class="hljs-keyword">if</span> cv2.waitKey(<span class="hljs-number">1</span>) &amp; <span class="hljs-number">0xFF</span> == <span class="hljs-built_in">ord</span>(<span class="hljs-string">'q'</span>):
         <span class="hljs-keyword">break</span>
-
-    prev_gray = curr_gray.copy()
-    prev_points = curr_points.reshape(-<span class="hljs-number">1</span>, <span class="hljs-number">1</span>, <span class="hljs-number">2</span>)
 
 cap.release()
 cv2.destroyAllWindows()
 </code></pre>
 <hr></hr>
-<h2 id="第二次课：目标追踪（3小时）">第二次课：目标追踪（3小时）</h2>
+<h2 id="332-iou追踪">3.3.2 IOU追踪</h2>
+<blockquote>
+<p>根据检测框的重叠面积追踪物体</p>
+</blockquote>
+<h3 id="iou计算">IOU计算</h3>
+<pre><code class="lang-python"><span class="hljs-keyword">def</span> <span class="hljs-title function_">calculate_iou</span>(<span class="hljs-params">box1, box2</span>):
+    <span class="hljs-string">"""计算两个框的IOU"""</span>
+    <span class="hljs-comment"># box = [x1, y1, x2, y2]</span>
+
+    x1 = <span class="hljs-built_in">max</span>(box1[<span class="hljs-number">0</span>], box2[<span class="hljs-number">0</span>])
+    y1 = <span class="hljs-built_in">max</span>(box1[<span class="hljs-number">1</span>], box2[<span class="hljs-number">1</span>])
+    x2 = <span class="hljs-built_in">min</span>(box1[<span class="hljs-number">2</span>], box2[<span class="hljs-number">2</span>])
+    y2 = <span class="hljs-built_in">min</span>(box1[<span class="hljs-number">3</span>], box2[<span class="hljs-number">3</span>])
+
+    <span class="hljs-comment"># 计算重叠面积</span>
+    intersection = <span class="hljs-built_in">max</span>(<span class="hljs-number">0</span>, x2 - x1) * <span class="hljs-built_in">max</span>(<span class="hljs-number">0</span>, y2 - y1)
+
+    <span class="hljs-comment"># 计算各自面积</span>
+    area1 = (box1[<span class="hljs-number">2</span>]-box1[<span class="hljs-number">0</span>]) * (box1[<span class="hljs-number">3</span>]-box1[<span class="hljs-number">1</span>])
+    area2 = (box2[<span class="hljs-number">2</span>]-box2[<span class="hljs-number">0</span>]) * (box2[<span class="hljs-number">3</span>]-box2[<span class="hljs-number">1</span>])
+
+    <span class="hljs-comment"># 计算IOU</span>
+    union = area1 + area2 - intersection
+    <span class="hljs-keyword">return</span> intersection / union <span class="hljs-keyword">if</span> union &gt; <span class="hljs-number">0</span> <span class="hljs-keyword">else</span> <span class="hljs-number">0</span>
+</code></pre>
+<h3 id="简单追踪器">简单追踪器</h3>
+<pre><code class="lang-python"><span class="hljs-keyword">class</span> <span class="hljs-title class_">SimpleTracker</span>:
+    <span class="hljs-string">"""简单追踪器"""</span>
+
+    <span class="hljs-keyword">def</span> <span class="hljs-title function_">__init__</span>(<span class="hljs-params">self, iou_threshold=<span class="hljs-number">0.3</span></span>):
+        <span class="hljs-variable language_">self</span>.tracks = {}  <span class="hljs-comment"># id -&gt; box</span>
+        <span class="hljs-variable language_">self</span>.next_id = <span class="hljs-number">0</span>
+        <span class="hljs-variable language_">self</span>.iou_threshold = iou_threshold
+
+    <span class="hljs-keyword">def</span> <span class="hljs-title function_">update</span>(<span class="hljs-params">self, detections</span>):
+        <span class="hljs-string">"""更新追踪"""</span>
+        <span class="hljs-comment"># detections: [[x1,y1,x2,y2, conf], ...]</span>
+
+        <span class="hljs-comment"># 如果没有检测</span>
+        <span class="hljs-keyword">if</span> <span class="hljs-keyword">not</span> detections:
+            <span class="hljs-variable language_">self</span>.tracks.clear()
+            <span class="hljs-keyword">return</span> {}
+
+        <span class="hljs-comment"># 如果没有历史轨迹，创建新ID</span>
+        <span class="hljs-keyword">if</span> <span class="hljs-keyword">not</span> <span class="hljs-variable language_">self</span>.tracks:
+            <span class="hljs-keyword">for</span> det <span class="hljs-keyword">in</span> detections:
+                <span class="hljs-variable language_">self</span>.tracks[<span class="hljs-variable language_">self</span>.next_id] = det[:<span class="hljs-number">4</span>]
+                <span class="hljs-variable language_">self</span>.next_id += <span class="hljs-number">1</span>
+            <span class="hljs-keyword">return</span> <span class="hljs-variable language_">self</span>.tracks.copy()
+
+        <span class="hljs-comment"># 简单的匹配</span>
+        matched = {}
+        used_det = <span class="hljs-built_in">set</span>()
+
+        <span class="hljs-keyword">for</span> track_id, old_box <span class="hljs-keyword">in</span> <span class="hljs-built_in">list</span>(<span class="hljs-variable language_">self</span>.tracks.items()):
+            best_iou = <span class="hljs-number">0</span>
+            best_det_idx = -<span class="hljs-number">1</span>
+
+            <span class="hljs-keyword">for</span> i, det <span class="hljs-keyword">in</span> <span class="hljs-built_in">enumerate</span>(detections):
+                <span class="hljs-keyword">if</span> i <span class="hljs-keyword">in</span> used_det:
+                    <span class="hljs-keyword">continue</span>
+                iou = calculate_iou(old_box, det[:<span class="hljs-number">4</span>])
+                <span class="hljs-keyword">if</span> iou &gt; best_iou:
+                    best_iou = iou
+                    best_det_idx = i
+
+            <span class="hljs-keyword">if</span> best_iou &gt; <span class="hljs-variable language_">self</span>.iou_threshold:
+                matched[track_id] = detections[best_det_idx][:<span class="hljs-number">4</span>]
+                used_det.add(best_det_idx)
+
+        <span class="hljs-variable language_">self</span>.tracks = matched
+        <span class="hljs-keyword">return</span> matched
+
+
+<span class="hljs-comment"># 使用</span>
+tracker = SimpleTracker(iou_threshold=<span class="hljs-number">0.3</span>)
+
+<span class="hljs-comment"># 每一帧调用</span>
+current_detections = [[<span class="hljs-number">100</span>, <span class="hljs-number">100</span>, <span class="hljs-number">200</span>, <span class="hljs-number">200</span>, <span class="hljs-number">0.9</span>], ...]  <span class="hljs-comment"># YOLO输出</span>
+tracks = tracker.update(current_detections)
+</code></pre>
+<hr></hr>
+<h2 id="第二次课：多目标追踪（3小时）">第二次课：多目标追踪（3小时）</h2>
 <h3 id="⏱️-时间分配">⏱️ 时间分配</h3>
 <table>
 <thead>
@@ -584,17 +580,17 @@ cv2.destroyAllWindows()
 <tr>
 <td>复习</td>
 <td>20分钟</td>
-<td>光流法回顾</td>
+<td>简单追踪回顾</td>
 </tr>
 <tr>
 <td>讲解</td>
 <td>60分钟</td>
-<td>卡尔曼滤波</td>
+<td>Sort算法</td>
 </tr>
 <tr>
 <td>讲解</td>
 <td>60分钟</td>
-<td>DeepSORT追踪</td>
+<td>ROS2集成</td>
 </tr>
 <tr>
 <td>茶歇</td>
@@ -609,143 +605,27 @@ cv2.destroyAllWindows()
 </tbody>
 </table>
 <hr></hr>
-<h2 id="333-卡尔曼滤波">3.3.3 卡尔曼滤波</h2>
+<h2 id="333-sort追踪器">3.3.3 Sort追踪器</h2>
 <blockquote>
-<p><strong>卡尔曼滤波</strong> = 预测 + 观测的最优状态估计 [3]。</p>
+<p><strong>Sort</strong> = Simple Online and Realtime Tracking<br></br>简单高效的多目标追踪器 [1]。</p>
 </blockquote>
-<h3 id="卡尔曼滤波原理">卡尔曼滤波原理</h3>
-<pre><code>卡尔曼滤波流程：
-
-┌─────────────────────────────────────────────────────────────┐
-│                                                             │
-│  预测步骤 (Prediction)                                     │
-│  ─────────────────────                                    │
-│  x̂ₖ₊₁ = F·x̂ₖ + B·uₖ           (状态预测)               │
-│  Pₖ₊₁ = F·Pₖ·Fᵀ + Q            (协方差预测)            │
-│                                                             │
-│  更新步骤 (Update)                                        │
-│  ─────────────────────                                    │
-│  Kₖ = Pₖ·Hᵀ(H·Pₖ·Hᵀ + R)⁻¹    (卡尔曼增益)           │
-│  x̂ₖ = x̂ₖ + Kₖ(zₖ - H·x̂ₖ)   (状态更新)               │
-│  Pₖ = (I - Kₖ·H)·Pₖ          (协方差更新)             │
-│                                                             │
-│  其中：                                                    │
-│  x̂ = 状态估计        P = 协方差矩阵                       │
-│  F = 状态转移矩阵   H = 观测矩阵                         │
-│  Q = 过程噪声      R = 观测噪声                         │
-│  K = 卡尔曼增益                                         │
-│                                                             │
-└─────────────────────────────────────────────────────────────┘
-</code></pre><h3 id="简单卡尔曼滤波实现">简单卡尔曼滤波实现</h3>
-<pre><code class="lang-python"><span class="hljs-keyword">import</span> numpy <span class="hljs-keyword">as</span> np
-
-
-<span class="hljs-keyword">class</span> <span class="hljs-title class_">SimpleKalmanFilter</span>:
-    <span class="hljs-string">"""简单卡尔曼滤波"""</span>
-
-    <span class="hljs-keyword">def</span> <span class="hljs-title function_">__init__</span>(<span class="hljs-params">self, dt=<span class="hljs-number">0.1</span>, process_noise=<span class="hljs-number">0.01</span>, measurement_noise=<span class="hljs-number">0.1</span></span>):
-        <span class="hljs-comment"># 状态 [位置, 速度]</span>
-        <span class="hljs-variable language_">self</span>.x = np.array([<span class="hljs-number">0.0</span>, <span class="hljs-number">0.0</span>])
-
-        <span class="hljs-comment"># 状态转移矩阵</span>
-        <span class="hljs-variable language_">self</span>.F = np.array([
-            [<span class="hljs-number">1</span>, dt],    <span class="hljs-comment"># 位置 = 旧位置 + 速度*dt</span>
-            [<span class="hljs-number">0</span>, <span class="hljs-number">1</span>]      <span class="hljs-comment"># 速度 = 旧速度</span>
-        ])
-
-        <span class="hljs-comment"># 观测矩阵 (只观测位置)</span>
-        <span class="hljs-variable language_">self</span>.H = np.array([[<span class="hljs-number">1</span>, <span class="hljs-number">0</span>]])
-
-        <span class="hljs-comment"># 协方差矩阵</span>
-        <span class="hljs-variable language_">self</span>.P = np.eye(<span class="hljs-number">2</span>)
-
-        <span class="hljs-comment"># 噪声</span>
-        <span class="hljs-variable language_">self</span>.Q = np.eye(<span class="hljs-number">2</span>) * process_noise
-        <span class="hljs-variable language_">self</span>.R = np.eye(<span class="hljs-number">1</span>) * measurement_noise
-
-    <span class="hljs-keyword">def</span> <span class="hljs-title function_">predict</span>(<span class="hljs-params">self</span>):
-        <span class="hljs-string">"""预测步骤"""</span>
-        <span class="hljs-variable language_">self</span>.x = <span class="hljs-variable language_">self</span>.F @ <span class="hljs-variable language_">self</span>.x
-        <span class="hljs-variable language_">self</span>.P = <span class="hljs-variable language_">self</span>.F @ <span class="hljs-variable language_">self</span>.P @ <span class="hljs-variable language_">self</span>.F.T + <span class="hljs-variable language_">self</span>.Q
-        <span class="hljs-keyword">return</span> <span class="hljs-variable language_">self</span>.x
-
-    <span class="hljs-keyword">def</span> <span class="hljs-title function_">update</span>(<span class="hljs-params">self, z</span>):
-        <span class="hljs-string">"""更新步骤"""</span>
-        <span class="hljs-comment"># 预测观测</span>
-        z_pred = <span class="hljs-variable language_">self</span>.H @ <span class="hljs-variable language_">self</span>.x
-
-        <span class="hljs-comment"># 卡尔曼增益</span>
-        S = <span class="hljs-variable language_">self</span>.H @ <span class="hljs-variable language_">self</span>.P @ <span class="hljs-variable language_">self</span>.H.T + <span class="hljs-variable language_">self</span>.R
-        K = <span class="hljs-variable language_">self</span>.P @ <span class="hljs-variable language_">self</span>.H.T @ np.linalg.inv(S)
-
-        <span class="hljs-comment"># 更新状态</span>
-        y = z - z_pred  <span class="hljs-comment"># 观测残差</span>
-        <span class="hljs-variable language_">self</span>.x = <span class="hljs-variable language_">self</span>.x + K @ y
-
-        <span class="hljs-comment"># 更新协方差</span>
-        <span class="hljs-variable language_">self</span>.P = (np.eye(<span class="hljs-number">2</span>) - K @ <span class="hljs-variable language_">self</span>.H) @ <span class="hljs-variable language_">self</span>.P
-
-        <span class="hljs-keyword">return</span> <span class="hljs-variable language_">self</span>.x
-
-
-<span class="hljs-comment"># 使用示例</span>
-kf = SimpleKalmanFilter(dt=<span class="hljs-number">0.1</span>)
-
-<span class="hljs-comment"># 模拟测量</span>
-measurements = [<span class="hljs-number">1.2</span>, <span class="hljs-number">2.1</span>, <span class="hljs-number">3.3</span>, <span class="hljs-number">4.0</span>, <span class="hljs-number">5.1</span>, <span class="hljs-number">5.8</span>]
-
-<span class="hljs-keyword">for</span> z <span class="hljs-keyword">in</span> measurements:
-    kf.predict()
-    kf.update(np.array([z]))
-    <span class="hljs-built_in">print</span>(<span class="hljs-string">f"真实位置: <span class="hljs-subst">{z:<span class="hljs-number">.1</span>f}</span>, 估计: <span class="hljs-subst">{kf.x[<span class="hljs-number">0</span>]:<span class="hljs-number">.2</span>f}</span>"</span>)
+<h3 id="安装sort">安装Sort</h3>
+<pre><code class="lang-bash">pip install <span class="hljs-built_in">sort</span>
 </code></pre>
-<hr></hr>
-<h2 id="334-deepsort追踪">3.3.4 DeepSORT追踪</h2>
-<blockquote>
-<p><strong>DeepSORT</strong> = Simple Online and Realtime Tracking with a Deep Association Metric<br></br>结合深度学习外观特征的追踪算法 [4]。</p>
-</blockquote>
-<h3 id="deepsort原理">DeepSORT原理</h3>
-<pre><code>DeepSORT追踪流程：
-
-┌─────────────────────────────────────────────────────────────┐
-│                                                             │
-│  输入: 检测框 + 特征向量                                    │
-│          ↓                                                  │
-│  ┌─────────────────────────────────────────────────┐   │
-│  │  1. 预测: 卡尔曼滤波预测下一帧位置              │   │
-│  └─────────────────────────────────────────────────┘   │
-│          ↓                                                  │
-│  ┌─────────────────────────────────────────────────┐   │
-│  │  2. 关联: 匹配检测框与追踪轨迹                   │   │
-│  │     - 距离度量 (IoU)                              │   │
-│  │     - 外观度量 (余弦距离)                         │   │
-│  └─────────────────────────────────────────────────┘   │
-│          ↓                                                  │
-│  ┌─────────────────────────────────────────────────┐   │
-│  │  3. 更新: 卡尔曼滤波更新 + 特征更新            │   │
-│  └─────────────────────────────────────────────────┘   │
-│          ↓                                                  │
-│  输出: 追踪ID + 边界框                                    │
-│                                                             │
-└─────────────────────────────────────────────────────────────┘
-</code></pre><h3 id="使用deepsort">使用DeepSORT</h3>
-<pre><code class="lang-bash"><span class="hljs-comment"># 安装</span>
-pip install <span class="hljs-built_in">sort</span>
-</code></pre>
+<h3 id="使用sort">使用Sort</h3>
 <pre><code class="lang-python"><span class="hljs-keyword">import</span> cv2
 <span class="hljs-keyword">import</span> numpy <span class="hljs-keyword">as</span> np
 <span class="hljs-keyword">from</span> sort <span class="hljs-keyword">import</span> Sort
+<span class="hljs-keyword">from</span> ultralytics <span class="hljs-keyword">import</span> YOLO
 
+<span class="hljs-comment"># 加载YOLO</span>
+model = YOLO(<span class="hljs-string">'yolov8n.pt'</span>)
 
 <span class="hljs-comment"># 创建追踪器</span>
 tracker = Sort(max_age=<span class="hljs-number">30</span>, min_hits=<span class="hljs-number">3</span>, iou_threshold=<span class="hljs-number">0.3</span>)
 
-<span class="hljs-comment"># 加载YOLO</span>
-<span class="hljs-keyword">from</span> ultralytics <span class="hljs-keyword">import</span> YOLO
-model = YOLO(<span class="hljs-string">'yolov8n.pt'</span>)
-
-<span class="hljs-comment"># 打开视频</span>
-cap = cv2.VideoCapture(<span class="hljs-string">'video.mp4'</span>)
+<span class="hljs-comment"># 打开摄像头</span>
+cap = cv2.VideoCapture(<span class="hljs-number">0</span>)
 
 <span class="hljs-keyword">while</span> <span class="hljs-literal">True</span>:
     ret, frame = cap.read()
@@ -754,48 +634,47 @@ cap = cv2.VideoCapture(<span class="hljs-string">'video.mp4'</span>)
 
     <span class="hljs-comment"># YOLO检测</span>
     results = model(frame, verbose=<span class="hljs-literal">False</span>)
+
+    <span class="hljs-comment"># 提取检测框</span>
     dets = []
     <span class="hljs-keyword">for</span> r <span class="hljs-keyword">in</span> results:
-        boxes = r.boxes
-        <span class="hljs-keyword">for</span> box <span class="hljs-keyword">in</span> boxes:
-            x1, y1, x2, y2 = box.xyxy[<span class="hljs-number">0</span>].cpu().numpy()
-            conf = <span class="hljs-built_in">float</span>(box.conf[<span class="hljs-number">0</span>])
-            <span class="hljs-keyword">if</span> conf &gt; <span class="hljs-number">0.5</span>:
-                dets.append([x1, y1, x2, y2, conf])
+        <span class="hljs-keyword">for</span> box <span class="hljs-keyword">in</span> r.boxes:
+            <span class="hljs-keyword">if</span> <span class="hljs-built_in">float</span>(box.conf[<span class="hljs-number">0</span>]) &gt; <span class="hljs-number">0.5</span>:
+                x1, y1, x2, y2 = box.xyxy[<span class="hljs-number">0</span>].cpu().numpy()
+                dets.append([x1, y1, x2, y2, <span class="hljs-built_in">float</span>(box.conf[<span class="hljs-number">0</span>])])
 
-    <span class="hljs-comment"># 转换为numpy数组</span>
     dets = np.array(dets) <span class="hljs-keyword">if</span> dets <span class="hljs-keyword">else</span> np.empty((<span class="hljs-number">0</span>, <span class="hljs-number">5</span>))
 
-    <span class="hljs-comment"># 更新追踪器</span>
+    <span class="hljs-comment"># 更新追踪</span>
     tracks = tracker.update(dets)
 
     <span class="hljs-comment"># 绘制结果</span>
     <span class="hljs-keyword">for</span> track <span class="hljs-keyword">in</span> tracks:
         x1, y1, x2, y2, track_id = track
         cv2.rectangle(frame, (<span class="hljs-built_in">int</span>(x1), <span class="hljs-built_in">int</span>(y1)), 
-                        (<span class="hljs-built_in">int</span>(x2), <span class="hljs-built_in">int</span>(y2)), (<span class="hljs-number">0</span>, <span class="hljs-number">255</span>, <span class="hljs-number">0</span>), <span class="hljs-number">2</span>)
+                     (<span class="hljs-built_in">int</span>(x2), <span class="hljs-built_in">int</span>(y2)), (<span class="hljs-number">0</span>, <span class="hljs-number">255</span>, <span class="hljs-number">0</span>), <span class="hljs-number">2</span>)
         cv2.putText(frame, <span class="hljs-string">f'ID:<span class="hljs-subst">{<span class="hljs-built_in">int</span>(track_id)}</span>'</span>, 
-                    (<span class="hljs-built_in">int</span>(x1), <span class="hljs-built_in">int</span>(y1)-<span class="hljs-number">10</span>),
-                    cv2.FONT_HERSHEY_SIMPLEX, <span class="hljs-number">0.5</span>, (<span class="hljs-number">0</span>, <span class="hljs-number">255</span>, <span class="hljs-number">0</span>), <span class="hljs-number">2</span>)
+                   (<span class="hljs-built_in">int</span>(x1), <span class="hljs-built_in">int</span>(y1)-<span class="hljs-number">10</span>),
+                   cv2.FONT_HERSHEY_SIMPLEX, <span class="hljs-number">0.5</span>, (<span class="hljs-number">0</span>, <span class="hljs-number">255</span>, <span class="hljs-number">0</span>), <span class="hljs-number">2</span>)
 
-    cv2.imshow(<span class="hljs-string">'DeepSORT'</span>, frame)
-    <span class="hljs-keyword">if</span> cv2.waitKey(<span class="hljs-number">30</span>) &amp; <span class="hljs-number">0xFF</span> == <span class="hljs-built_in">ord</span>(<span class="hljs-string">'q'</span>):
+    cv2.imshow(<span class="hljs-string">'Multi-Object Tracking'</span>, frame)
+    <span class="hljs-keyword">if</span> cv2.waitKey(<span class="hljs-number">1</span>) &amp; <span class="hljs-number">0xFF</span> == <span class="hljs-built_in">ord</span>(<span class="hljs-string">'q'</span>):
         <span class="hljs-keyword">break</span>
 
 cap.release()
 cv2.destroyAllWindows()
 </code></pre>
 <hr></hr>
-<h2 id="335-ros2集成">3.3.5 ROS2集成</h2>
+<h2 id="334-ros2追踪节点">3.3.4 ROS2追踪节点</h2>
 <pre><code class="lang-python"><span class="hljs-comment">#!/usr/bin/env python3</span>
 <span class="hljs-string">"""
-视觉追踪ROS2节点
+目标追踪ROS2节点
 """</span>
 
 <span class="hljs-keyword">import</span> rclpy
 <span class="hljs-keyword">from</span> rclpy.node <span class="hljs-keyword">import</span> Node
 <span class="hljs-keyword">from</span> sensor_msgs.msg <span class="hljs-keyword">import</span> Image
-<span class="hljs-keyword">from</span> geometry_msgs.msg <span class="hljs-keyword">import</span> Point
+<span class="hljs-keyword">from</span> std_msgs.msg <span class="hljs-keyword">import</span> Int32MultiArray
 <span class="hljs-keyword">from</span> cv_bridge <span class="hljs-keyword">import</span> CvBridge
 <span class="hljs-keyword">from</span> ultralytics <span class="hljs-keyword">import</span> YOLO
 <span class="hljs-keyword">import</span> cv2
@@ -803,11 +682,11 @@ cv2.destroyAllWindows()
 <span class="hljs-keyword">from</span> sort <span class="hljs-keyword">import</span> Sort
 
 
-<span class="hljs-keyword">class</span> <span class="hljs-title class_">VisualTracker</span>(<span class="hljs-title class_ inherited__">Node</span>):
-    <span class="hljs-string">"""视觉追踪节点"""</span>
+<span class="hljs-keyword">class</span> <span class="hljs-title class_">ObjectTracker</span>(<span class="hljs-title class_ inherited__">Node</span>):
+    <span class="hljs-string">"""目标追踪节点"""</span>
 
     <span class="hljs-keyword">def</span> <span class="hljs-title function_">__init__</span>(<span class="hljs-params">self</span>):
-        <span class="hljs-built_in">super</span>().__init__(<span class="hljs-string">'visual_tracker'</span>)
+        <span class="hljs-built_in">super</span>().__init__(<span class="hljs-string">'object_tracker'</span>)
 
         <span class="hljs-comment"># 加载YOLO</span>
         <span class="hljs-variable language_">self</span>.model = YOLO(<span class="hljs-string">'yolov8n.pt'</span>)
@@ -817,27 +696,20 @@ cv2.destroyAllWindows()
 
         <span class="hljs-comment"># 订阅图像</span>
         <span class="hljs-variable language_">self</span>.subscription = <span class="hljs-variable language_">self</span>.create_subscription(
-            Image,
-            <span class="hljs-string">'/camera/image_raw'</span>,
-            <span class="hljs-variable language_">self</span>.image_callback,
-            <span class="hljs-number">10</span>
-        )
+            Image, <span class="hljs-string">'/camera/image_raw'</span>, <span class="hljs-variable language_">self</span>.callback, <span class="hljs-number">10</span>)
 
         <span class="hljs-comment"># 发布追踪结果</span>
-        <span class="hljs-variable language_">self</span>.publisher = <span class="hljs-variable language_">self</span>.create_publisher(Point, <span class="hljs-string">'/tracker/positions'</span>, <span class="hljs-number">10</span>)
+        <span class="hljs-variable language_">self</span>.publisher = <span class="hljs-variable language_">self</span>.create_publisher(
+            Int32MultiArray, <span class="hljs-string">'/tracked_ids'</span>, <span class="hljs-number">10</span>)
 
         <span class="hljs-variable language_">self</span>.bridge = CvBridge()
+        <span class="hljs-variable language_">self</span>.get_logger().info(<span class="hljs-string">'追踪节点已启动'</span>)
 
-        <span class="hljs-variable language_">self</span>.get_logger().info(<span class="hljs-string">'视觉追踪节点已启动'</span>)
-
-    <span class="hljs-keyword">def</span> <span class="hljs-title function_">image_callback</span>(<span class="hljs-params">self, msg</span>):
-        <span class="hljs-string">"""图像回调"""</span>
+    <span class="hljs-keyword">def</span> <span class="hljs-title function_">callback</span>(<span class="hljs-params">self, msg</span>):
         cv_image = <span class="hljs-variable language_">self</span>.bridge.imgmsg_to_cv2(msg, <span class="hljs-string">'bgr8'</span>)
 
-        <span class="hljs-comment"># YOLO检测</span>
+        <span class="hljs-comment"># 检测</span>
         results = <span class="hljs-variable language_">self</span>.model(cv_image, verbose=<span class="hljs-literal">False</span>)
-
-        <span class="hljs-comment"># 提取检测框</span>
         dets = []
         <span class="hljs-keyword">for</span> r <span class="hljs-keyword">in</span> results:
             <span class="hljs-keyword">for</span> box <span class="hljs-keyword">in</span> r.boxes:
@@ -847,26 +719,19 @@ cv2.destroyAllWindows()
 
         dets = np.array(dets) <span class="hljs-keyword">if</span> dets <span class="hljs-keyword">else</span> np.empty((<span class="hljs-number">0</span>, <span class="hljs-number">5</span>))
 
-        <span class="hljs-comment"># 更新追踪</span>
+        <span class="hljs-comment"># 追踪</span>
         tracks = <span class="hljs-variable language_">self</span>.tracker.update(dets)
 
-        <span class="hljs-comment"># 发布第一个追踪目标的位置</span>
-        <span class="hljs-keyword">if</span> <span class="hljs-built_in">len</span>(tracks) &gt; <span class="hljs-number">0</span>:
-            x1, y1, x2, y2, track_id = tracks[<span class="hljs-number">0</span>]
-            center_x = (x1 + x2) / <span class="hljs-number">2</span>
-            center_y = (y1 + y2) / <span class="hljs-number">2</span>
-
-            point = Point()
-            point.x = <span class="hljs-built_in">float</span>(center_x)
-            point.y = <span class="hljs-built_in">float</span>(center_y)
-            point.z = <span class="hljs-built_in">float</span>(track_id)
-            <span class="hljs-variable language_">self</span>.publisher.publish(point)
+        <span class="hljs-comment"># 发布ID</span>
+        ids = [<span class="hljs-built_in">int</span>(t[<span class="hljs-number">4</span>]) <span class="hljs-keyword">for</span> t <span class="hljs-keyword">in</span> tracks]
+        out_msg = Int32MultiArray()
+        out_msg.data = ids
+        <span class="hljs-variable language_">self</span>.publisher.publish(out_msg)
 
 
 <span class="hljs-keyword">def</span> <span class="hljs-title function_">main</span>(<span class="hljs-params">args=<span class="hljs-literal">None</span></span>):
     rclpy.init(args=args)
-    node = VisualTracker()
-
+    node = ObjectTracker()
     <span class="hljs-keyword">try</span>:
         rclpy.spin(node)
     <span class="hljs-keyword">except</span> KeyboardInterrupt:
@@ -894,44 +759,40 @@ cv2.destroyAllWindows()
 <tbody>
 <tr>
 <td>1</td>
-<td>光流法</td>
-<td>Lucas-Kanade实现</td>
+<td>颜色追踪</td>
+<td>追踪红色物体</td>
 <td>☐</td>
 </tr>
 <tr>
 <td>2</td>
-<td>卡尔曼滤波</td>
-<td>简单追踪</td>
+<td>IOU计算</td>
+<td>实现IOU函数</td>
 <td>☐</td>
 </tr>
 <tr>
 <td>3</td>
-<td>DeepSORT</td>
+<td>Sort追踪</td>
 <td>多目标追踪</td>
 <td>☐</td>
 </tr>
 <tr>
 <td>4</td>
 <td>ROS2集成</td>
-<td>发布位置话题</td>
+<td>发布ID话题</td>
 <td>☐</td>
 </tr>
 </tbody>
 </table>
 <hr></hr>
 <h2 id="参考文献">参考文献</h2>
-<p>[1] Gibson, J.J. (1950). <em>The Perception of the Visual World</em>. Houghton Mifflin.</p>
-<p>[2] Lucas, B.D., &amp; Kanade, T. (1981). An Iterative Image Registration Technique. <em>IJCAI</em>.</p>
-<p>[3] Kalman, R.E. (1960). A New Approach to Linear Filtering. <em>Transactions of the ASME</em>.</p>
-<p>[4] Wojke, N., Bewley, A., &amp; Paulus, D. (2017). Simple Online and Realtime Tracking with a Deep Association Metric. <em>ICIP</em>.</p>
+<p>[1] Bewley, A., et al. (2016). Simple Online and Realtime Tracking. <em>ICIP</em>.</p>
 <hr></hr>
 <h2 id="下周预告">下周预告</h2>
 <blockquote>
 <p><strong>第12周：Sim2Real - 仿真到现实</strong></p>
 <ul>
-<li>仿真环境配置</li>
-<li>真机连接</li>
-<li>项目展示</li>
+<li>Gazebo仿真</li>
+<li>真机控制</li>
 </ul>
 </blockquote>
 <hr></hr>
@@ -979,7 +840,7 @@ cv2.destroyAllWindows()
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"第11周：视觉追踪与光流法","level":"4.3","depth":1,"next":{"title":"第12周：Sim2Real仿真到现实","level":"4.4","depth":1,"path":"content/week12.md","ref":"content/week12.md","articles":[]},"previous":{"title":"第10周：物体检测与识别","level":"4.2","depth":1,"path":"content/week10.md","ref":"content/week10.md","articles":[]},"dir":"ltr"},"config":{"plugins":[],"root":".","styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","author":"Your Name","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56},"embedFonts":false},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"AI机器人课程","language":"zh-hans","gitbook":"*","description":"15周ROS2机器人编程入门课程"},"file":{"path":"content/week11.md","mtime":"2026-03-02T10:50:33.118Z","type":"markdown"},"gitbook":{"version":"6.1.6","time":"2026-03-02T10:51:50.908Z"},"basePath":"..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"第11周：视觉追踪与光流法","level":"4.3","depth":1,"next":{"title":"第12周：Sim2Real仿真到现实","level":"4.4","depth":1,"path":"content/week12.md","ref":"content/week12.md","articles":[]},"previous":{"title":"第10周：物体检测与识别","level":"4.2","depth":1,"path":"content/week10.md","ref":"content/week10.md","articles":[]},"dir":"ltr"},"config":{"plugins":[],"root":".","styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","author":"Your Name","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56},"embedFonts":false},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"AI机器人课程","language":"zh-hans","gitbook":"*","description":"15周ROS2机器人编程入门课程"},"file":{"path":"content/week11.md","mtime":"2026-03-02T11:53:42.665Z","type":"markdown"},"gitbook":{"version":"6.1.6","time":"2026-03-02T11:54:23.099Z"},"basePath":"..","book":{"language":""}});
         });
     </script>
 </div>

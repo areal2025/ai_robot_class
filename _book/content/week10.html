@@ -373,229 +373,43 @@
 <tr>
 <td>第1次</td>
 <td>3小时</td>
-<td>经典方法</td>
-<td>HOG + SVM 物体分类</td>
+<td>YOLO目标检测</td>
+<td>预训练模型使用</td>
 </tr>
 <tr>
 <td>第2次</td>
 <td>3小时</td>
-<td>深度学习方法</td>
-<td>YOLO实时检测</td>
-</tr>
-</tbody>
-</table>
-<hr></hr>
-<h2 id="第一次课：经典方法（3小时）">第一次课：经典方法（3小时）</h2>
-<h3 id="⏱️-时间分配">⏱️ 时间分配</h3>
-<table>
-<thead>
-<tr>
-<th>环节</th>
-<th>时间</th>
-<th>内容</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>复习</td>
-<td>20分钟</td>
-<td>OpenCV基础回顾</td>
-</tr>
-<tr>
-<td>讲解</td>
-<td>60分钟</td>
-<td>HOG特征提取</td>
-</tr>
-<tr>
-<td>讲解</td>
-<td>60分钟</td>
-<td>SVM分类器</td>
-</tr>
-<tr>
-<td>茶歇</td>
-<td>10分钟</td>
-<td>休息</td>
-</tr>
-<tr>
-<td>实践</td>
-<td>60分钟</td>
-<td>实验练习</td>
-</tr>
-</tbody>
-</table>
-<hr></hr>
-<h2 id="321-hog特征提取">3.2.1 HOG特征提取</h2>
-<blockquote>
-<p><strong>HOG</strong> = Histogram of Oriented Gradients<br></br>方向梯度直方图特征 [1]。</p>
-</blockquote>
-<h3 id="hog原理">HOG原理</h3>
-<pre><code>HOG特征提取流程：
-
-┌─────────────────────────────────────────────────────────────┐
-│                                                             │
-│  1. 图像预处理                                             │
-│     读取图像 → 灰度化 → 归一化                           │
-│                                                             │
-│  2. 计算梯度                                               │
-│     使用[-1, 0, 1]卷积核                                  │
-│     Gx = ∂I/∂x, Gy = ∂I/∂y                              │
-│                                                             │
-│  3. 单元格梯度直方图                                       │
-│     将图像分成8×8像素的小格子                             │
-│     每个格子计算9个方向的梯度直方图                        │
-│                                                             │
-│  4. 块归一化                                             │
-│     2×2个格子组成一个块                                 │
-│     对块内梯度进行L2归一化                                │
-│                                                             │
-│  5. 特征向量                                             │
-│     所有块的HOG特征串联成最终特征向量                      │
-│                                                             │
-└─────────────────────────────────────────────────────────────┘
-</code></pre><h3 id="hog-python实现">HOG Python实现</h3>
-<pre><code class="lang-python"><span class="hljs-keyword">import</span> cv2
-<span class="hljs-keyword">import</span> numpy <span class="hljs-keyword">as</span> np
-<span class="hljs-keyword">from</span> skimage.feature <span class="hljs-keyword">import</span> hog
-
-
-<span class="hljs-keyword">def</span> <span class="hljs-title function_">extract_hog</span>(<span class="hljs-params">image</span>):
-    <span class="hljs-string">"""提取HOG特征"""</span>
-
-    <span class="hljs-comment"># 图像预处理</span>
-    gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-    resized = cv2.resize(gray, (<span class="hljs-number">64</span>, <span class="hljs-number">128</span>))
-
-    <span class="hljs-comment"># 提取HOG特征</span>
-    features = hog(
-        resized,
-        orientations=<span class="hljs-number">9</span>,           <span class="hljs-comment"># 方向数</span>
-        pixels_per_cell=(<span class="hljs-number">8</span>, <span class="hljs-number">8</span>),   <span class="hljs-comment"># 单元格大小</span>
-        cells_per_block=(<span class="hljs-number">2</span>, <span class="hljs-number">2</span>),   <span class="hljs-comment"># 块内单元格数</span>
-        block_norm=<span class="hljs-string">'L2-Hys'</span>,
-        visualize=<span class="hljs-literal">False</span>,
-        feature_vector=<span class="hljs-literal">True</span>
-    )
-
-    <span class="hljs-keyword">return</span> features
-
-
-<span class="hljs-comment"># 使用示例</span>
-img = cv2.imread(<span class="hljs-string">'sample.jpg'</span>)
-hog_features = extract_hog(img)
-<span class="hljs-built_in">print</span>(<span class="hljs-string">f"HOG特征维度: <span class="hljs-subst">{hog_features.shape}</span>"</span>)
-</code></pre>
-<h3 id="特征可视化">特征可视化</h3>
-<pre><code class="lang-python"><span class="hljs-comment"># 可视化HOG特征</span>
-features, hog_image = hog(
-    resized,
-    orientations=<span class="hljs-number">9</span>,
-    pixels_per_cell=(<span class="hljs-number">8</span>, <span class="hljs-number">8</span>),
-    cells_per_block=(<span class="hljs-number">2</span>, <span class="hljs-number">2</span>),
-    visualize=<span class="hljs-literal">True</span>,
-    feature_vector=<span class="hljs-literal">True</span>
-)
-
-cv2.imshow(<span class="hljs-string">'HOG Features'</span>, hog_image)
-cv2.waitKey(<span class="hljs-number">0</span>)
-</code></pre>
-<hr></hr>
-<h2 id="322-svm分类器">3.2.2 SVM分类器</h2>
-<blockquote>
-<p><strong>SVM</strong> = Support Vector Machine<br></br>支持向量机分类器 [2]。</p>
-</blockquote>
-<h3 id="svm原理">SVM原理</h3>
-<pre><code>SVM分类原理：
-
-┌─────────────────────────────────────────────────────────────┐
-│                                                             │
-│  二分类问题：                                               │
-│                                                             │
-│        ● ● ● ● ●                                         │
-│      ────────────── ○ ○ ○ ○ ○                           │
-│        ● ● ●                                            │
-│                                                             │
-│      支持向量                                              │
-│                                                             │
-│  目标：找到一个超平面，最大化两类之间的间隔                │
-│                                                             │
-│  优化目标：                                               │
-│  minimize: ||w||²                                         │
-│  subject to: y_i(w·x_i + b) ≥ 1                          │
-│                                                             │
-└─────────────────────────────────────────────────────────────┘
-</code></pre><h3 id="使用svm进行物体分类">使用SVM进行物体分类</h3>
-<pre><code class="lang-python"><span class="hljs-keyword">from</span> sklearn.svm <span class="hljs-keyword">import</span> LinearSVC
-<span class="hljs-keyword">from</span> sklearn.preprocessing <span class="hljs-keyword">import</span> StandardScaler
-<span class="hljs-keyword">from</span> sklearn.model_selection <span class="hljs-keyword">import</span> train_test_split
-<span class="hljs-keyword">import</span> numpy <span class="hljs-keyword">as</span> np
-
-
-<span class="hljs-keyword">def</span> <span class="hljs-title function_">train_object_classifier</span>(<span class="hljs-params">pos_images, neg_images</span>):
-    <span class="hljs-string">"""训练物体分类器"""</span>
-
-    <span class="hljs-comment"># 提取HOG特征</span>
-    pos_features = [extract_hog(img) <span class="hljs-keyword">for</span> img <span class="hljs-keyword">in</span> pos_images]
-    neg_features = [extract_hog(img) <span class="hljs-keyword">for</span> img <span class="hljs-keyword">in</span> neg_images]
-
-    <span class="hljs-comment"># 准备数据</span>
-    X = np.array(pos_features + neg_features)
-    y = np.array([<span class="hljs-number">1</span>] * <span class="hljs-built_in">len</span>(pos_features) + [<span class="hljs-number">0</span>] * <span class="hljs-built_in">len</span>(neg_features))
-
-    <span class="hljs-comment"># 划分训练集和测试集</span>
-    X_train, X_test, y_train, y_test = train_test_split(
-        X, y, test_size=<span class="hljs-number">0.2</span>, random_state=<span class="hljs-number">42</span>
-    )
-
-    <span class="hljs-comment"># 标准化</span>
-    scaler = StandardScaler()
-    X_train_scaled = scaler.fit_transform(X_train)
-    X_test_scaled = scaler.transform(X_test)
-
-    <span class="hljs-comment"># 训练SVM</span>
-    svm = LinearSVC(C=<span class="hljs-number">1.0</span>, max_iter=<span class="hljs-number">10000</span>)
-    svm.fit(X_train_scaled, y_train)
-
-    <span class="hljs-comment"># 评估</span>
-    accuracy = svm.score(X_test_scaled, y_test)
-    <span class="hljs-built_in">print</span>(<span class="hljs-string">f"准确率: <span class="hljs-subst">{accuracy:<span class="hljs-number">.2</span>%}</span>"</span>)
-
-    <span class="hljs-keyword">return</span> svm, scaler
-
-
-<span class="hljs-comment"># 使用预训练模型进行预测</span>
-<span class="hljs-keyword">def</span> <span class="hljs-title function_">predict_image</span>(<span class="hljs-params">svm, scaler, image</span>):
-    <span class="hljs-string">"""预测图像类别"""</span>
-    features = extract_hog(image).reshape(<span class="hljs-number">1</span>, -<span class="hljs-number">1</span>)
-    features_scaled = scaler.transform(features)
-    prediction = svm.predict(features_scaled)
-    <span class="hljs-keyword">return</span> prediction[<span class="hljs-number">0</span>]
-</code></pre>
-<hr></hr>
-<h2 id="第二次课：深度学习方法（3小时）">第二次课：深度学习方法（3小时）</h2>
-<h3 id="⏱️-时间分配">⏱️ 时间分配</h3>
-<table>
-<thead>
-<tr>
-<th>环节</th>
-<th>时间</th>
-<th>内容</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>复习</td>
-<td>20分钟</td>
-<td>HOG+SVM回顾</td>
-</tr>
-<tr>
-<td>讲解</td>
-<td>60分钟</td>
-<td>YOLO目标检测</td>
-</tr>
-<tr>
-<td>讲解</td>
-<td>60分钟</td>
 <td>ROS2集成</td>
+<td>检测结果发布</td>
+</tr>
+</tbody>
+</table>
+<hr></hr>
+<h2 id="第一次课：yolo目标检测（3小时）">第一次课：YOLO目标检测（3小时）</h2>
+<h3 id="⏱️-时间分配">⏱️ 时间分配</h3>
+<table>
+<thead>
+<tr>
+<th>环节</th>
+<th>时间</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>复习</td>
+<td>20分钟</td>
+<td>OpenCV回顾</td>
+</tr>
+<tr>
+<td>讲解</td>
+<td>60分钟</td>
+<td>YOLO简介</td>
+</tr>
+<tr>
+<td>讲解</td>
+<td>60分钟</td>
+<td>预训练模型使用</td>
 </tr>
 <tr>
 <td>茶歇</td>
@@ -610,85 +424,127 @@ cv2.waitKey(<span class="hljs-number">0</span>)
 </tbody>
 </table>
 <hr></hr>
-<h2 id="323-yolo目标检测">3.2.3 YOLO目标检测</h2>
+<h2 id="321-yolo简介">3.2.1 YOLO简介</h2>
 <blockquote>
-<p><strong>YOLO</strong> = You Only Look Once<br></br>实时目标检测算法 [3]。</p>
+<p><strong>YOLO</strong> = You Only Look Once<br></br>只需看一次图像就能检测出所有物体！</p>
 </blockquote>
-<h3 id="yolo发展历程">YOLO发展历程</h3>
-<pre><code>YOLO版本对比：
-
-┌─────────────────────────────────────────────────────────────┐
-│  版本     发布时间   mAP@50    FPS    特点                │
-├─────────────────────────────────────────────────────────────┤
-│  YOLOv1  2015     63.4%    45     首个单阶段检测器        │
-│  YOLOv2  2017     78.5%    40     引入Anchor Box        │
-│  YOLOv3  2018     85.5%    35     多尺度预测            │
-│  YOLOv4  2020     89.8%    65     Bag of Freebies    │
-│  YOLOv5  2020     89.6%   140     PyTorch实现         │
-│  YOLOv8  2023     94.0%   120     最新版本             │
-│  YOLOv10 2024     95.5%   200+    实时SOTA             │
-└─────────────────────────────────────────────────────────────┘
-</code></pre><h3 id="yolo原理">YOLO原理</h3>
-<pre><code>YOLO检测流程：
+<pre><code>YOLO检测示例：
 
 ┌─────────────────────────────────────────────────────────────┐
 │                                                             │
-│  输入图像 (416×416)                                        │
-│          ↓                                                  │
-│  ┌─────────────────────────────────────────────────────┐   │
-│  │         CNN特征提取                   │   │
-│  │    (Darknet / CSP / PANet)         │   │
-│  └─────────────────────────────────────────────────────┘   │
-│          ↓                                                  │
-│  ┌─────────────────────────────────────────────────────┐   │
-│  │    特征图 (13×13, 26×26, 52×52)   │   │
-│  │    每个格子预测:                          │   │
-│  │    - 边界框 (x,y,w,h)                 │   │
-│  │    - 物体概率                          │   │
-│  │    - 类别概率                        │   │
-│  └─────────────────────────────────────────────────────┘   │
-│          ↓                                                  │
-│  ┌─────────────────────────────────────────────────────┐   │
-│  │         NMS非极大值抑制                           │   │
-│  └─────────────────────────────────────────────────────┘   │
-│          ↓                                                  │
-│  输出: 检测框 + 类别 + 置信度                          │
+│    ┌─────┐                                                   │
+│    │ 人 │     ┌────┐                                         │
+│    └─────┘     │ 狗 │   ┌──┐                                 │
+│                 └────┘   │车│                                 │
+│                                                             │
+│  输出: 物体类别 + 位置 + 置信度                            │
 │                                                             │
 └─────────────────────────────────────────────────────────────┘
-</code></pre><h3 id="yolo-python实现">YOLO Python实现</h3>
-<pre><code class="lang-python"><span class="hljs-comment"># 使用Ultralytics YOLOv8</span>
-<span class="hljs-keyword">from</span> ultralytics <span class="hljs-keyword">import</span> YOLO
-<span class="hljs-keyword">import</span> cv2
+</code></pre><h3 id="yolo版本">YOLO版本</h3>
+<table>
+<thead>
+<tr>
+<th>版本</th>
+<th>速度</th>
+<th>准确率</th>
+<th>推荐</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>YOLOv8n</td>
+<td>最快</td>
+<td>较低</td>
+<td>学习用</td>
+</tr>
+<tr>
+<td>YOLOv8s</td>
+<td>快</td>
+<td>中等</td>
+<td>平衡</td>
+</tr>
+<tr>
+<td>YOLOv8m</td>
+<td>中等</td>
+<td>较高</td>
+<td>进阶</td>
+</tr>
+</tbody>
+</table>
+<hr></hr>
+<h2 id="322-安装yolo">3.2.2 安装YOLO</h2>
+<pre><code class="lang-bash"><span class="hljs-comment"># 安装Ultralytics库</span>
+pip install ultralytics
 
+<span class="hljs-comment"># 验证安装</span>
+python3 -c <span class="hljs-string">"from ultralytics import YOLO; print('OK')"</span>
+</code></pre>
+<hr></hr>
+<h2 id="323-yolo快速使用">3.2.3 YOLO快速使用</h2>
+<pre><code class="lang-python"><span class="hljs-keyword">from</span> ultralytics <span class="hljs-keyword">import</span> YOLO
 
-<span class="hljs-comment"># 加载模型</span>
-model = YOLO(<span class="hljs-string">'yolov8n.pt'</span>)  <span class="hljs-comment"># nano版本（最快）</span>
+<span class="hljs-comment"># 加载预训练模型（自动下载）</span>
+model = YOLO(<span class="hljs-string">'yolov8n.pt'</span>)
 
 <span class="hljs-comment"># 检测图像</span>
-results = model(<span class="hljs-string">'sample.jpg'</span>, save=<span class="hljs-literal">True</span>)
+results = model(<span class="hljs-string">'street.jpg'</span>)
 
-<span class="hljs-comment"># 处理结果</span>
-<span class="hljs-keyword">for</span> result <span class="hljs-keyword">in</span> results:
-    boxes = result.boxes  <span class="hljs-comment"># 检测框</span>
-    <span class="hljs-keyword">for</span> box <span class="hljs-keyword">in</span> boxes:
-        <span class="hljs-comment"># 获取坐标</span>
-        x1, y1, x2, y2 = box.xyxy[<span class="hljs-number">0</span>].cpu().numpy()
-        <span class="hljs-comment"># 获取类别和置信度</span>
-        cls = <span class="hljs-built_in">int</span>(box.cls[<span class="hljs-number">0</span>])
+<span class="hljs-comment"># 显示结果</span>
+<span class="hljs-keyword">for</span> r <span class="hljs-keyword">in</span> results:
+    <span class="hljs-built_in">print</span>(<span class="hljs-string">f"检测到 <span class="hljs-subst">{<span class="hljs-built_in">len</span>(r.boxes)}</span> 个物体"</span>)
+    <span class="hljs-keyword">for</span> box <span class="hljs-keyword">in</span> r.boxes:
+        cls = model.names[<span class="hljs-built_in">int</span>(box.cls[<span class="hljs-number">0</span>])]
         conf = <span class="hljs-built_in">float</span>(box.conf[<span class="hljs-number">0</span>])
-        label = model.names[cls]
-
-        <span class="hljs-comment"># 绘制框</span>
-        cv2.rectangle(img, (x1, y1), (x2, y2), (<span class="hljs-number">0</span>, <span class="hljs-number">255</span>, <span class="hljs-number">0</span>), <span class="hljs-number">2</span>)
-        cv2.putText(img, <span class="hljs-string">f'<span class="hljs-subst">{label}</span> <span class="hljs-subst">{conf:<span class="hljs-number">.2</span>f}</span>'</span>, 
-                   (x1, y1-<span class="hljs-number">10</span>), 
-                   cv2.FONT_HERSHEY_SIMPLEX, 
-                   <span class="hljs-number">0.5</span>, (<span class="hljs-number">0</span>, <span class="hljs-number">255</span>, <span class="hljs-number">0</span>), <span class="hljs-number">2</span>)
-
-cv2.imshow(<span class="hljs-string">'YOLO Detection'</span>, img)
-cv2.waitKey(<span class="hljs-number">0</span>)
+        <span class="hljs-built_in">print</span>(<span class="hljs-string">f"  - <span class="hljs-subst">{cls}</span>: <span class="hljs-subst">{conf:<span class="hljs-number">.2</span>%}</span>"</span>)
 </code></pre>
-<h3 id="ros2集成">ROS2集成</h3>
+<h3 id="检测摄像头">检测摄像头</h3>
+<pre><code class="lang-python"><span class="hljs-comment"># 检测摄像头</span>
+results = model(<span class="hljs-number">0</span>)  <span class="hljs-comment"># 0 = 默认摄像头</span>
+
+<span class="hljs-comment"># 检测视频文件</span>
+results = model(<span class="hljs-string">'video.mp4'</span>, save=<span class="hljs-literal">True</span>)
+</code></pre>
+<hr></hr>
+<h2 id="第二次课：ros2集成（3小时）">第二次课：ROS2集成（3小时）</h2>
+<h3 id="⏱️-时间分配">⏱️ 时间分配</h3>
+<table>
+<thead>
+<tr>
+<th>环节</th>
+<th>时间</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>复习</td>
+<td>20分钟</td>
+<td>YOLO使用回顾</td>
+</tr>
+<tr>
+<td>讲解</td>
+<td>60分钟</td>
+<td>ROS2话题发布</td>
+</tr>
+<tr>
+<td>讲解</td>
+<td>60分钟</td>
+<td>可视化显示</td>
+</tr>
+<tr>
+<td>茶歇</td>
+<td>10分钟</td>
+<td>休息</td>
+</tr>
+<tr>
+<td>实践</td>
+<td>60分钟</td>
+<td>实验练习</td>
+</tr>
+</tbody>
+</table>
+<hr></hr>
+<h2 id="324-ros2目标检测节点">3.2.4 ROS2目标检测节点</h2>
 <pre><code class="lang-python"><span class="hljs-comment">#!/usr/bin/env python3</span>
 <span class="hljs-string">"""
 YOLO目标检测ROS2节点
@@ -697,6 +553,7 @@ YOLO目标检测ROS2节点
 <span class="hljs-keyword">import</span> rclpy
 <span class="hljs-keyword">from</span> rclpy.node <span class="hljs-keyword">import</span> Node
 <span class="hljs-keyword">from</span> sensor_msgs.msg <span class="hljs-keyword">import</span> Image
+<span class="hljs-keyword">from</span> std_msgs.msg <span class="hljs-keyword">import</span> String
 <span class="hljs-keyword">from</span> cv_bridge <span class="hljs-keyword">import</span> CvBridge
 <span class="hljs-keyword">from</span> ultralytics <span class="hljs-keyword">import</span> YOLO
 <span class="hljs-keyword">import</span> cv2
@@ -710,6 +567,7 @@ YOLO目标检测ROS2节点
 
         <span class="hljs-comment"># 加载YOLO模型</span>
         <span class="hljs-variable language_">self</span>.model = YOLO(<span class="hljs-string">'yolov8n.pt'</span>)
+        <span class="hljs-variable language_">self</span>.get_logger().info(<span class="hljs-string">'YOLO模型已加载'</span>)
 
         <span class="hljs-comment"># 订阅图像话题</span>
         <span class="hljs-variable language_">self</span>.subscription = <span class="hljs-variable language_">self</span>.create_subscription(
@@ -719,26 +577,37 @@ YOLO目标检测ROS2节点
             <span class="hljs-number">10</span>
         )
 
-        <span class="hljs-variable language_">self</span>.bridge = CvBridge()
+        <span class="hljs-comment"># 发布检测结果（简单版：发布检测到的类别）</span>
+        <span class="hljs-variable language_">self</span>.publisher = <span class="hljs-variable language_">self</span>.create_publisher(String, <span class="hljs-string">'/detected_objects'</span>, <span class="hljs-number">10</span>)
 
+        <span class="hljs-variable language_">self</span>.bridge = CvBridge()
         <span class="hljs-variable language_">self</span>.get_logger().info(<span class="hljs-string">'YOLO检测节点已启动'</span>)
 
     <span class="hljs-keyword">def</span> <span class="hljs-title function_">image_callback</span>(<span class="hljs-params">self, msg</span>):
         <span class="hljs-string">"""图像回调"""</span>
-        <span class="hljs-comment"># ROS图像转OpenCV</span>
-        cv_image = <span class="hljs-variable language_">self</span>.bridge.imgmsg_to_cv2(msg, <span class="hljs-string">'bgr8'</span>)
+        <span class="hljs-keyword">try</span>:
+            <span class="hljs-comment"># ROS图像转OpenCV</span>
+            cv_image = <span class="hljs-variable language_">self</span>.bridge.imgmsg_to_cv2(msg, <span class="hljs-string">'bgr8'</span>)
 
-        <span class="hljs-comment"># YOLO检测</span>
-        results = <span class="hljs-variable language_">self</span>.model(cv_image, verbose=<span class="hljs-literal">False</span>)
+            <span class="hljs-comment"># YOLO检测</span>
+            results = <span class="hljs-variable language_">self</span>.model(cv_image, verbose=<span class="hljs-literal">False</span>)
 
-        <span class="hljs-comment"># 处理结果</span>
-        <span class="hljs-keyword">for</span> result <span class="hljs-keyword">in</span> results:
-            boxes = result.boxes
-            <span class="hljs-keyword">for</span> box <span class="hljs-keyword">in</span> boxes:
-                cls = <span class="hljs-built_in">int</span>(box.cls[<span class="hljs-number">0</span>])
-                conf = <span class="hljs-built_in">float</span>(box.conf[<span class="hljs-number">0</span>])
-                label = <span class="hljs-variable language_">self</span>.model.names[cls]
-                <span class="hljs-variable language_">self</span>.get_logger().info(<span class="hljs-string">f'检测到: <span class="hljs-subst">{label}</span> <span class="hljs-subst">{conf:<span class="hljs-number">.2</span>f}</span>'</span>)
+            <span class="hljs-comment"># 提取检测结果</span>
+            detected = []
+            <span class="hljs-keyword">for</span> r <span class="hljs-keyword">in</span> results:
+                <span class="hljs-keyword">for</span> box <span class="hljs-keyword">in</span> r.boxes:
+                    <span class="hljs-keyword">if</span> <span class="hljs-built_in">float</span>(box.conf[<span class="hljs-number">0</span>]) &gt; <span class="hljs-number">0.5</span>:  <span class="hljs-comment"># 置信度阈值</span>
+                        cls = <span class="hljs-variable language_">self</span>.model.names[<span class="hljs-built_in">int</span>(box.cls[<span class="hljs-number">0</span>])]
+                        detected.append(cls)
+
+            <span class="hljs-comment"># 发布结果</span>
+            <span class="hljs-keyword">if</span> detected:
+                msg_out = String()
+                msg_out.data = <span class="hljs-string">', '</span>.join(<span class="hljs-built_in">set</span>(detected))
+                <span class="hljs-variable language_">self</span>.publisher.publish(msg_out)
+
+        <span class="hljs-keyword">except</span> Exception <span class="hljs-keyword">as</span> e:
+            <span class="hljs-variable language_">self</span>.get_logger().error(<span class="hljs-string">f'检测失败: <span class="hljs-subst">{e}</span>'</span>)
 
 
 <span class="hljs-keyword">def</span> <span class="hljs-title function_">main</span>(<span class="hljs-params">args=<span class="hljs-literal">None</span></span>):
@@ -757,52 +626,15 @@ YOLO目标检测ROS2节点
 <span class="hljs-keyword">if</span> __name__ == <span class="hljs-string">'__main__'</span>:
     main()
 </code></pre>
-<hr></hr>
-<h2 id="324-公开数据集">3.2.4 公开数据集</h2>
-<h3 id="常用目标检测数据集">常用目标检测数据集</h3>
-<table>
-<thead>
-<tr>
-<th>数据集</th>
-<th>类别数</th>
-<th>图像数</th>
-<th>特点</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>COCO [4]</td>
-<td>80</td>
-<td>330K</td>
-<td>日常场景，最流行</td>
-</tr>
-<tr>
-<td>PASCAL VOC</td>
-<td>20</td>
-<td>11K</td>
-<td>经典基准</td>
-</tr>
-<tr>
-<td>Open Images</td>
-<td>600</td>
-<td>9M</td>
-<td>最多类别</td>
-</tr>
-<tr>
-<td>KITTI</td>
-<td>8</td>
-<td>15K</td>
-<td>自动驾驶</td>
-</tr>
-</tbody>
-</table>
-<h3 id="下载coco数据集">下载COCO数据集</h3>
-<pre><code class="lang-bash"><span class="hljs-comment"># 使用pycocotools</span>
-pip install pycocotools
+<h3 id="启动命令">启动命令</h3>
+<pre><code class="lang-bash"><span class="hljs-comment"># 1. 启动摄像头</span>
+ros2 launch usb_cam usb_cam.launch.py
 
-<span class="hljs-comment"># 或下载预训练模型</span>
-from ultralytics import YOLO
-model = YOLO(<span class="hljs-string">'yolov8n.pt'</span>)  <span class="hljs-comment"># 自动下载</span>
+<span class="hljs-comment"># 2. 启动YOLO检测</span>
+ros2 run your_package yolo_detector
+
+<span class="hljs-comment"># 3. 查看检测结果</span>
+ros2 topic <span class="hljs-built_in">echo</span> /detected_objects
 </code></pre>
 <hr></hr>
 <h2 id="本周实验报告">本周实验报告</h2>
@@ -819,49 +651,40 @@ model = YOLO(<span class="hljs-string">'yolov8n.pt'</span>)  <span class="hljs-c
 <tbody>
 <tr>
 <td>1</td>
-<td>HOG特征提取</td>
-<td>提取特征并可视化</td>
+<td>安装YOLO</td>
+<td>能import</td>
 <td>☐</td>
 </tr>
 <tr>
 <td>2</td>
-<td>SVM训练</td>
-<td>训练简单分类器</td>
+<td>检测图片</td>
+<td>运行检测</td>
 <td>☐</td>
 </tr>
 <tr>
 <td>3</td>
-<td>YOLO安装</td>
-<td>能运行检测</td>
+<td>检测摄像头</td>
+<td>实时检测</td>
 <td>☐</td>
 </tr>
 <tr>
 <td>4</td>
-<td>YOLO检测</td>
-<td>检测图像中物体</td>
-<td>☐</td>
-</tr>
-<tr>
-<td>5</td>
-<td>ROS2集成</td>
-<td>发布检测结果</td>
+<td>ROS2节点</td>
+<td>发布话题</td>
 <td>☐</td>
 </tr>
 </tbody>
 </table>
 <hr></hr>
 <h2 id="参考文献">参考文献</h2>
-<p>[1] Dalal, N., &amp; Triggs, B. (2005). Histograms of Oriented Gradients for Human Detection. <em>CVPR</em>.</p>
-<p>[2] Cortes, C., &amp; Vapnik, V. (1995). Support-Vector Networks. <em>Machine Learning</em>, 20(3), 273-297.</p>
-<p>[3] Redmon, J., et al. (2016). You Only Look Once: Unified, Real-Time Object Detection. <em>CVPR</em>.</p>
-<p>[4] Lin, T.Y., et al. (2014). Microsoft COCO: Common Objects in Context. <em>ECCV</em>.</p>
+<p>[1] Ultralytics. (2024). <em>YOLOv8 Documentation</em>. Available: <a href="https://docs.ultralytics.com/" target="_blank">https://docs.ultralytics.com/</a></p>
+<p>[2] Redmon, J., et al. (2016). You Only Look Once. <em>CVPR</em>.</p>
 <hr></hr>
 <h2 id="下周预告">下周预告</h2>
 <blockquote>
-<p><strong>第11周：视觉追踪与光流法</strong></p>
+<p><strong>第11周：目标追踪</strong></p>
 <ul>
-<li>经典方法：光流法</li>
-<li>深度学习：DeepSORT追踪</li>
+<li>简单追踪方法</li>
 <li>ROS2集成</li>
 </ul>
 </blockquote>
@@ -910,7 +733,7 @@ model = YOLO(<span class="hljs-string">'yolov8n.pt'</span>)  <span class="hljs-c
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"第10周：物体检测与识别","level":"4.2","depth":1,"next":{"title":"第11周：视觉追踪与光流法","level":"4.3","depth":1,"path":"content/week11.md","ref":"content/week11.md","articles":[]},"previous":{"title":"第9周：机器视觉与AI工具入门","level":"4.1","depth":1,"path":"content/week9.md","ref":"content/week9.md","articles":[]},"dir":"ltr"},"config":{"plugins":[],"root":".","styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","author":"Your Name","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56},"embedFonts":false},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"AI机器人课程","language":"zh-hans","gitbook":"*","description":"15周ROS2机器人编程入门课程"},"file":{"path":"content/week10.md","mtime":"2026-03-02T10:49:02.195Z","type":"markdown"},"gitbook":{"version":"6.1.6","time":"2026-03-02T10:51:50.908Z"},"basePath":"..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"第10周：物体检测与识别","level":"4.2","depth":1,"next":{"title":"第11周：视觉追踪与光流法","level":"4.3","depth":1,"path":"content/week11.md","ref":"content/week11.md","articles":[]},"previous":{"title":"第9周：机器视觉与AI工具入门","level":"4.1","depth":1,"path":"content/week9.md","ref":"content/week9.md","articles":[]},"dir":"ltr"},"config":{"plugins":[],"root":".","styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","author":"Your Name","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56},"embedFonts":false},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"AI机器人课程","language":"zh-hans","gitbook":"*","description":"15周ROS2机器人编程入门课程"},"file":{"path":"content/week10.md","mtime":"2026-03-02T11:52:45.521Z","type":"markdown"},"gitbook":{"version":"6.1.6","time":"2026-03-02T11:54:23.099Z"},"basePath":"..","book":{"language":""}});
         });
     </script>
 </div>
