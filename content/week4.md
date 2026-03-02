@@ -362,7 +362,7 @@ v = (v_left + v_right) / 2
 [5] Tsai, R. W. (1999). *A Computational Introduction to Robotics*. Springer. ISBN: 978-0387985016
 
 
-## 🎮 PyBullet 3D运动学演示（进阶）
+## 2.1.5 PyBullet 3D运动学演示
 
 > 除了Turtlesim，我们还可以用PyBullet看更真实的3D机器人运动！
 
@@ -670,7 +670,7 @@ if __name__ == '__main__':
 
 ---
 
-## 🧠 拓展思考：逆运动学
+## 2.1.6 逆运动学简介
 
 > 除了让机器人**按给定速度移动**（正运动学），我们还可以**反着来**——给定目标位置，计算需要的关节角度！
 
@@ -858,7 +858,7 @@ for i in range(0, 91, 30):
     print(f"{i}°    ({x1_only[i]:.2f}, {y1_only[i]:.2f})    ({x_both[i]:.2f}, {y_both[i]:.2f})")
 ```
 
-## 📐 自由度的定义
+## 2.1.7 自由度的定义
 
 > 自由度(DOF = Degrees of Freedom)是机器人学中最重要的概念之一！
 

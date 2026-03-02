@@ -949,7 +949,7 @@ def main(args=None):
 
 ---
 
-## 🆕 PyBullet仿真环境介绍
+## 1.4 PyBullet仿真环境介绍
 
 > 除了Turtlesim，我们还可以用**PyBullet**进行更真实的3D机器人仿真！
 
@@ -1162,7 +1162,7 @@ python3 -m pybullet_data.gdf_loader
 
 
 
-## 🆕 进阶：用Python控制ROS2 + 集成OpenClaw
+## 1.5 Python + OpenClaw集成控制
 
 ### RosClaw Python节点
 
@@ -1266,7 +1266,7 @@ Agent 发送反馈给用户
 
 ---
 
-## 🧩 拓展思考：什么是更复杂的机器人运动？
+## 1.6 复杂机器人运动简介
 
 > 到目前为止，我们学习了2D平面上的简单运动。那么真实的机器人是如何在**三维空间**中工作的呢？
 
