@@ -270,6 +270,147 @@ x: 5.44, y: 6.44, theta: 1.57 (90°)
 v = (v_left + v_right) / 2
 
 # 角速度  
+
+### 🎮 PyBullet 3D运动学演示（进阶）
+
+> 除了Turtlesim，我们还可以用PyBullet看更真实的3D机器人运动！
+
+#### PyBullet 3D小车仿真
+
+```python
+#!/usr/bin/env python3
+"""
+PyBullet 3D机器人运动学演示
+"""
+
+import pybullet as p
+import pybullet_data
+import time
+import math
+
+# 连接仿真
+client_id = p.connect(p.GUI)
+p.setAdditionalSearchPath(pybullet_data.getDataPath())
+
+# 加载地面
+p.loadURDF("plane.urdf")
+
+# 创建机器人（小车）
+def create_robot():
+    # 车身
+    chassis = p.createCollisionShape(p.BoxShape, halfExtents=[0.3, 0.2, 0.1])
+    chassis_mass = 1.0
+    chassis_id = p.createMultiBody(
+        chassisMass=chassis_mass,
+        baseCollisionShapeIndex=chassis,
+        basePosition=[0, 0, 0.2]
+    )
+    
+    # 左轮
+    left_wheel = p.createCollisionShape(p.CylinderShape, radius=0.1, height=0.05)
+    left_wheel_idx = p.createMultiBody(
+        baseMass=0.2,
+        baseCollisionShapeIndex=left_wheel,
+        basePosition=[0.3, 0.25, 0.1],
+        baseOrientation=[0, 0, 0, 1]
+    )
+    
+    # 右轮
+    right_wheel = p.createCollisionShape(p.CylinderShape, radius=0.1, height=0.05)
+    right_wheel_idx = p.createMultiBody(
+        baseMass=0.2,
+        baseCollisionShapeIndex=right_wheel,
+        basePosition=[-0.3, 0.25, 0.1],
+        baseOrientation=[0, 0, 0, 1]
+    )
+    
+    # 连接轮子和车身
+    p.createConstraint(
+        chassis_id, -1, left_wheel_idx, -1,
+        p.JOINT_POINT2POINT,
+        [0, 0.25, 0], [0.15, 0, 0]
+    )
+    p.createConstraint(
+        chassis_id, -1, right_wheel_idx, -1,
+        p.JOINT_POINT2POINT,
+        [0, -0.25, 0], [0.15, 0, 0]
+    )
+    
+    return chassis_id, left_wheel_idx, right_wheel_idx
+
+robot, left_wheel, right_wheel = create_robot()
+
+# 运动学参数
+wheel_radius = 0.1  # 轮子半径 (m)
+wheel_base = 0.5   # 轮间距 (m)
+
+# 控制函数
+def move_robot(linear_vel, angular_vel, dt=0.1):
+    """
+    运动学：计算轮速
+    v = (v_l + v_r) / 2
+    ω = (v_r - v_l) / L
+    """
+    # 计算左右轮速度
+    v_right = (2 * linear_vel + angular_vel * wheel_base) / 2
+    v_left = (2 * linear_vel - angular_vel * wheel_base) / 2
+    
+    # 设置轮子速度
+    p.setJointMotorControl2(robot, left_wheel, p.VELOCITY_CONTROL, targetVelocity=v_left)
+    p.setJointMotorControl2(robot, right_wheel, p.VELOCITY_CONTROL, targetVelocity=v_right)
+    
+    return v_left, v_right
+
+print("3D机器人运动学演示")
+print("=" * 50)
+
+# 演示1：走直线
+print("\n演示1：前进1米")
+v_l, v_r = move_robot(0.5, 0)  # 0.5m/s前进
+print(f"左轮速度: {v_l:.2f} m/s, 右轮速度: {v_r:.2f} m/s")
+
+for _ in range(240):  # 约1秒
+    p.stepSimulation()
+    time.sleep(1./240.)
+
+# 演示2：画圆
+print("\n演示2：画圆（半径1米）")
+# v = r × ω => ω = v/r = 0.5/1 = 0.5 rad/s
+v_l, v_r = move_robot(0.5, 0.5)  # 0.5m/s, 0.5rad/s
+print(f"左轮速度: {v_l:.2f} m/s, 右轮速度: {v_r:.2f} m/s")
+
+for _ in range(1250):  # 约5秒
+    p.stepSimulation()
+    time.sleep(1./240.)
+
+# 停止
+move_robot(0, 0)
+print("\n演示结束！")
+
+# 读取位置
+pos, orn = p.getBasePositionAndOrientation(robot)
+print(f"最终位置: x={pos[0]:.2f}, y={pos[1]:.2f}, z={pos[2]:.2f}")
+```
+
+#### 运动学公式回顾
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                    运动学公式                                │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│  线速度: v = (v_l + v_r) / 2                             │
+│                                                             │
+│  角速度: ω = (v_r - v_l) / L                             │
+│           (L = 轮间距)                                      │
+│                                                             │
+│  反推轮速:                                                  │
+│  v_r = v + ω × L / 2                                      │
+│  v_l = v - ω × L / 2                                      │
+│                                                             │
+└─────────────────────────────────────────────────────────────┘
+```
+
 ω = (v_right - v_left) / wheel_base
 
 # 位置更新

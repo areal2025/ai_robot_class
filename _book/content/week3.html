@@ -1683,6 +1683,208 @@ TURN_TIME_PENTAGON = <span class="hljs-number">1.257</span> / TURN_SPEED
 <hr></hr>
 <h2 id="第一阶段完成！">第一阶段完成！</h2>
 <hr></hr>
+<hr></hr>
+<h2 id="🆕-pybullet仿真环境介绍">🆕 PyBullet仿真环境介绍</h2>
+<blockquote>
+<p>除了Turtlesim，我们还可以用<strong>PyBullet</strong>进行更真实的3D机器人仿真！</p>
+</blockquote>
+<h3 id="什么是pybullet？">什么是PyBullet？</h3>
+<blockquote>
+<p><strong>PyBullet</strong> = Python + Bullet物理引擎<br></br>一个开源的3D物理仿真库，支持机器人、车辆、物体等</p>
+</blockquote>
+<pre><code>PyBullet vs Turtlesim：
+
+┌─────────────────────────────────────────────────────────────┐
+│  Turtlesim                    │  PyBullet                   │
+├───────────────────────────────┼─────────────────────────────┤
+│  2D平面仿真                  │  3D空间仿真                 │
+│  简单的小乌龟                │  真实的机器人模型           │
+│  入门学习                    │  进阶学习                   │
+│  只有一只小乌龟              │  可以有多个机器人           │
+└───────────────────────────────┴─────────────────────────────┘
+</code></pre><h3 id="安装pybullet">安装PyBullet</h3>
+<pre><code class="lang-bash"><span class="hljs-comment"># 安装PyBullet</span>
+pip install pybullet
+
+<span class="hljs-comment"># 或使用conda</span>
+conda install pybullet -c conda-forge
+</code></pre>
+<h3 id="第一个pybullet示例：创建地面和球体">第一个PyBullet示例：创建地面和球体</h3>
+<pre><code class="lang-python"><span class="hljs-comment">#!/usr/bin/env python3</span>
+<span class="hljs-string">"""
+第一个PyBullet示例：创建地面和摆动的球体
+"""</span>
+
+<span class="hljs-keyword">import</span> pybullet <span class="hljs-keyword">as</span> p
+<span class="hljs-keyword">import</span> pybullet_data
+<span class="hljs-keyword">import</span> time
+
+<span class="hljs-comment"># 连接GUI客户端（显示3D窗口）</span>
+client_id = p.connect(p.GUI)
+
+<span class="hljs-comment"># 添加搜索路径（找到内置模型）</span>
+p.setAdditionalSearchPath(pybullet_data.getDataPath())
+
+<span class="hljs-comment"># 加载地面</span>
+plane_id = p.loadURDF(<span class="hljs-string">"plane.urdf"</span>)
+
+<span class="hljs-comment"># 加载球体（使用球体URDF）</span>
+sphere_id = p.loadURDF(<span class="hljs-string">"sphere2.urdf"</span>, [<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">2</span>])
+
+<span class="hljs-comment"># 设置重力</span>
+p.setGravity(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, -<span class="hljs-number">9.8</span>)
+
+<span class="hljs-comment"># 渲染器设置</span>
+p.configureDebugVisualizer(p.COV_ENABLE_RGB_BUFFER_PREVIEW, <span class="hljs-number">0</span>)
+p.configureDebugVisualizer(p.COV_ENABLE_DEPTH_BUFFER_PREVIEW, <span class="hljs-number">0</span>)
+p.configureDebugVisualizer(p.COV_ENABLE_SEGMENTATION_STA_PREVIEW, <span class="hljs-number">0</span>)
+
+<span class="hljs-built_in">print</span>(<span class="hljs-string">"按Ctrl+C退出"</span>)
+<span class="hljs-built_in">print</span>(<span class="hljs-string">"3D窗口显示：地面 + 球体"</span>)
+
+<span class="hljs-comment"># 仿真循环</span>
+<span class="hljs-keyword">try</span>:
+    <span class="hljs-keyword">while</span> <span class="hljs-literal">True</span>:
+        <span class="hljs-comment"># 进一步仿真（1/240秒）</span>
+        p.stepSimulation()
+        time.sleep(<span class="hljs-number">1.</span>/<span class="hljs-number">240.</span>)
+
+<span class="hljs-keyword">except</span> KeyboardInterrupt:
+    <span class="hljs-built_in">print</span>(<span class="hljs-string">"退出仿真"</span>)
+
+<span class="hljs-comment"># 断开连接</span>
+p.disconnect()
+</code></pre>
+<h3 id="运行效果">运行效果</h3>
+<pre><code>┌─────────────────────────────────────────────────────────────┐
+│                    PyBullet 3D窗口                          │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│                         ☀ (光源)                            │
+│                                                             │
+│                    ┌─────────┐                              │
+│                    │   球体   │ ← 球体受重力下落             │
+│                    │    ○    │                              │
+│                    └─────────┘                              │
+│                    ───────────────────  ← 地面              │
+│                                                             │
+│                    [相机控制: 鼠标拖动]                       │
+│                                                             │
+└─────────────────────────────────────────────────────────────┘
+</code></pre><h3 id="机器人仿真示例：移动的小车">机器人仿真示例：移动的小车</h3>
+<pre><code class="lang-python"><span class="hljs-comment">#!/usr/bin/env python3</span>
+<span class="hljs-string">"""
+PyBullet机器人示例：差速驱动小车
+"""</span>
+
+<span class="hljs-keyword">import</span> pybullet <span class="hljs-keyword">as</span> p
+<span class="hljs-keyword">import</span> pybullet_data
+<span class="hljs-keyword">import</span> time
+
+<span class="hljs-comment"># 连接仿真</span>
+client_id = p.connect(p.GUI)
+p.setAdditionalSearchPath(pybullet_data.getDataPath())
+
+<span class="hljs-comment"># 加载环境</span>
+p.loadURDF(<span class="hljs-string">"plane.urdf"</span>)
+
+<span class="hljs-comment"># 加载机器人（小车）</span>
+<span class="hljs-comment"># 使用内置的kuka或创建简单的盒子机器人</span>
+cube_start_pos = [<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0.5</span>]
+cube_start_orientation = p.getQuaternionFromEuler([<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>])
+
+<span class="hljs-comment"># 创建一个移动机器人（两个轮子+身体）</span>
+robot_id = p.createMultiBody(
+    baseMass=<span class="hljs-number">0</span>,
+    baseCollisionShapeIndex=p.createCollisionShape(p.BoxShape, halfExtents=[<span class="hljs-number">0.5</span>, <span class="hljs-number">0.3</span>, <span class="hljs-number">0.1</span>]),
+    basePosition=[<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0.1</span>]
+)
+
+<span class="hljs-comment"># 设置参数</span>
+max_force = <span class="hljs-number">20</span>
+max_velocity = <span class="hljs-number">3</span>
+
+<span class="hljs-built_in">print</span>(<span class="hljs-string">"机器人仿真开始！"</span>)
+<span class="hljs-built_in">print</span>(<span class="hljs-string">"使用applyJointMotor2Control来控制轮子"</span>)
+
+<span class="hljs-comment"># 控制循环</span>
+<span class="hljs-keyword">while</span> <span class="hljs-literal">True</span>:
+    <span class="hljs-comment"># 前进</span>
+    p.setJointMotorControl2(
+        bodyUniqueId=robot_id,
+        jointIndex=<span class="hljs-number">0</span>,  <span class="hljs-comment"># 左轮</span>
+        controlMode=p.VELOCITY_CONTROL,
+        targetVelocity=max_velocity,
+        force=max_force
+    )
+
+    p.setJointMotorControl2(
+        bodyUniqueId=robot_id,
+        jointIndex=<span class="hljs-number">1</span>,  <span class="hljs-comment"># 右轮</span>
+        controlMode=p.VELOCITY_CONTROL,
+        targetVelocity=max_velocity,
+        force=max_force
+    )
+
+    p.stepSimulation()
+    time.sleep(<span class="hljs-number">1.</span>/<span class="hljs-number">240.</span>)
+</code></pre>
+<h3 id="pybullet-vs-ros2仿真">PyBullet vs ROS2仿真</h3>
+<table>
+<thead>
+<tr>
+<th>特性</th>
+<th>PyBullet</th>
+<th>ROS2 (Gazebo)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>编程方式</td>
+<td>纯Python</td>
+<td>C++/Python + ROS2 API</td>
+</tr>
+<tr>
+<td>物理精度</td>
+<td>中等</td>
+<td>高</td>
+</tr>
+<tr>
+<td>传感器仿真</td>
+<td>基本</td>
+<td>完整</td>
+</tr>
+<tr>
+<td>与ROS集成</td>
+<td>需手动</td>
+<td>原生支持</td>
+</tr>
+<tr>
+<td>学习曲线</td>
+<td>简单</td>
+<td>较难</td>
+</tr>
+<tr>
+<td>适用场景</td>
+<td>学习/原型</td>
+<td>产品开发</td>
+</tr>
+</tbody>
+</table>
+<h3 id="何时使用pybullet？">何时使用PyBullet？</h3>
+<p>✅ 当你想快速验证算法时<br></br>✅ 当你学习机器人运动学时<br></br>✅ 当你需要简单的3D可视化时<br></br>✅ 当你不想配置复杂的ROS环境时  </p>
+<p>❌ 当你需要精确的传感器仿真时<br></br>❌ 当你需要与真实ROS机器人集成时<br></br>❌ 当你需要高保真物理仿真时  </p>
+<hr></hr>
+<h3 id="🎯-练习：尝试运行pybullet">🎯 练习：尝试运行PyBullet</h3>
+<pre><code class="lang-bash"><span class="hljs-comment"># 1. 安装</span>
+pip install pybullet
+
+<span class="hljs-comment"># 2. 运行示例</span>
+python3 -m pybullet_envs.examples.enjoy_TF_AntBulletEnv
+
+<span class="hljs-comment"># 3. 查看内置示例</span>
+python3 -m pybullet_data.gdf_loader
+</code></pre>
 <h2 id="🆕-进阶：用python控制ros2--集成openclaw">🆕 进阶：用Python控制ROS2 + 集成OpenClaw</h2>
 <h3 id="rosclaw-python节点">RosClaw Python节点</h3>
 <pre><code class="lang-python"><span class="hljs-comment">#!/usr/bin/env python3</span>
@@ -1774,6 +1976,114 @@ Agent 发送反馈给用户
 </blockquote>
 <hr></hr>
 <p><em>第一阶段（基础与环境搭建）完成！🎊</em></p>
+<hr></hr>
+<h2 id="🧩-拓展思考：什么是更复杂的机器人运动？">🧩 拓展思考：什么是更复杂的机器人运动？</h2>
+<blockquote>
+<p>到目前为止，我们学习了2D平面上的简单运动。那么真实的机器人是如何在<strong>三维空间</strong>中工作的呢？</p>
+</blockquote>
+<h3 id="从2d到3d">从2D到3D</h3>
+<pre><code>┌─────────────────────────────────────────────────────────────┐
+│                    运动维度扩展                               │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│  2D平面运动                    3D空间运动                  │
+│  ────────────────              ────────────────             │
+│                                                             │
+│     Y                              Z                       │
+│     │                             /│                        │
+│     │           → X               /│                        │
+│     │                          ───┼──→ X                   │
+│     │                         Y/                             │
+│                                                             │
+│  • 位置 (x, y)              • 位置 (x, y, z)              │
+│  • 偏航角 θ                 • 偏航 + 俯仰 + 滚转           │
+│                                                             │
+│     = 3 DOF                   • = 6 DOF                   │
+│     (自由度)                   (自由度)                    │
+│                                                             │
+└─────────────────────────────────────────────────────────────┘
+</code></pre><h3 id="三维空间的运动">三维空间的运动</h3>
+<blockquote>
+<p><strong>思考</strong>：如果机器人要在三维空间中移动，需要考虑什么？</p>
+</blockquote>
+<pre><code>3D机器人运动需要考虑：
+
+┌─────────────────────────────────────────────────────────────┐
+│                                                             │
+│  1️⃣ 位置 (Position)                                        │
+│     ├── X轴平移（前后）                                    │
+│     ├── Y轴平移（左右）                                    │
+│     └── Z轴平移（上下） ← 爬楼梯、飞行                     │
+│                                                             │
+│  2️⃣ 姿态 (Orientation)                                     │
+│     ├── 滚转 (Roll)  - 飞机翻滚                           │
+│     ├── 俯仰 (Pitch) - 飞机抬头/低头                       │
+│     └── 偏航 (Yaw)   - 船/车转弯                          │
+│                                                             │
+│  3️⃣ 动力学                                                │
+│     ├── 重力                                               │
+│     ├── 惯性                                               │
+│     └── 摩擦力                                             │
+│                                                             │
+└─────────────────────────────────────────────────────────────┘
+</code></pre><h3 id="常见的3d机器人">常见的3D机器人</h3>
+<table>
+<thead>
+<tr>
+<th>机器人</th>
+<th>运动特点</th>
+<th>自由度</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>四足机器人</td>
+<td>腿部运动+身体平衡</td>
+<td>12+ DOF</td>
+</tr>
+<tr>
+<td>无人机</td>
+<td>飞行+悬停</td>
+<td>6 DOF</td>
+</tr>
+<tr>
+<td>机械臂</td>
+<td>关节运动+末端定位</td>
+<td>6+ DOF</td>
+</tr>
+<tr>
+<td>人形机器人</td>
+<td>双足行走+全身协调</td>
+<td>30+ DOF</td>
+</tr>
+</tbody>
+</table>
+<h3 id="课后思考题">课后思考题</h3>
+<blockquote>
+<p>🔥 <strong>挑战</strong>：尝试回答以下问题</p>
+</blockquote>
+<ol>
+<li><p><strong>四足机器人</strong>：如果想让一只机器狗正常行走，需要控制哪些关节？最少需要几个电机？</p>
+</li>
+<li><p><strong>无人机</strong>：四旋翼无人机是如何实现前后左右移动的？和车轮机器人有什么区别？</p>
+</li>
+<li><p><strong>机械臂</strong>：要精确控制机械臂末端到达空间中的某个点，需要知道什么信息？</p>
+</li>
+<li><p><strong>平衡问题</strong>：为什么双足机器人走路比轮子机器人更难？</p>
+</li>
+</ol>
+<hr></hr>
+<h3 id="📚-延伸学习">📚 延伸学习</h3>
+<p>如果你对3D机器人运动感兴趣，可以了解：</p>
+<ul>
+<li><strong>PyBullet/Gazebo</strong> - 3D物理仿真</li>
+<li><strong>RobotPy</strong> - Python机器人库</li>
+<li><strong>MoveIt</strong> - ROS机械臂规划</li>
+<li><strong>PX4</strong> - 开源无人机软件</li>
+</ul>
+<blockquote>
+<p>💡 <strong>提示</strong>：本课程的第6阶段会介绍更复杂的3D运动控制！</p>
+</blockquote>
 
                                 
                                 </section>
@@ -1813,7 +2123,7 @@ Agent 发送反馈给用户
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"1.3.1 Python基础回顾","level":"5.1","depth":1,"previous":{"title":"课程简介","level":"1.1","depth":1,"path":"README.md","ref":"README.md","articles":[]},"dir":"ltr"},"config":{"plugins":[],"root":".","styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","author":"Your Name","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56},"embedFonts":false},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"ROS2机器人编程基础课程","language":"zh-hans","gitbook":"*","description":"第一阶段：基础与环境搭建"},"file":{"path":"content/week3.md","mtime":"2026-02-28T11:02:24.661Z","type":"markdown"},"gitbook":{"version":"6.1.6","time":"2026-03-02T05:22:05.010Z"},"basePath":"..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"1.3.1 Python基础回顾","level":"5.1","depth":1,"previous":{"title":"课程简介","level":"1.1","depth":1,"path":"README.md","ref":"README.md","articles":[]},"dir":"ltr"},"config":{"plugins":[],"root":".","styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","author":"Your Name","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56},"embedFonts":false},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"ROS2机器人编程基础课程","language":"zh-hans","gitbook":"*","description":"第一阶段：基础与环境搭建"},"file":{"path":"content/week3.md","mtime":"2026-03-02T09:21:57.211Z","type":"markdown"},"gitbook":{"version":"6.1.6","time":"2026-03-02T09:22:05.685Z"},"basePath":"..","book":{"language":""}});
         });
     </script>
 </div>

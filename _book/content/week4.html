@@ -1274,67 +1274,205 @@ x: 5.44, y: 6.44, theta: 1.57 (90°)
 v = (v_left + v_right) / <span class="hljs-number">2</span>
 
 <span class="hljs-comment"># 角速度  </span>
-ω = (v_right - v_left) / wheel_base
 
-<span class="hljs-comment"># 位置更新</span>
-x_new = x_old + v * cos(θ) * dt
-y_new = y_old + v * sin(θ) * dt
-θ_new = θ_old + ω * dt
-</code></pre>
-<hr></hr>
-<h2 id="215-编程实践（80分钟）">2.1.5 编程实践（80分钟）</h2>
-<h3 id="编写里程计读取节点">编写里程计读取节点</h3>
-<pre><code class="lang-python"><span class="hljs-comment">#!/usr/bin/env python3</span>
+<span class="hljs-comment">### 🎮 PyBullet 3D运动学演示（进阶）</span>
+
+&gt; 除了Turtlesim，我们还可以用PyBullet看更真实的3D机器人运动！
+
+<span class="hljs-comment">#### PyBullet 3D小车仿真</span>
+
+```python
+<span class="hljs-comment">#!/usr/bin/env python3</span>
 <span class="hljs-string">"""
-读取Turtlesim的里程计数据
+PyBullet 3D机器人运动学演示
 """</span>
 
-<span class="hljs-keyword">import</span> rclpy
-<span class="hljs-keyword">from</span> rclpy.node <span class="hljs-keyword">import</span> Node
-<span class="hljs-keyword">from</span> turtlesim.msg <span class="hljs-keyword">import</span> Pose
+<span class="hljs-keyword">import</span> pybullet <span class="hljs-keyword">as</span> p
+<span class="hljs-keyword">import</span> pybullet_data
+<span class="hljs-keyword">import</span> time
+<span class="hljs-keyword">import</span> math
+
+<span class="hljs-comment"># 连接仿真</span>
+client_id = p.connect(p.GUI)
+p.setAdditionalSearchPath(pybullet_data.getDataPath())
+
+<span class="hljs-comment"># 加载地面</span>
+p.loadURDF(<span class="hljs-string">"plane.urdf"</span>)
+
+<span class="hljs-comment"># 创建机器人（小车）</span>
+<span class="hljs-keyword">def</span> <span class="hljs-title function_">create_robot</span>():
+    <span class="hljs-comment"># 车身</span>
+    chassis = p.createCollisionShape(p.BoxShape, halfExtents=[<span class="hljs-number">0.3</span>, <span class="hljs-number">0.2</span>, <span class="hljs-number">0.1</span>])
+    chassis_mass = <span class="hljs-number">1.0</span>
+    chassis_id = p.createMultiBody(
+        chassisMass=chassis_mass,
+        baseCollisionShapeIndex=chassis,
+        basePosition=[<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0.2</span>]
+    )
+
+    <span class="hljs-comment"># 左轮</span>
+    left_wheel = p.createCollisionShape(p.CylinderShape, radius=<span class="hljs-number">0.1</span>, height=<span class="hljs-number">0.05</span>)
+    left_wheel_idx = p.createMultiBody(
+        baseMass=<span class="hljs-number">0.2</span>,
+        baseCollisionShapeIndex=left_wheel,
+        basePosition=[<span class="hljs-number">0.3</span>, <span class="hljs-number">0.25</span>, <span class="hljs-number">0.1</span>],
+        baseOrientation=[<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>]
+    )
+
+    <span class="hljs-comment"># 右轮</span>
+    right_wheel = p.createCollisionShape(p.CylinderShape, radius=<span class="hljs-number">0.1</span>, height=<span class="hljs-number">0.05</span>)
+    right_wheel_idx = p.createMultiBody(
+        baseMass=<span class="hljs-number">0.2</span>,
+        baseCollisionShapeIndex=right_wheel,
+        basePosition=[-<span class="hljs-number">0.3</span>, <span class="hljs-number">0.25</span>, <span class="hljs-number">0.1</span>],
+        baseOrientation=[<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>]
+    )
+
+    <span class="hljs-comment"># 连接轮子和车身</span>
+    p.createConstraint(
+        chassis_id, -<span class="hljs-number">1</span>, left_wheel_idx, -<span class="hljs-number">1</span>,
+        p.JOINT_POINT2POINT,
+        [<span class="hljs-number">0</span>, <span class="hljs-number">0.25</span>, <span class="hljs-number">0</span>], [<span class="hljs-number">0.15</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>]
+    )
+    p.createConstraint(
+        chassis_id, -<span class="hljs-number">1</span>, right_wheel_idx, -<span class="hljs-number">1</span>,
+        p.JOINT_POINT2POINT,
+        [<span class="hljs-number">0</span>, -<span class="hljs-number">0.25</span>, <span class="hljs-number">0</span>], [<span class="hljs-number">0.15</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>]
+    )
+
+    <span class="hljs-keyword">return</span> chassis_id, left_wheel_idx, right_wheel_idx
+
+robot, left_wheel, right_wheel = create_robot()
+
+<span class="hljs-comment"># 运动学参数</span>
+wheel_radius = <span class="hljs-number">0.1</span>  <span class="hljs-comment"># 轮子半径 (m)</span>
+wheel_base = <span class="hljs-number">0.5</span>   <span class="hljs-comment"># 轮间距 (m)</span>
+
+<span class="hljs-comment"># 控制函数</span>
+<span class="hljs-keyword">def</span> <span class="hljs-title function_">move_robot</span>(<span class="hljs-params">linear_vel, angular_vel, dt=<span class="hljs-number">0.1</span></span>):
+    <span class="hljs-string">"""
+    运动学：计算轮速
+    v = (v_l + v_r) / 2
+    ω = (v_r - v_l) / L
+    """</span>
+    <span class="hljs-comment"># 计算左右轮速度</span>
+    v_right = (<span class="hljs-number">2</span> * linear_vel + angular_vel * wheel_base) / <span class="hljs-number">2</span>
+    v_left = (<span class="hljs-number">2</span> * linear_vel - angular_vel * wheel_base) / <span class="hljs-number">2</span>
+
+    <span class="hljs-comment"># 设置轮子速度</span>
+    p.setJointMotorControl2(robot, left_wheel, p.VELOCITY_CONTROL, targetVelocity=v_left)
+    p.setJointMotorControl2(robot, right_wheel, p.VELOCITY_CONTROL, targetVelocity=v_right)
+
+    <span class="hljs-keyword">return</span> v_left, v_right
+
+<span class="hljs-built_in">print</span>(<span class="hljs-string">"3D机器人运动学演示"</span>)
+<span class="hljs-built_in">print</span>(<span class="hljs-string">"="</span> * <span class="hljs-number">50</span>)
+
+<span class="hljs-comment"># 演示1：走直线</span>
+<span class="hljs-built_in">print</span>(<span class="hljs-string">"\n演示1：前进1米"</span>)
+v_l, v_r = move_robot(<span class="hljs-number">0.5</span>, <span class="hljs-number">0</span>)  <span class="hljs-comment"># 0.5m/s前进</span>
+<span class="hljs-built_in">print</span>(<span class="hljs-string">f"左轮速度: <span class="hljs-subst">{v_l:<span class="hljs-number">.2</span>f}</span> m/s, 右轮速度: <span class="hljs-subst">{v_r:<span class="hljs-number">.2</span>f}</span> m/s"</span>)
+
+<span class="hljs-keyword">for</span> _ <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">240</span>):  <span class="hljs-comment"># 约1秒</span>
+    p.stepSimulation()
+    time.sleep(<span class="hljs-number">1.</span>/<span class="hljs-number">240.</span>)
+
+<span class="hljs-comment"># 演示2：画圆</span>
+<span class="hljs-built_in">print</span>(<span class="hljs-string">"\n演示2：画圆（半径1米）"</span>)
+<span class="hljs-comment"># v = r × ω =&gt; ω = v/r = 0.5/1 = 0.5 rad/s</span>
+v_l, v_r = move_robot(<span class="hljs-number">0.5</span>, <span class="hljs-number">0.5</span>)  <span class="hljs-comment"># 0.5m/s, 0.5rad/s</span>
+<span class="hljs-built_in">print</span>(<span class="hljs-string">f"左轮速度: <span class="hljs-subst">{v_l:<span class="hljs-number">.2</span>f}</span> m/s, 右轮速度: <span class="hljs-subst">{v_r:<span class="hljs-number">.2</span>f}</span> m/s"</span>)
+
+<span class="hljs-keyword">for</span> _ <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">1250</span>):  <span class="hljs-comment"># 约5秒</span>
+    p.stepSimulation()
+    time.sleep(<span class="hljs-number">1.</span>/<span class="hljs-number">240.</span>)
+
+<span class="hljs-comment"># 停止</span>
+move_robot(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>)
+<span class="hljs-built_in">print</span>(<span class="hljs-string">"\n演示结束！"</span>)
+
+<span class="hljs-comment"># 读取位置</span>
+pos, orn = p.getBasePositionAndOrientation(robot)
+<span class="hljs-built_in">print</span>(<span class="hljs-string">f"最终位置: x=<span class="hljs-subst">{pos[<span class="hljs-number">0</span>]:<span class="hljs-number">.2</span>f}</span>, y=<span class="hljs-subst">{pos[<span class="hljs-number">1</span>]:<span class="hljs-number">.2</span>f}</span>, z=<span class="hljs-subst">{pos[<span class="hljs-number">2</span>]:<span class="hljs-number">.2</span>f}</span>"</span>)
+</code></pre>
+<h4 id="运动学公式回顾">运动学公式回顾</h4>
+<pre><code>┌─────────────────────────────────────────────────────────────┐
+│                    运动学公式                                │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│  线速度: v = (v_l + v_r) / 2                             │
+│                                                             │
+│  角速度: ω = (v_r - v_l) / L                             │
+│           (L = 轮间距)                                      │
+│                                                             │
+│  反推轮速:                                                  │
+│  v_r = v + ω × L / 2                                      │
+│  v_l = v - ω × L / 2                                      │
+│                                                             │
+└─────────────────────────────────────────────────────────────┘
+</code></pre><p>ω = (v_right - v_left) / wheel_base</p>
+<h1 id="位置更新">位置更新</h1>
+<p>x_new = x_old + v <em> cos(θ) </em> dt
+y_new = y_old + v <em> sin(θ) </em> dt
+θ_new = θ_old + ω * dt</p>
+<pre><code>
+---
+
+## 2.1.5 编程实践（80分钟）
+
+### 编写里程计读取节点
+
+```python
+#!/usr/bin/env python3
+"""
+读取Turtlesim的里程计数据
+"""
+
+import rclpy
+from rclpy.node import Node
+from turtlesim.msg import Pose
 
 
-<span class="hljs-keyword">class</span> <span class="hljs-title class_">PoseReader</span>(<span class="hljs-title class_ inherited__">Node</span>):
-    <span class="hljs-string">"""读取位置信息的节点"""</span>
+class PoseReader(Node):
+    """读取位置信息的节点"""
 
-    <span class="hljs-keyword">def</span> <span class="hljs-title function_">__init__</span>(<span class="hljs-params">self</span>):
-        <span class="hljs-built_in">super</span>().__init__(<span class="hljs-string">'pose_reader'</span>)
+    def __init__(self):
+        super().__init__('pose_reader')
 
-        <span class="hljs-comment"># 订阅/turtle1/pose话题</span>
-        <span class="hljs-variable language_">self</span>.subscription = <span class="hljs-variable language_">self</span>.create_subscription(
+        # 订阅/turtle1/pose话题
+        self.subscription = self.create_subscription(
             Pose,
-            <span class="hljs-string">'/turtle1/pose'</span>,
-            <span class="hljs-variable language_">self</span>.pose_callback,
-            <span class="hljs-number">10</span>
+            '/turtle1/pose',
+            self.pose_callback,
+            10
         )
 
-        <span class="hljs-variable language_">self</span>.get_logger().info(<span class="hljs-string">'位置读取节点已启动！'</span>)
+        self.get_logger().info('位置读取节点已启动！')
 
-    <span class="hljs-keyword">def</span> <span class="hljs-title function_">pose_callback</span>(<span class="hljs-params">self, msg</span>):
-        <span class="hljs-string">"""回调函数：收到位置数据时调用"""</span>
-        <span class="hljs-variable language_">self</span>.get_logger().info(
-            <span class="hljs-string">f'位置: x=<span class="hljs-subst">{msg.x:<span class="hljs-number">.2</span>f}</span>, y=<span class="hljs-subst">{msg.y:<span class="hljs-number">.2</span>f}</span>, '</span>
-            <span class="hljs-string">f'角度: <span class="hljs-subst">{msg.theta:<span class="hljs-number">.2</span>f}</span> rad (<span class="hljs-subst">{msg.theta*<span class="hljs-number">180</span>/<span class="hljs-number">3.14</span>:<span class="hljs-number">.1</span>f}</span>°)'</span>
+    def pose_callback(self, msg):
+        """回调函数：收到位置数据时调用"""
+        self.get_logger().info(
+            f'位置: x={msg.x:.2f}, y={msg.y:.2f}, '
+            f'角度: {msg.theta:.2f} rad ({msg.theta*180/3.14:.1f}°)'
         )
 
 
-<span class="hljs-keyword">def</span> <span class="hljs-title function_">main</span>(<span class="hljs-params">args=<span class="hljs-literal">None</span></span>):
+def main(args=None):
     rclpy.init(args=args)
     node = PoseReader()
 
-    <span class="hljs-keyword">try</span>:
+    try:
         rclpy.spin(node)
-    <span class="hljs-keyword">except</span> KeyboardInterrupt:
-        <span class="hljs-keyword">pass</span>
-    <span class="hljs-keyword">finally</span>:
+    except KeyboardInterrupt:
+        pass
+    finally:
         node.destroy_node()
         rclpy.shutdown()
 
 
-<span class="hljs-keyword">if</span> __name__ == <span class="hljs-string">'__main__'</span>:
+if __name__ == '__main__':
     main()
-</code></pre>
-<hr></hr>
+</code></pre><hr></hr>
 <h2 id="本周实验报告">本周实验报告</h2>
 <h3 id="✅-验收清单">✅ 验收清单</h3>
 <table>
@@ -1468,7 +1606,7 @@ y_new = y_old + v * sin(θ) * dt
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"2.1.1 坐标系概念","level":"7.1","depth":1,"previous":{"title":"课程简介","level":"1.1","depth":1,"path":"README.md","ref":"README.md","articles":[]},"dir":"ltr"},"config":{"plugins":[],"root":".","styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","author":"Your Name","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56},"embedFonts":false},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"ROS2机器人编程基础课程","language":"zh-hans","gitbook":"*","description":"第一阶段：基础与环境搭建"},"file":{"path":"content/week4.md","mtime":"2026-03-02T05:18:46.592Z","type":"markdown"},"gitbook":{"version":"6.1.6","time":"2026-03-02T05:22:05.010Z"},"basePath":"..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"2.1.1 坐标系概念","level":"7.1","depth":1,"previous":{"title":"课程简介","level":"1.1","depth":1,"path":"README.md","ref":"README.md","articles":[]},"dir":"ltr"},"config":{"plugins":[],"root":".","styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","author":"Your Name","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56},"embedFonts":false},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"ROS2机器人编程基础课程","language":"zh-hans","gitbook":"*","description":"第一阶段：基础与环境搭建"},"file":{"path":"content/week4.md","mtime":"2026-03-02T09:21:23.275Z","type":"markdown"},"gitbook":{"version":"6.1.6","time":"2026-03-02T09:22:05.685Z"},"basePath":"..","book":{"language":""}});
         });
     </script>
 </div>

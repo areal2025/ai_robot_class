@@ -641,6 +641,208 @@ def main(args=None):
 
 ---
 
+
+---
+
+## 🆕 PyBullet仿真环境介绍
+
+> 除了Turtlesim，我们还可以用**PyBullet**进行更真实的3D机器人仿真！
+
+### 什么是PyBullet？
+
+> **PyBullet** = Python + Bullet物理引擎  
+> 一个开源的3D物理仿真库，支持机器人、车辆、物体等
+
+```
+PyBullet vs Turtlesim：
+
+┌─────────────────────────────────────────────────────────────┐
+│  Turtlesim                    │  PyBullet                   │
+├───────────────────────────────┼─────────────────────────────┤
+│  2D平面仿真                  │  3D空间仿真                 │
+│  简单的小乌龟                │  真实的机器人模型           │
+│  入门学习                    │  进阶学习                   │
+│  只有一只小乌龟              │  可以有多个机器人           │
+└───────────────────────────────┴─────────────────────────────┘
+```
+
+### 安装PyBullet
+
+```bash
+# 安装PyBullet
+pip install pybullet
+
+# 或使用conda
+conda install pybullet -c conda-forge
+```
+
+### 第一个PyBullet示例：创建地面和球体
+
+```python
+#!/usr/bin/env python3
+"""
+第一个PyBullet示例：创建地面和摆动的球体
+"""
+
+import pybullet as p
+import pybullet_data
+import time
+
+# 连接GUI客户端（显示3D窗口）
+client_id = p.connect(p.GUI)
+
+# 添加搜索路径（找到内置模型）
+p.setAdditionalSearchPath(pybullet_data.getDataPath())
+
+# 加载地面
+plane_id = p.loadURDF("plane.urdf")
+
+# 加载球体（使用球体URDF）
+sphere_id = p.loadURDF("sphere2.urdf", [0, 0, 2])
+
+# 设置重力
+p.setGravity(0, 0, -9.8)
+
+# 渲染器设置
+p.configureDebugVisualizer(p.COV_ENABLE_RGB_BUFFER_PREVIEW, 0)
+p.configureDebugVisualizer(p.COV_ENABLE_DEPTH_BUFFER_PREVIEW, 0)
+p.configureDebugVisualizer(p.COV_ENABLE_SEGMENTATION_STA_PREVIEW, 0)
+
+print("按Ctrl+C退出")
+print("3D窗口显示：地面 + 球体")
+
+# 仿真循环
+try:
+    while True:
+        # 进一步仿真（1/240秒）
+        p.stepSimulation()
+        time.sleep(1./240.)
+        
+except KeyboardInterrupt:
+    print("退出仿真")
+
+# 断开连接
+p.disconnect()
+```
+
+### 运行效果
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                    PyBullet 3D窗口                          │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│                         ☀ (光源)                            │
+│                                                             │
+│                    ┌─────────┐                              │
+│                    │   球体   │ ← 球体受重力下落             │
+│                    │    ○    │                              │
+│                    └─────────┘                              │
+│                    ───────────────────  ← 地面              │
+│                                                             │
+│                    [相机控制: 鼠标拖动]                       │
+│                                                             │
+└─────────────────────────────────────────────────────────────┘
+```
+
+### 机器人仿真示例：移动的小车
+
+```python
+#!/usr/bin/env python3
+"""
+PyBullet机器人示例：差速驱动小车
+"""
+
+import pybullet as p
+import pybullet_data
+import time
+
+# 连接仿真
+client_id = p.connect(p.GUI)
+p.setAdditionalSearchPath(pybullet_data.getDataPath())
+
+# 加载环境
+p.loadURDF("plane.urdf")
+
+# 加载机器人（小车）
+# 使用内置的kuka或创建简单的盒子机器人
+cube_start_pos = [0, 0, 0.5]
+cube_start_orientation = p.getQuaternionFromEuler([0, 0, 0])
+
+# 创建一个移动机器人（两个轮子+身体）
+robot_id = p.createMultiBody(
+    baseMass=0,
+    baseCollisionShapeIndex=p.createCollisionShape(p.BoxShape, halfExtents=[0.5, 0.3, 0.1]),
+    basePosition=[0, 0, 0.1]
+)
+
+# 设置参数
+max_force = 20
+max_velocity = 3
+
+print("机器人仿真开始！")
+print("使用applyJointMotor2Control来控制轮子")
+
+# 控制循环
+while True:
+    # 前进
+    p.setJointMotorControl2(
+        bodyUniqueId=robot_id,
+        jointIndex=0,  # 左轮
+        controlMode=p.VELOCITY_CONTROL,
+        targetVelocity=max_velocity,
+        force=max_force
+    )
+    
+    p.setJointMotorControl2(
+        bodyUniqueId=robot_id,
+        jointIndex=1,  # 右轮
+        controlMode=p.VELOCITY_CONTROL,
+        targetVelocity=max_velocity,
+        force=max_force
+    )
+    
+    p.stepSimulation()
+    time.sleep(1./240.)
+```
+
+### PyBullet vs ROS2仿真
+
+| 特性 | PyBullet | ROS2 (Gazebo) |
+|------|---------|---------------|
+| 编程方式 | 纯Python | C++/Python + ROS2 API |
+| 物理精度 | 中等 | 高 |
+| 传感器仿真 | 基本 | 完整 |
+| 与ROS集成 | 需手动 | 原生支持 |
+| 学习曲线 | 简单 | 较难 |
+| 适用场景 | 学习/原型 | 产品开发 |
+
+### 何时使用PyBullet？
+
+✅ 当你想快速验证算法时  
+✅ 当你学习机器人运动学时  
+✅ 当你需要简单的3D可视化时  
+✅ 当你不想配置复杂的ROS环境时  
+
+❌ 当你需要精确的传感器仿真时  
+❌ 当你需要与真实ROS机器人集成时  
+❌ 当你需要高保真物理仿真时  
+
+---
+
+### 🎯 练习：尝试运行PyBullet
+
+```bash
+# 1. 安装
+pip install pybullet
+
+# 2. 运行示例
+python3 -m pybullet_envs.examples.enjoy_TF_AntBulletEnv
+
+# 3. 查看内置示例
+python3 -m pybullet_data.gdf_loader
+```
+
 ## 🆕 进阶：用Python控制ROS2 + 集成OpenClaw
 
 ### RosClaw Python节点
@@ -742,3 +944,96 @@ Agent 发送反馈给用户
 ---
 
 *第一阶段（基础与环境搭建）完成！🎊*
+
+---
+
+## 🧩 拓展思考：什么是更复杂的机器人运动？
+
+> 到目前为止，我们学习了2D平面上的简单运动。那么真实的机器人是如何在**三维空间**中工作的呢？
+
+### 从2D到3D
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                    运动维度扩展                               │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│  2D平面运动                    3D空间运动                  │
+│  ────────────────              ────────────────             │
+│                                                             │
+│     Y                              Z                       │
+│     │                             /│                        │
+│     │           → X               /│                        │
+│     │                          ───┼──→ X                   │
+│     │                         Y/                             │
+│                                                             │
+│  • 位置 (x, y)              • 位置 (x, y, z)              │
+│  • 偏航角 θ                 • 偏航 + 俯仰 + 滚转           │
+│                                                             │
+│     = 3 DOF                   • = 6 DOF                   │
+│     (自由度)                   (自由度)                    │
+│                                                             │
+└─────────────────────────────────────────────────────────────┘
+```
+
+### 三维空间的运动
+
+> **思考**：如果机器人要在三维空间中移动，需要考虑什么？
+
+```
+3D机器人运动需要考虑：
+
+┌─────────────────────────────────────────────────────────────┐
+│                                                             │
+│  1️⃣ 位置 (Position)                                        │
+│     ├── X轴平移（前后）                                    │
+│     ├── Y轴平移（左右）                                    │
+│     └── Z轴平移（上下） ← 爬楼梯、飞行                     │
+│                                                             │
+│  2️⃣ 姿态 (Orientation)                                     │
+│     ├── 滚转 (Roll)  - 飞机翻滚                           │
+│     ├── 俯仰 (Pitch) - 飞机抬头/低头                       │
+│     └── 偏航 (Yaw)   - 船/车转弯                          │
+│                                                             │
+│  3️⃣ 动力学                                                │
+│     ├── 重力                                               │
+│     ├── 惯性                                               │
+│     └── 摩擦力                                             │
+│                                                             │
+└─────────────────────────────────────────────────────────────┘
+```
+
+### 常见的3D机器人
+
+| 机器人 | 运动特点 | 自由度 |
+|--------|---------|--------|
+| 四足机器人 | 腿部运动+身体平衡 | 12+ DOF |
+| 无人机 | 飞行+悬停 | 6 DOF |
+| 机械臂 | 关节运动+末端定位 | 6+ DOF |
+| 人形机器人 | 双足行走+全身协调 | 30+ DOF |
+
+### 课后思考题
+
+> 🔥 **挑战**：尝试回答以下问题
+
+1. **四足机器人**：如果想让一只机器狗正常行走，需要控制哪些关节？最少需要几个电机？
+
+2. **无人机**：四旋翼无人机是如何实现前后左右移动的？和车轮机器人有什么区别？
+
+3. **机械臂**：要精确控制机械臂末端到达空间中的某个点，需要知道什么信息？
+
+4. **平衡问题**：为什么双足机器人走路比轮子机器人更难？
+
+---
+
+### 📚 延伸学习
+
+如果你对3D机器人运动感兴趣，可以了解：
+
+- **PyBullet/Gazebo** - 3D物理仿真
+- **RobotPy** - Python机器人库
+- **MoveIt** - ROS机械臂规划
+- **PX4** - 开源无人机软件
+
+> 💡 **提示**：本课程的第6阶段会介绍更复杂的3D运动控制！
+
