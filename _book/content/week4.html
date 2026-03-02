@@ -1726,7 +1726,141 @@ y_both = [L1 * math.sin(t) + L2 * math.sin(t*<span class="hljs-number">2</span>)
 <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">0</span>, <span class="hljs-number">91</span>, <span class="hljs-number">30</span>):
     <span class="hljs-built_in">print</span>(<span class="hljs-string">f"<span class="hljs-subst">{i}</span>°    (<span class="hljs-subst">{x1_only[i]:<span class="hljs-number">.2</span>f}</span>, <span class="hljs-subst">{y1_only[i]:<span class="hljs-number">.2</span>f}</span>)    (<span class="hljs-subst">{x_both[i]:<span class="hljs-number">.2</span>f}</span>, <span class="hljs-subst">{y_both[i]:<span class="hljs-number">.2</span>f}</span>)"</span>)
 </code></pre>
-<h3 id="思考题">思考题</h3>
+<h2 id="📐-自由度的定义">📐 自由度的定义</h2>
+<blockquote>
+<p>自由度(DOF = Degrees of Freedom)是机器人学中最重要的概念之一！</p>
+</blockquote>
+<h3 id="什么是自由度？">什么是自由度？</h3>
+<blockquote>
+<p><strong>自由度</strong> = 机器人<strong>独立运动</strong>的数目</p>
+</blockquote>
+<pre><code>┌─────────────────────────────────────────────────────────────┐
+│                    例子：从1D到3D                           │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│  1D (1自由度)                                              │
+│  ─────────────                                             │
+│  只能来回移动                                               │
+│  ○──────────○                                               │
+│  ←────────→                                                │
+│                                                             │
+│  ────────────────────────────────────────────────────────   │
+│                                                             │
+│  2D (3自由度)                                              │
+│  ─────────────                                             │
+│  可以在平面移动 + 旋转                                       │
+│          ↑                                                  │
+│     ↖   │   ↗                                             │
+│      │  │  │                                              │
+│  ←────┼──┼──→                                              │
+│      │  │  │                                              │
+│     ↙   │   ↘                                             │
+│          ↓                                                  │
+│  位置(x,y) + 方向(θ) = 3个自由度                         │
+│                                                             │
+│  ────────────────────────────────────────────────────────   │
+│                                                             │
+│  3D (6自由度)                                              │
+│  ─────────────                                             │
+│  空间移动 + 空间旋转                                        │
+│                                                             │
+│  位置(x,y,z) + 姿态(Roll,Pitch,Yaw) = 6个自由度           │
+│                                                             │
+└─────────────────────────────────────────────────────────────┘
+</code></pre><h3 id="机器人自由度">机器人自由度</h3>
+<table>
+<thead>
+<tr>
+<th>机器人类型</th>
+<th>典型自由度</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>差速驱动小车</td>
+<td>2</td>
+<td>x,y位移</td>
+</tr>
+<tr>
+<td>全向移动机器人</td>
+<td>3</td>
+<td>x,y位移 + 旋转</td>
+</tr>
+<tr>
+<td>机械臂(6轴)</td>
+<td>6</td>
+<td>6个关节</td>
+</tr>
+<tr>
+<td>四足机器人</td>
+<td>12+</td>
+<td>每条腿3个关节</td>
+</tr>
+<tr>
+<td>人形机器人</td>
+<td>30+</td>
+<td>全身关节</td>
+</tr>
+<tr>
+<td>无人机</td>
+<td>6</td>
+<td>位置+姿态</td>
+</tr>
+</tbody>
+</table>
+<h3 id="自由度-vs-关节数">自由度 vs 关节数</h3>
+<pre><code>┌─────────────────────────────────────────────────────────────┐
+│  常见误解：自由度 = 关节数                                  │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│  实际上：                                                   │
+│  • 关节数 ≥ 自由度数（冗余）                               │
+│  • 可以有"冗余自由度"（比如7轴机械臂 &gt; 6个末端自由度）    │
+│  • 冗余机械臂更灵活，可以避开障碍物                         │
+│                                                             │
+└─────────────────────────────────────────────────────────────┘
+</code></pre><h3 id="2d-vs-3d-运动">2D vs 3D 运动</h3>
+<table>
+<thead>
+<tr>
+<th>维度</th>
+<th>位置</th>
+<th>姿态</th>
+<th>总自由度</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2D</td>
+<td>x, y</td>
+<td>θ</td>
+<td>3</td>
+</tr>
+<tr>
+<td>3D</td>
+<td>x, y, z</td>
+<td>roll, pitch, yaw</td>
+<td>6</td>
+</tr>
+</tbody>
+</table>
+<h3 id="思考：turtlesim的小乌龟有几个自由度？">思考：Turtlesim的小乌龟有几个自由度？</h3>
+<pre><code>┌─────────────────────────────────────────────────────────────┐
+│  小乌龟的运动：                                              │
+│                                                             │
+│  • 可以在2D平面移动 (x, y) = 2个位置自由度               │
+│  • 可以旋转方向 θ = 1个姿态自由度                          │
+│                                                             │
+│  总计：3个自由度 (在2D空间)                               │
+│                                                             │
+│  但是！它只有2个控制输入：                                  │
+│  • 线速度 (控制x,y)                                        │
+│  • 角速度 (控制θ)                                         │
+│                                                             │
+│  这就是为什么它不能直接侧向移动！                           │
+└─────────────────────────────────────────────────────────────┘
+</code></pre><h3 id="思考题">思考题</h3>
 <blockquote>
 <p>🔥 <strong>挑战</strong>：尝试回答以下问题</p>
 </blockquote>
@@ -1796,7 +1930,7 @@ y_both = [L1 * math.sin(t) + L2 * math.sin(t*<span class="hljs-number">2</span>)
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"2.1.1 坐标系概念","level":"7.1","depth":1,"previous":{"title":"课程简介","level":"1.1","depth":1,"path":"README.md","ref":"README.md","articles":[]},"dir":"ltr"},"config":{"plugins":[],"root":".","styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","author":"Your Name","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56},"embedFonts":false},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"ROS2机器人编程基础课程","language":"zh-hans","gitbook":"*","description":"第一阶段：基础与环境搭建"},"file":{"path":"content/week4.md","mtime":"2026-03-02T09:23:47.498Z","type":"markdown"},"gitbook":{"version":"6.1.6","time":"2026-03-02T09:23:55.757Z"},"basePath":"..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"2.1.1 坐标系概念","level":"7.1","depth":1,"previous":{"title":"课程简介","level":"1.1","depth":1,"path":"README.md","ref":"README.md","articles":[]},"dir":"ltr"},"config":{"plugins":[],"root":".","styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","author":"Your Name","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56},"embedFonts":false},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"ROS2机器人编程基础课程","language":"zh-hans","gitbook":"*","description":"第一阶段：基础与环境搭建"},"file":{"path":"content/week4.md","mtime":"2026-03-02T09:31:40.638Z","type":"markdown"},"gitbook":{"version":"6.1.6","time":"2026-03-02T09:31:49.009Z"},"basePath":"..","book":{"language":""}});
         });
     </script>
 </div>
