@@ -5,15 +5,10 @@
 ## 第一阶段：基础与环境搭建
 
 - [第1周：课程介绍与仿真环境搭建](content/week1.md)
-
 - [第2周：ROS2通信机制基础](content/week2.md)
-
 - [第3周：Python编程与机器人控制入门](content/week3.md)
-  - [3.1 Python基础](content/week3.md#11-python基础回顾60分钟)
-  - [3.2 ROS2 Python库](content/week3.md#12-ros2-python库)
-  - [3.3 第一个Python节点](content/week3.md#13-第一个python节点)
-  - [3.4 PyBullet仿真环境](content/week3.md#14-pybullet仿真环境介绍)
-  - [3.5 RosClaw与OpenClaw集成](content/week3.md#15-rosclaw与openclaw集成控制)
+
+---
 
 ## 第二阶段：运动学与空间感知
 
@@ -27,9 +22,11 @@
 ## 第三阶段：AI应用与Sim2Real
 
 - [第9周：机器视觉与AI工具入门](content/week9.md)
-- [第10周：AI感知实战1 - QR识别](content/week10.md)
-- [第11周：AI感知实战2 - 巡线与跟随](content/week11.md)
-- [第12周：Sim2Real](content/week12.md)
+- [第10周：物体检测与识别](content/week10.md)
+- [第11周：视觉追踪与光流法](content/week11.md)
+- [第12周：Sim2Real仿真到现实](content/week12.md)
+
+---
 
 ## 第四阶段：综合项目
 
