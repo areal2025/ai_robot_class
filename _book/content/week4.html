@@ -3,7 +3,7 @@
 <html lang="zh-hans" >
     <head>
         <meta charset="UTF-8">
-        <title>1.2.1 节点深入理解 · ROS2机器人编程基础课程</title>
+        <title>2.1.1 坐标系概念 · ROS2机器人编程基础课程</title>
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="description" content="">
         <meta name="generator" content="HonKit 6.1.6">
@@ -944,7 +944,7 @@
     <!-- Title -->
     <h1>
         <i class="fa fa-circle-o-notch fa-spin"></i>
-        <a href=".." >1.2.1 节点深入理解</a>
+        <a href=".." >2.1.1 坐标系概念</a>
     </h1>
 </div>
 
@@ -959,8 +959,7 @@
     
                                 <section class="normal markdown-section">
                                 
-                                <h1 id="第2周：ros2通信机制基础">第2周：ROS2通信机制基础</h1>
-<p><img src="https://docs.ros.org/en/humble/_images/topic__single_1.png" alt="ROS2 Communication"></img></p>
+                                <h1 id="第4周：机器人运动学基础（二维）">第4周：机器人运动学基础（二维）</h1>
 <p><strong>课时</strong>: 6小时（第一次课3小时 + 第二次课3小时）</p>
 <hr></hr>
 <h2 id="📋-本周课程表">📋 本周课程表</h2>
@@ -977,19 +976,19 @@
 <tr>
 <td>第1次</td>
 <td>3小时</td>
-<td>核心概念深入</td>
-<td>节点与话题深入理解、Pub/Sub模型</td>
+<td>坐标系与里程计</td>
+<td>坐标系概念、世界坐标vs机器人坐标、里程计</td>
 </tr>
 <tr>
 <td>第2次</td>
 <td>3小时</td>
-<td>命令行实战</td>
-<td>用命令行控制机器人画圆</td>
+<td>运动学演示实验</td>
+<td>简单二维运动学演示、实验练习</td>
 </tr>
 </tbody>
 </table>
 <hr></hr>
-<h2 id="第一次课：核心概念深入（3小时）">第一次课：核心概念深入（3小时）</h2>
+<h2 id="第一次课：坐标系与里程计（3小时）">第一次课：坐标系与里程计（3小时）</h2>
 <h3 id="⏱️-时间分配">⏱️ 时间分配</h3>
 <table>
 <thead>
@@ -1003,17 +1002,17 @@
 <tr>
 <td>复习</td>
 <td>20分钟</td>
-<td>上周内容回顾、提问</td>
+<td>上周内容回顾</td>
 </tr>
 <tr>
-<td>深入概念1</td>
-<td>40分钟</td>
-<td>节点(Node)深入理解</td>
+<td>讲解</td>
+<td>60分钟</td>
+<td>坐标系概念</td>
 </tr>
 <tr>
-<td>深入概念2</td>
+<td>讲解</td>
 <td>50分钟</td>
-<td>话题(Topic)深入理解</td>
+<td>里程计原理</td>
 </tr>
 <tr>
 <td>茶歇</td>
@@ -1023,183 +1022,196 @@
 <tr>
 <td>演示</td>
 <td>30分钟</td>
-<td>探索Turtlesim的节点和话题</td>
+<td>实际演示</td>
 </tr>
 <tr>
 <td>总结</td>
-<td>30分钟</td>
+<td>10分钟</td>
 <td>本周小结</td>
 </tr>
 </tbody>
 </table>
 <hr></hr>
-<h2 id="11-节点深入理解（40分钟）">1.1 节点深入理解（40分钟）</h2>
-<h3 id="111-节点的特性">1.1.1 节点的特性</h3>
-<h4 id="①-单一职责">① 单一职责</h4>
+<h2 id="211-坐标系概念（60分钟）">2.1.1 坐标系概念（60分钟）</h2>
+<h3 id="什么是坐标系？">什么是坐标系？</h3>
 <blockquote>
-<p><strong>原则</strong>：每个节点只做一件事</p>
+<p><strong>坐标系</strong> = 用来描述物体<strong>位置和方向</strong>的系统</p>
 </blockquote>
-<pre><code>好例子：一个节点做一件事
-┌─────────────────────────────────────────────┐
-│  /camera_node       → 只管相机               │
-│  /detection_node    → 只管检测               │
-│  /navigation_node   → 只管导航               │
-└─────────────────────────────────────────────┘
+<pre><code>二维平面坐标系：
 
-❌ 不好例子：一个节点做所有事
-┌─────────────────────────────────────────────┐
-│  /super_robot_node                         │
-│  → 相机+检测+导航+控制+显示+...全部搞定    │
-└─────────────────────────────────────────────┘
-</code></pre><h4 id="②-独立运行">② 独立运行</h4>
-<pre><code>节点是独立的进程，互不干扰：
+         +Y (北/上)
+          │
+          │
+          │
+          │
+   ───────┼─────── +X (东/右)
+          │
+          │
+          │
+</code></pre><h4 id="常用的坐标系">常用的坐标系</h4>
+<table>
+<thead>
+<tr>
+<th>坐标系</th>
+<th>英文</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>世界坐标系</td>
+<td>World Frame</td>
+<td>固定不变的参考系</td>
+</tr>
+<tr>
+<td>机器人坐标系</td>
+<td>Robot Frame</td>
+<td>随机器人移动</td>
+</tr>
+<tr>
+<td>里程计坐标系</td>
+<td>Odom Frame</td>
+<td>机器人自己计算的位置</td>
+</tr>
+</tbody>
+</table>
+<h3 id="机器人的位置表示">机器人的位置表示</h3>
+<pre><code>机器人在世界坐标系中的位置：
 
-┌─────────────────────────────────────────────┐
-│                                             │
-│  进程A (/camera)    进程B (/detection)     │
-│     │                     │                 │
-│     ▼                     ▼                 │
-│  相机驱动              目标检测              │
-│     │                     │                 │
-│     │                     │                 │
-│  即使A崩溃，B继续运行！                       │
-│                                             │
-└─────────────────────────────────────────────┘
-</code></pre><h4 id="③-松耦合">③ 松耦合</h4>
-<pre><code>松耦合 = 不需要知道对方在哪
+         +Y
+          │
+    ┌─────┼─────┐
+    │  ┌──┴──┐  │
+    │  │ 🤖  │  │  ← 机器人位置 (x=2, y=1)
+    │  └──┬──┘  │
+    └─────┼─────┘
+          │
+         +X
 
-发布者：                    订阅者：
-┌────────────┐           ┌────────────┐
-│ 我只管发布  │ ────────►│ 我只管订阅  │
-│ 到/camera   │           │ /camera    │
-└────────────┘           └────────────┘
-    不需要知道                不需要知道
-    谁在订阅                  谁在发布
-</code></pre><h3 id="112-节点的生命周期">1.1.2 节点的生命周期</h3>
-<pre><code>节点状态机：
-
-           ┌──────────┐
-           │  未初始化  │
-           └─────┬────┘
-                 │ rclpy.init()
-                 ▼
-           ┌──────────┐
-           │   初始    │ ◄──────────────┐
-           └─────┬────┘                 │
-                 │ create_node()        │
-                 ▼                      │
-           ┌──────────┐                 │
-    ┌─────►│  运行中  │─────┐          │
-│   │      └─────┬────┘     │          │
-│   │            │         │          │destroy_node()
-│   │        spin()        │          │
-│   │            │         │          │
-│   │            ▼         │          │
-│   │      ┌──────────┐   │          │
-│   │      │  销毁中   │───┘          │
-│   │      └──────────┘                │
-│   │            │                      │
-│   │            ▼                      │
-│   │      ┌──────────┐                 │
-│   └──────│   已销毁  │◄────────────────
-           └──────────┘
-
-           rclpy.shutdown()
+坐标表示：
+• x = 2 (向右2米)
+• y = 1 (向上1米)  
+• θ = 30° (朝向西北方向)
 </code></pre><hr></hr>
-<h2 id="12-话题深入理解（50分钟）">1.2 话题深入理解（50分钟）</h2>
-<h3 id="121-话题的特性">1.2.1 话题的特性</h3>
-<h4 id="①-异步通信">① 异步通信</h4>
-<pre><code>异步 = 发布者不等订阅者
+<h2 id="212-世界坐标vs机器人坐标（50分钟）">2.1.2 世界坐标vs机器人坐标（50分钟）</h2>
+<h3 id="世界坐标系（固定不变）">世界坐标系（固定不变）</h3>
+<pre><code>世界坐标系 = 房间里的GPS
 
-发布者：                    订阅者：
-┌────────────┐           ┌────────────┐
-│  碰碰碰    │ ────────►│  叮叮叮    │
-│  (连续发布) │           │  (收到回调) │
-└────────────┘           └────────────┘
-    │                         │
-    ▼                         ▼
- 不等待                     收到就处理
- 继续运行                  后再等待
-</code></pre><h4 id="②-消息队列">② 消息队列</h4>
-<pre><code>队列大小 = 10
+┌─────────────────────────────────────┐
+│                                      │
+│         +Y (北)                      │
+│          │                          │
+│          │    ┌───┐                 │
+│          │    │ 🤖 │ ← 机器人       │
+│          │    └───┘                 │
+│          │                          │
+│    ──────┼───────── +X (东)         │
+│          │                          │
+└─────────────────────────────────────┘
 
-发布者 ──► [消息1] [消息2] [消息3] ... [消息10] ──► 订阅者
-              ▲                                        │
-              │                                        │
-              │ 新消息                                  │ 消费
-              └────────────────────────────────────────┘
+特点：
+• 原点固定（房间角落）
+• X轴Y轴固定
+• 用于标记绝对位置
+</code></pre><h3 id="机器人坐标系（相对运动）">机器人坐标系（相对运动）</h3>
+<pre><code>机器人坐标系 = 机器人身上的指南针
 
-如果订阅者处理太慢，队列只保留最近10条
-</code></pre><h3 id="122-消息类型详解">1.2.2 消息类型详解</h3>
-<h4 id="twist消息（最常用的速度消息）">Twist消息（最常用的速度消息）</h4>
-<pre><code class="lang-python"><span class="hljs-comment"># geometry_msgs/Twist 定义</span>
-<span class="hljs-comment"># 文件位置: geometry_msgs/msg/Twist.msg</span>
+机器人坐标系始终以机器人为中心：
+• +X = 机器人正前方
+• +Y = 机器人正左方
+• +θ = 机器人逆时针方向
 
-<span class="hljs-comment"># 线性速度（单位：米/秒）</span>
-geometry_msgs/Vector3 linear
-    float64 x    <span class="hljs-comment"># 前进方向 +为前 -为后</span>
-    float64 y    <span class="hljs-comment"># 侧向（差速机器人通常为0）</span>
-    float64 z    <span class="hljs-comment"># 垂直（平面运动为0）</span>
+┌─────────────────────────────────────┐
+│                                      │
+│    机器人视角：                      │
+│                                      │
+│         +Y_robot                    │
+│          │                          │
+│    ────►│────── +X_robot            │
+│   机器人                          │
+│                                      │
+└─────────────────────────────────────┘
+</code></pre><h3 id="坐标变换">坐标变换</h3>
+<pre><code>世界坐标 → 机器人坐标
 
-<span class="hljs-comment"># 角速度（单位：弧度/秒）</span>
-geometry_msgs/Vector3 angular
-    float64 x    <span class="hljs-comment"># 滚转（平面运动为0）</span>
-    float64 y    <span class="hljs-comment"># 俯仰（平面运动为0）</span>
-    float64 z    <span class="hljs-comment"># 偏航 +为逆时针 -为顺时针</span>
-</code></pre>
-<h3 id="123-发布订阅模型">1.2.3 发布/订阅模型</h3>
-<pre><code>数据流向：
+公式：
+x_robot = (x_world - x_robot) * cos(θ) + (y_world - y_robot) * sin(θ)
+y_robot = -(x_world - x_robot) * sin(θ) + (y_world - y_robot) * cos(θ)
 
-   发布者节点                          订阅者节点
-   ┌────────────┐                   ┌────────────┐
-   │            │                   │            │
-   │ create_    │   DDS网络          │ create_    │
-   │ publisher  │◄─────────────────►│ subscriber │
-   │ (/cmd_vel) │   (话题传输)        │ (/cmd_vel) │
-   └─────┬──────┘                   └─────┬──────┘
-         │                                 │
-         ▼                                 ▼
-   ┌────────────┐                   ┌────────────┐
-   │ 发布Twist  │                   │ 回调函数   │
-   │ 消息       │                   │ 处理消息   │
-   └────────────┘                   └────────────┘
+其中θ是机器人的朝向角
 </code></pre><hr></hr>
-<h2 id="13-探索turtlesim（30分钟）">1.3 探索Turtlesim（30分钟）</h2>
-<h3 id="演示1：查看节点">演示1：查看节点</h3>
-<pre><code class="lang-bash"><span class="hljs-comment"># 先启动Turtlesim（如果还没启动）</span>
-ros2 run turtlesim turtlesim_node
+<h2 id="213-里程计odom简介（30分钟）">2.1.3 里程计(odom)简介（30分钟）</h2>
+<h3 id="什么是里程计？">什么是里程计？</h3>
+<blockquote>
+<p><strong>里程计</strong> = 机器人通过<strong>传感器估算</strong>自己移动了多远</p>
+</blockquote>
+<pre><code>里程计原理：
 
-<span class="hljs-comment"># 查看所有运行中的节点</span>
-ros2 node list
+初始位置: (0, 0)
+    ↓
+左轮移动: 1.0米
+右轮移动: 1.0米
+    ↓
+计算位置: (1.0, 0)
+    ↓
+左轮移动: 1.0米
+右轮移动: 0.8米 (转左弯)
+    ↓
+计算位置: (1.9, 0.1)
+</code></pre><h3 id="里程计数据类型">里程计数据类型</h3>
+<pre><code class="lang-python"><span class="hljs-comment"># nav_msgs/Odometry 消息</span>
+std_msgs/Header header
+    uint32 seq
+    time stamp
+    string frame_id  <span class="hljs-comment"># "odom"</span>
 
-<span class="hljs-comment"># 输出：</span>
-<span class="hljs-comment"># /turtlesim</span>
+string child_frame_id  <span class="hljs-comment"># "base_link"</span>
+
+geometry_msgs/PoseWithCovariance pose
+    geometry_msgs/Pose pose
+        geometry_msgs/Point position
+            float64 x
+            float64 y
+            float64 z
+        geometry_msgs/Quaternion orientation
+            float64 x
+            float64 y
+            float64 z
+            float64 w
+
+geometry_msgs/TwistWithCovariance twist
+    geometry_msgs/Twist twist
+        geometry_msgs/Vector3 linear
+            float64 x
+            float64 y
+            float64 z
+        geometry_msgs/Vector3 angular
+            float64 x
+            float64 y
+            float64 z
 </code></pre>
-<h3 id="演示2：查看话题">演示2：查看话题</h3>
-<pre><code class="lang-bash"><span class="hljs-comment"># 查看所有话题</span>
-ros2 topic list
+<h3 id="ros2中的里程计话题">ROS2中的里程计话题</h3>
+<pre><code class="lang-bash"><span class="hljs-comment"># 查看里程计话题</span>
+ros2 topic list | grep odom
 
-<span class="hljs-comment"># 输出：</span>
-<span class="hljs-comment"># /parameter_events</span>
-<span class="hljs-comment"># /rosout</span>
-<span class="hljs-comment"># /turtle1/cmd_vel        ← 速度命令</span>
-<span class="hljs-comment"># /turtle1/color_sensor   ← 颜色传感器</span>
-<span class="hljs-comment"># /turtle1/goal_vel       ← 目标速度</span>
-<span class="hljs-comment"># /turtle1/pose           ← 位置坐标</span>
-</code></pre>
-<h3 id="演示3：监听话题">演示3：监听话题</h3>
-<pre><code class="lang-bash"><span class="hljs-comment"># 监听位置话题</span>
-ros2 topic <span class="hljs-built_in">echo</span> /turtle1/pose
+<span class="hljs-comment"># 监听里程计</span>
+ros2 topic <span class="hljs-built_in">echo</span> /odom
 
-<span class="hljs-comment"># 输出：</span>
-<span class="hljs-comment"># x: 5.444444656</span>
-<span class="hljs-comment"># y: 5.444444656</span>
-<span class="hljs-comment"># theta: 0.0</span>
-<span class="hljs-comment"># linear_velocity: 0.0</span>
-<span class="hljs-comment"># angular_velocity: 0.0</span>
+<span class="hljs-comment"># 输出示例：</span>
+<span class="hljs-comment"># pose:</span>
+<span class="hljs-comment">#   pose:</span>
+<span class="hljs-comment">#     position:</span>
+<span class="hljs-comment">#       x: 1.234</span>
+<span class="hljs-comment">#       y: 0.567</span>
+<span class="hljs-comment">#       z: 0.0</span>
+<span class="hljs-comment">#     orientation:</span>
+<span class="hljs-comment">#       x: 0.0</span>
+<span class="hljs-comment">#       y: 0.0</span>
+<span class="hljs-comment">#       z: 0.123</span>
+<span class="hljs-comment">#       w: 0.992</span>
 </code></pre>
 <hr></hr>
-<h2 id="第二次课：命令行实战（3小时）">第二次课：命令行实战（3小时）</h2>
+<h2 id="第二次课：运动学演示实验（3小时）">第二次课：运动学演示实验（3小时）</h2>
 <h3 id="⏱️-时间分配">⏱️ 时间分配</h3>
 <table>
 <thead>
@@ -1216,19 +1228,14 @@ ros2 topic <span class="hljs-built_in">echo</span> /turtle1/pose
 <td>提问巩固</td>
 </tr>
 <tr>
-<td>讲解</td>
-<td>40分钟</td>
-<td>速度控制原理</td>
-</tr>
-<tr>
 <td>演示</td>
-<td>30分钟</td>
-<td>命令行发布速度</td>
+<td>40分钟</td>
+<td>Turtlesim里程计演示</td>
 </tr>
 <tr>
 <td>实践</td>
-<td>60分钟</td>
-<td>画圆实验</td>
+<td>80分钟</td>
+<td>学生动手实验</td>
 </tr>
 <tr>
 <td>茶歇</td>
@@ -1243,174 +1250,89 @@ ros2 topic <span class="hljs-built_in">echo</span> /turtle1/pose
 </tbody>
 </table>
 <hr></hr>
-<h2 id="21-速度控制原理（40分钟）">2.1 速度控制原理（40分钟）</h2>
-<h3 id="211-运动学基础">2.1.1 运动学基础</h3>
-<h4 id="重要公式">重要公式</h4>
-<pre><code>公式：圆周运动
-┌─────────────────────────────────────┐
-│           v = r × ω                │
-│                                     │
-│  其中：                             │
-│  • v = 线速度 (m/s)                │
-│  • r = 圆的半径 (m)                 │
-│  • ω = 角速度 (rad/s)              │
-│                                     │
-│  推导：                             │
-│  r = v / ω  (求半径)               │
-│  ω = v / r  (求角速度)             │
-└─────────────────────────────────────┘
-</code></pre><h4 id="常用角度转换">常用角度转换</h4>
-<table>
-<thead>
-<tr>
-<th>角度</th>
-<th>弧度</th>
-<th>计算</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>360°</td>
-<td>2π ≈ 6.283</td>
-<td>2 × 3.14159</td>
-</tr>
-<tr>
-<td>180°</td>
-<td>π ≈ 3.142</td>
-<td>3.14159</td>
-</tr>
-<tr>
-<td>90°</td>
-<td>π/2 ≈ 1.571</td>
-<td>3.14159 / 2</td>
-</tr>
-<tr>
-<td>60°</td>
-<td>π/3 ≈ 1.047</td>
-<td>3.14159 / 3</td>
-</tr>
-<tr>
-<td>45°</td>
-<td>π/4 ≈ 0.785</td>
-<td>3.14159 / 4</td>
-</tr>
-</tbody>
-</table>
-<h3 id="212-速度组合表">2.1.2 速度组合表</h3>
-<table>
-<thead>
-<tr>
-<th>动作</th>
-<th>linear.x</th>
-<th>angular.z</th>
-<th>效果</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>直行前进</td>
-<td>1.0</td>
-<td>0.0</td>
-<td>1m/s向前</td>
-</tr>
-<tr>
-<td>直行后退</td>
-<td>-1.0</td>
-<td>0.0</td>
-<td>1m/s向后</td>
-</tr>
-<tr>
-<td>原地左转</td>
-<td>0.0</td>
-<td>1.0</td>
-<td>逆时针1rad/s</td>
-</tr>
-<tr>
-<td>原地右转</td>
-<td>0.0</td>
-<td>-1.0</td>
-<td>顺时针1rad/s</td>
-</tr>
-<tr>
-<td>前进左转</td>
-<td>1.0</td>
-<td>0.5</td>
-<td>画圆（半径2m）</td>
-</tr>
-<tr>
-<td>停止</td>
-<td>0.0</td>
-<td>0.0</td>
-<td>静止</td>
-</tr>
-</tbody>
-</table>
-<h3 id="213-数学计算示例">2.1.3 数学计算示例</h3>
-<pre><code>示例1：半径2米的圆
-- 设定线速度 v = 2 m/s
-- 半径 r = 2 m
-- 角速度 ω = v / r = 2 / 2 = 1 rad/s
-- 命令：linear.x=2.0, angular.z=1.0
+<h2 id="214-简单二维运动学演示（40分钟）">2.1.4 简单二维运动学演示（40分钟）</h2>
+<h3 id="实验1：查看turtlesim里程计">实验1：查看Turtlesim里程计</h3>
+<pre><code class="lang-bash"><span class="hljs-comment"># 启动Turtlesim</span>
+ros2 run turtlesim turtlesim_node
 
-示例2：每秒转一圈
-- 周期 T = 1秒
-- 角速度 ω = 2π / T = 2π ≈ 6.28 rad/s
-- 命令：angular.z=6.28
-</code></pre><hr></hr>
-<h2 id="22-命令行发布速度（30分钟）">2.2 命令行发布速度（30分钟）</h2>
-<h3 id="基本语法">基本语法</h3>
-<pre><code class="lang-bash"><span class="hljs-comment"># 语法</span>
-ros2 topic pub &lt;话题&gt; &lt;消息类型&gt; &lt;数据&gt;
+<span class="hljs-comment"># 监听里程计话题</span>
+ros2 topic <span class="hljs-built_in">echo</span> /turtle1/pose
+</code></pre>
+<h3 id="实验2：观察坐标变化">实验2：观察坐标变化</h3>
+<pre><code>移动前：
+x: 5.44, y: 5.44, theta: 0.0
 
-<span class="hljs-comment"># 示例</span>
-ros2 topic pub /turtle1/cmd_vel geometry_msgs/Twist \
-  <span class="hljs-string">"{linear: {x: 1.0, y: 0.0, z: 0.0}, angular: {x: 0.0, y: 0.0, z: 0.0}}"</span>
+按↑键前进一次后：
+x: 5.44, y: 6.44, theta: 0.0
+
+按←键左转后：
+x: 5.44, y: 6.44, theta: 1.57 (90°)
+</code></pre><h3 id="运动学公式">运动学公式</h3>
+<pre><code class="lang-python"><span class="hljs-comment"># 差速驱动机器人的运动学</span>
+
+<span class="hljs-comment"># 线速度</span>
+v = (v_left + v_right) / <span class="hljs-number">2</span>
+
+<span class="hljs-comment"># 角速度  </span>
+ω = (v_right - v_left) / wheel_base
+
+<span class="hljs-comment"># 位置更新</span>
+x_new = x_old + v * cos(θ) * dt
+y_new = y_old + v * sin(θ) * dt
+θ_new = θ_old + ω * dt
 </code></pre>
 <hr></hr>
-<h2 id="23-画圆实验（60分钟）">2.3 画圆实验（60分钟）</h2>
-<h3 id="实验1：基础画圆">实验1：基础画圆</h3>
-<pre><code class="lang-bash"><span class="hljs-comment"># 让小乌龟画圆（前进 + 左转）</span>
-ros2 topic pub --rate 1 /turtle1/cmd_vel geometry_msgs/Twist \
-  <span class="hljs-string">"{linear: {x: 2.0, y: 0.0, z: 0.0}, angular: {x: 0.0, y: 0.0, z: 1.0}}"</span>
-</code></pre>
-<blockquote>
-<p>按 <code>Ctrl+C</code> 停止</p>
-</blockquote>
-<h3 id="实验2：不同半径">实验2：不同半径</h3>
-<table>
-<thead>
-<tr>
-<th>目标半径</th>
-<th>线速度</th>
-<th>角速度</th>
-<th>命令参数</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>1米</td>
-<td>1.0 m/s</td>
-<td>1.0 rad/s</td>
-<td>x=1.0, z=1.0</td>
-</tr>
-<tr>
-<td>2米</td>
-<td>2.0 m/s</td>
-<td>1.0 rad/s</td>
-<td>x=2.0, z=1.0</td>
-</tr>
-<tr>
-<td>4米</td>
-<td>2.0 m/s</td>
-<td>0.5 rad/s</td>
-<td>x=2.0, z=0.5</td>
-</tr>
-</tbody>
-</table>
-<h3 id="实验3：顺时针画圆">实验3：顺时针画圆</h3>
-<pre><code class="lang-bash"><span class="hljs-comment"># 顺时针转</span>
-ros2 topic pub --rate 1 /turtle1/cmd_vel geometry_msgs/Twist \
-  <span class="hljs-string">"{linear: {x: 1.0, y: 0.0, z: 0.0}, angular: {x: 0.0, y: 0.0, z: -1.0}}"</span>
+<h2 id="215-编程实践（80分钟）">2.1.5 编程实践（80分钟）</h2>
+<h3 id="编写里程计读取节点">编写里程计读取节点</h3>
+<pre><code class="lang-python"><span class="hljs-comment">#!/usr/bin/env python3</span>
+<span class="hljs-string">"""
+读取Turtlesim的里程计数据
+"""</span>
+
+<span class="hljs-keyword">import</span> rclpy
+<span class="hljs-keyword">from</span> rclpy.node <span class="hljs-keyword">import</span> Node
+<span class="hljs-keyword">from</span> turtlesim.msg <span class="hljs-keyword">import</span> Pose
+
+
+<span class="hljs-keyword">class</span> <span class="hljs-title class_">PoseReader</span>(<span class="hljs-title class_ inherited__">Node</span>):
+    <span class="hljs-string">"""读取位置信息的节点"""</span>
+
+    <span class="hljs-keyword">def</span> <span class="hljs-title function_">__init__</span>(<span class="hljs-params">self</span>):
+        <span class="hljs-built_in">super</span>().__init__(<span class="hljs-string">'pose_reader'</span>)
+
+        <span class="hljs-comment"># 订阅/turtle1/pose话题</span>
+        <span class="hljs-variable language_">self</span>.subscription = <span class="hljs-variable language_">self</span>.create_subscription(
+            Pose,
+            <span class="hljs-string">'/turtle1/pose'</span>,
+            <span class="hljs-variable language_">self</span>.pose_callback,
+            <span class="hljs-number">10</span>
+        )
+
+        <span class="hljs-variable language_">self</span>.get_logger().info(<span class="hljs-string">'位置读取节点已启动！'</span>)
+
+    <span class="hljs-keyword">def</span> <span class="hljs-title function_">pose_callback</span>(<span class="hljs-params">self, msg</span>):
+        <span class="hljs-string">"""回调函数：收到位置数据时调用"""</span>
+        <span class="hljs-variable language_">self</span>.get_logger().info(
+            <span class="hljs-string">f'位置: x=<span class="hljs-subst">{msg.x:<span class="hljs-number">.2</span>f}</span>, y=<span class="hljs-subst">{msg.y:<span class="hljs-number">.2</span>f}</span>, '</span>
+            <span class="hljs-string">f'角度: <span class="hljs-subst">{msg.theta:<span class="hljs-number">.2</span>f}</span> rad (<span class="hljs-subst">{msg.theta*<span class="hljs-number">180</span>/<span class="hljs-number">3.14</span>:<span class="hljs-number">.1</span>f}</span>°)'</span>
+        )
+
+
+<span class="hljs-keyword">def</span> <span class="hljs-title function_">main</span>(<span class="hljs-params">args=<span class="hljs-literal">None</span></span>):
+    rclpy.init(args=args)
+    node = PoseReader()
+
+    <span class="hljs-keyword">try</span>:
+        rclpy.spin(node)
+    <span class="hljs-keyword">except</span> KeyboardInterrupt:
+        <span class="hljs-keyword">pass</span>
+    <span class="hljs-keyword">finally</span>:
+        node.destroy_node()
+        rclpy.shutdown()
+
+
+<span class="hljs-keyword">if</span> __name__ == <span class="hljs-string">'__main__'</span>:
+    main()
 </code></pre>
 <hr></hr>
 <h2 id="本周实验报告">本周实验报告</h2>
@@ -1427,50 +1349,32 @@ ros2 topic pub --rate 1 /turtle1/cmd_vel geometry_msgs/Twist \
 <tbody>
 <tr>
 <td>1</td>
-<td>查看节点</td>
-<td>ros2 node list</td>
+<td>启动Turtlesim</td>
+<td>正常运行</td>
 <td>☐</td>
 </tr>
 <tr>
 <td>2</td>
-<td>查看话题</td>
-<td>ros2 topic list</td>
+<td>监听/turtle1/pose</td>
+<td>能看到实时坐标</td>
 <td>☐</td>
 </tr>
 <tr>
 <td>3</td>
-<td>监听话题</td>
-<td>ros2 topic echo /turtle1/pose</td>
+<td>移动观察坐标变化</td>
+<td>记录移动前后的坐标</td>
 <td>☐</td>
 </tr>
 <tr>
 <td>4</td>
-<td>前进命令</td>
-<td>小乌龟前进</td>
+<td>运行PoseReader节点</td>
+<td>能打印位置信息</td>
 <td>☐</td>
 </tr>
 <tr>
 <td>5</td>
-<td>画圆</td>
-<td>半径2米的圆</td>
-<td>☐</td>
-</tr>
-<tr>
-<td>6</td>
-<td>顺时针</td>
-<td>顺时针画圆</td>
-<td>☐</td>
-</tr>
-<tr>
-<td>7</td>
-<td>旋转</td>
-<td>原地转圈</td>
-<td>☐</td>
-</tr>
-<tr>
-<td>8</td>
-<td>停止</td>
-<td>发送停止命令</td>
+<td>理解坐标系转换</td>
+<td>能说清世界坐标vs机器人坐标</td>
 <td>☐</td>
 </tr>
 </tbody>
@@ -1479,88 +1383,52 @@ ros2 topic pub --rate 1 /turtle1/cmd_vel geometry_msgs/Twist \
 <h2 id="本周作业">本周作业</h2>
 <h3 id="📝-理论题">📝 理论题</h3>
 <ol>
-<li>解释"发布者"和"订阅者"的区别</li>
-<li>如果要同时控制两个机器人，需要什么条件？</li>
+<li>解释世界坐标系和机器人坐标系的区别</li>
+<li>里程计是如何计算机器人位置的？</li>
 </ol>
 <h3 id="📐-计算题">📐 计算题</h3>
-<p>已知：小乌龟线速度 1.5 m/s，角速度 0.75 rad/s</p>
+<p>已知：机器人左轮速度0.5m/s，右轮速度1.0m/s，轮间距0.5m</p>
 <ul>
-<li>画出的圆半径是多少？</li>
-<li>转一圈需要多少秒？</li>
+<li>计算线速度v</li>
+<li>计算角速度ω</li>
+<li>计算机器人1秒后的位置变化</li>
 </ul>
 <h3 id="💻-实践题">💻 实践题</h3>
-<ol>
-<li>用命令行实现走正方形</li>
-</ol>
+<p>编写一个节点，实时显示小乌龟距离原点的距离</p>
 <hr></hr>
 <h2 id="知识点速查表">知识点速查表</h2>
 <pre><code>┌─────────────────────────────────────────────────────────────┐
-│                    第2周知识点速查                           │
+│                    第4周知识点速查                           │
 ├─────────────────────────────────────────────────────────────┤
 │  概念                                                          │
-│  ├── Node = 独立运行的程序                                   │
-│  ├── Topic = 异步通信频道                                     │
-│  ├── Publisher = 发布者                                      │
-│  ├── Subscriber = 订阅者                                    │
-│  └── Twist = 速度消息类型                                    │
-│      ├── linear.x = 线速度 (m/s)                            │
-│      └── angular.z = 角速度 (rad/s)                         │
+│  ├── 坐标系 = 描述位置和方向的系统                           │
+│  ├── 世界坐标 = 固定不变的参考系                            │
+│  ├── 机器人坐标 = 随机器人移动的坐标系                       │
+│  └── 里程计 = 通过传感器估算移动距离                        │
 ├─────────────────────────────────────────────────────────────┤
 │  公式                                                          │
-│  ├── v = r × ω                                              │
-│  ├── r = v / ω                                              │
-│  └── ω = v / r                                              │
-├─────────────────────────────────────────────────────────────┤
-│  命令                                                          │
-│  ├── ros2 node list                                          │
-│  ├── ros2 topic list                                         │
-│  ├── ros2 topic echo &lt;topic&gt;                                 │
-│  └── ros2 topic pub &lt;topic&gt; &lt;type&gt; &lt;data&gt;                   │
+│  ├── v = (v_l + v_r) / 2    (线速度)                      │
+│  ├── ω = (v_r - v_l) / L    (角速度，L=轮间距)            │
+│  └── x_new = x + v*cos(θ)*dt                              │
 └─────────────────────────────────────────────────────────────┘
 </code></pre><hr></hr>
+<h2 id="📚-课后阅读">📚 课后阅读</h2>
+<ul>
+<li><a href="https://docs.ros.org/en/humble/Tutorials/Intermediate/Tf2/Introduction-To-Tf2.html" target="_blank">ROS2坐标变换文档</a></li>
+<li><a href="https://en.wikipedia.org/wiki/Kinematics" target="_blank">机器人运动学基础</a></li>
+</ul>
+<hr></hr>
 <h2 id="下周预告">下周预告</h2>
-<hr></hr>
-<h2 id="🆙-进阶内容：用消息应用控制机器人（rosclaw）">🆙 进阶内容：用消息应用控制机器人（RosClaw）</h2>
 <blockquote>
-<p>想用Telegram/Discord/WhatsApp控制机器人吗？</p>
-</blockquote>
-<h3 id="rosclaw快速入门">RosClaw快速入门</h3>
-<pre><code class="lang-bash"><span class="hljs-comment"># 克隆RosClaw</span>
-git <span class="hljs-built_in">clone</span> https://github.com/PlaiPin/rosclaw.git
-<span class="hljs-built_in">cd</span> rosclaw
-
-<span class="hljs-comment"># 安装依赖</span>
-pnpm install
-pnpm build
-
-<span class="hljs-comment"># 启动ROS2 + rosbridge</span>
-<span class="hljs-built_in">cd</span> docker
-docker compose up
-
-<span class="hljs-comment"># 配置OpenClaw连接</span>
-<span class="hljs-comment"># 在OpenClaw中配置 ws://localhost:9090</span>
-</code></pre>
-<h3 id="自然语言控制示例">自然语言控制示例</h3>
-<pre><code>用户发送              →    机器人执行
-─────────────────────────────────────
-"Move forward 1m"    →    /cmd_vel 发布速度
-"Turn left 90"       →    /cmd_vel 发布角速度
-"Stop"               →    /cmd_vel 全零
-"Take a photo"       →    /camera/capture
-</code></pre><h3 id="更多资源">更多资源</h3>
+<p><strong>第5周：传感器与感知基础</strong></p>
 <ul>
-<li>GitHub: <a href="https://github.com/PlaiPin/rosclaw" target="_blank">https://github.com/PlaiPin/rosclaw</a></li>
-</ul>
-<blockquote>
-<p><strong>第3周：Python编程与机器人控制</strong></p>
-<ul>
-<li>编写第一个Python ROS2节点</li>
-<li>用代码控制小乌龟</li>
-<li>实现走正方形</li>
+<li>激光雷达介绍</li>
+<li>相机与图像</li>
+<li>RViz可视化</li>
 </ul>
 </blockquote>
 <hr></hr>
-<p><em>第2周结束！🚀</em></p>
+<p><em>第4周结束！</em></p>
 
                                 
                                 </section>
@@ -1600,7 +1468,7 @@ docker compose up
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"1.2.1 节点深入理解","level":"4.1","depth":1,"previous":{"title":"课程简介","level":"1.1","depth":1,"path":"README.md","ref":"README.md","articles":[]},"dir":"ltr"},"config":{"plugins":[],"root":".","styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","author":"Your Name","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56},"embedFonts":false},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"ROS2机器人编程基础课程","language":"zh-hans","gitbook":"*","description":"第一阶段：基础与环境搭建"},"file":{"path":"content/week2.md","mtime":"2026-02-28T11:01:54.404Z","type":"markdown"},"gitbook":{"version":"6.1.6","time":"2026-03-02T05:22:05.010Z"},"basePath":"..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"2.1.1 坐标系概念","level":"7.1","depth":1,"previous":{"title":"课程简介","level":"1.1","depth":1,"path":"README.md","ref":"README.md","articles":[]},"dir":"ltr"},"config":{"plugins":[],"root":".","styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","author":"Your Name","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56},"embedFonts":false},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"ROS2机器人编程基础课程","language":"zh-hans","gitbook":"*","description":"第一阶段：基础与环境搭建"},"file":{"path":"content/week4.md","mtime":"2026-03-02T05:18:46.592Z","type":"markdown"},"gitbook":{"version":"6.1.6","time":"2026-03-02T05:22:05.010Z"},"basePath":"..","book":{"language":""}});
         });
     </script>
 </div>
