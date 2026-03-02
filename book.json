@@ -1,11 +1,7 @@
 {
   "root": ".",
-  "title": "ROS2机器人编程基础课程",
-  "description": "第一阶段：基础与环境搭建",
+  "title": "AI机器人课程",
+  "description": "15周ROS2机器人编程入门课程",
   "author": "Your Name",
-  "language": "zh-hans",
-  "structure": {
-    "readme": "README.md",
-    "summary": "SUMMARY.md"
-  }
+  "language": "zh-hans"
 }

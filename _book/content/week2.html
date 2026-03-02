@@ -3,7 +3,7 @@
 <html lang="zh-hans" >
     <head>
         <meta charset="UTF-8">
-        <title>1.2.1 节点深入理解 · ROS2机器人编程基础课程</title>
+        <title>1.2.1 节点深入理解 · AI机器人课程</title>
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="description" content="">
         <meta name="generator" content="HonKit 6.1.6">
@@ -1246,6 +1246,19 @@ ros2 topic <span class="hljs-built_in">echo</span> /turtle1/pose
 <h2 id="21-速度控制原理（40分钟）">2.1 速度控制原理（40分钟）</h2>
 <h3 id="211-运动学基础">2.1.1 运动学基础</h3>
 <h4 id="重要公式">重要公式</h4>
+<h3 id="latex公式">LaTeX公式</h3>
+<p>$$v = r \cdot \omega$$</p>
+<p>其中：</p>
+<ul>
+<li>$v$ = 线速度 (m/s)</li>
+<li>$r$ = 圆的半径 (m)  </li>
+<li>$\omega$ = 角速度 (rad/s)</li>
+</ul>
+<p>推导：</p>
+<ul>
+<li>$r = v / \omega$ (求半径)</li>
+<li>$\omega = v / r$ (求角速度)</li>
+</ul>
 <pre><code>公式：圆周运动
 ┌─────────────────────────────────────┐
 │           v = r × ω                │
@@ -1600,7 +1613,7 @@ docker compose up
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"1.2.1 节点深入理解","level":"4.1","depth":1,"previous":{"title":"课程简介","level":"1.1","depth":1,"path":"README.md","ref":"README.md","articles":[]},"dir":"ltr"},"config":{"plugins":[],"root":".","styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","author":"Your Name","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56},"embedFonts":false},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"ROS2机器人编程基础课程","language":"zh-hans","gitbook":"*","description":"第一阶段：基础与环境搭建"},"file":{"path":"content/week2.md","mtime":"2026-02-28T11:01:54.404Z","type":"markdown"},"gitbook":{"version":"6.1.6","time":"2026-03-02T09:31:49.009Z"},"basePath":"..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"1.2.1 节点深入理解","level":"4.1","depth":1,"previous":{"title":"课程简介","level":"1.1","depth":1,"path":"README.md","ref":"README.md","articles":[]},"dir":"ltr"},"config":{"plugins":[],"root":".","styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","author":"Your Name","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56},"embedFonts":false},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"AI机器人课程","language":"zh-hans","gitbook":"*","description":"15周ROS2机器人编程入门课程"},"file":{"path":"content/week2.md","mtime":"2026-03-02T09:40:56.181Z","type":"markdown"},"gitbook":{"version":"6.1.6","time":"2026-03-02T09:41:49.674Z"},"basePath":"..","book":{"language":""}});
         });
     </script>
 </div>

@@ -3,7 +3,7 @@
 <html lang="zh-hans" >
     <head>
         <meta charset="UTF-8">
-        <title>2.3.1 什么是闭环控制 · ROS2机器人编程基础课程</title>
+        <title>2.3.1 什么是闭环控制 · AI机器人课程</title>
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="description" content="">
         <meta name="generator" content="HonKit 6.1.6">
@@ -1136,7 +1136,17 @@
 │             └──────► 返回"误差计算" ◄── 反馈              │
 │                                                             │
 └─────────────────────────────────────────────────────────────┘
-</code></pre><h3 id="pid控制器简介">PID控制器简介</h3>
+</code></pre><h3 id="pid控制器的latex表示">PID控制器的LaTeX表示</h3>
+<p>$$u(t) = K_p e(t) + K_i \int_0^t e(\tau) d\tau + K_d \frac{de}{dt}$$</p>
+<p>其中：</p>
+<ul>
+<li>$u(t)$ = 控制器输出</li>
+<li>$e(t)$ = 误差 (目标值 - 实际值)</li>
+<li>$K_p$ = 比例增益</li>
+<li>$K_i$ = 积分增益</li>
+<li>$K_d$ = 微分增益</li>
+</ul>
+<h3 id="pid控制器简介">PID控制器简介</h3>
 <blockquote>
 <p><strong>PID</strong> = Proportional（比例）+ Integral（积分）+ Derivative（微分）</p>
 </blockquote>
@@ -1519,7 +1529,7 @@ python3 bumper_robot.py
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"2.3.1 什么是闭环控制","level":"9.1","depth":1,"previous":{"title":"课程简介","level":"1.1","depth":1,"path":"README.md","ref":"README.md","articles":[]},"dir":"ltr"},"config":{"plugins":[],"root":".","styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","author":"Your Name","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56},"embedFonts":false},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"ROS2机器人编程基础课程","language":"zh-hans","gitbook":"*","description":"第一阶段：基础与环境搭建"},"file":{"path":"content/week6.md","mtime":"2026-03-02T05:21:01.995Z","type":"markdown"},"gitbook":{"version":"6.1.6","time":"2026-03-02T09:31:49.009Z"},"basePath":"..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"2.3.1 什么是闭环控制","level":"9.1","depth":1,"previous":{"title":"课程简介","level":"1.1","depth":1,"path":"README.md","ref":"README.md","articles":[]},"dir":"ltr"},"config":{"plugins":[],"root":".","styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","author":"Your Name","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56},"embedFonts":false},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"AI机器人课程","language":"zh-hans","gitbook":"*","description":"15周ROS2机器人编程入门课程"},"file":{"path":"content/week6.md","mtime":"2026-03-02T09:41:17.434Z","type":"markdown"},"gitbook":{"version":"6.1.6","time":"2026-03-02T09:41:49.674Z"},"basePath":"..","book":{"language":""}});
         });
     </script>
 </div>

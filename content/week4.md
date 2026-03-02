@@ -56,6 +56,55 @@
 | 机器人坐标系 | Robot Frame | 随机器人移动 |
 | 里程计坐标系 | Odom Frame | 机器人自己计算的位置 |
 
+
+
+### 2D坐标系SVG表示
+
+<svg width="300" height="250" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="300" height="250" fill="#f8f9fa"/>
+  
+  <!-- Grid lines -->
+  <line x1="30" y1="30" x2="280" y2="30" stroke="#e0e0e0" stroke-width="1"/>
+  <line x1="30" y1="80" x2="280" y2="80" stroke="#e0e0e0" stroke-width="1"/>
+  <line x1="30" y1="130" x2="280" y2="130" stroke="#e0e0e0" stroke-width="1"/>
+  <line x1="30" y1="180" x2="280" y2="180" stroke="#e0e0e0" stroke-width="1"/>
+  
+  <line x1="30" y1="30" x2="30" y2="230" stroke="#e0e0e0" stroke-width="1"/>
+  <line x1="80" y1="30" x2="80" y2="230" stroke="#e0e0e0" stroke-width="1"/>
+  <line x1="130" y1="30" x2="130" y2="230" stroke="#e0e0e0" stroke-width="1"/>
+  <line x1="180" y1="30" x2="180" y2="230" stroke="#e0e0e0" stroke-width="1"/>
+  <line x1="230" y1="30" x2="230" y2="230" stroke="#e0e0e0" stroke-width="1"/>
+  
+  <!-- Axes -->
+  <line x1="30" y1="200" x2="280" y2="200" stroke="black" stroke-width="2"/>
+  <line x1="30" y1="200" x2="30" y2="50" stroke="black" stroke-width="2"/>
+  
+  <!-- Arrow heads -->
+  <polygon points="280,200 270,195 270,205" fill="black"/>
+  <polygon points="30,50 25,60 35,60" fill="black"/>
+  
+  <!-- Axis labels -->
+  <text x="260" y="220" font-size="16" fill="black">X</text>
+  <text x="15" y="55" font-size="16" fill="black">Y</text>
+  
+  <!-- Origin -->
+  <text x="40" y="220" font-size="12" fill="#666">(0,0)</text>
+  
+  <!-- Robot position -->
+  <circle cx="150" cy="120" r="15" fill="#3498db" opacity="0.7"/>
+  <text x="135" y="125" font-size="10" fill="white">Robot</text>
+  
+  <!-- Position vector -->
+  <line x1="30" y1="200" x2="150" y2="120" stroke="#e74c3c" stroke-width="2" stroke-dasharray="5,5"/>
+  <text x="80" y="170" font-size="11" fill="#e74c3c">P(x,y)</text>
+  
+  <!-- Theta arrow -->
+  <path d="M 150 155 Q 170 165 165 180" stroke="green" fill="none" stroke-width="2"/>
+  <text x="170" y="175" font-size="11" fill="green">θ</text>
+</svg>
+
+
 ### 机器人的位置表示
 
 ```
@@ -261,6 +310,31 @@ x: 5.44, y: 6.44, theta: 0.0
 x: 5.44, y: 6.44, theta: 1.57 (90°)
 ```
 
+
+
+### LaTeX公式表示
+
+运动学基本公式：
+
+$$v = \frac{v_l + v_r}{2}$$
+
+$$\omega = \frac{v_r - v_l}{L}$$
+
+其中：
+- $v$ = 线速度 (m/s)
+- $v_l, v_r$ = 左/右轮速度 (m/s)
+- $\omega$ = 角速度 (rad/s)
+- $L$ = 轮间距 (m)
+
+位置更新公式：
+
+$$x_{new} = x + v \cdot \cos(\theta) \cdot \Delta t$$
+
+$$y_{new} = y + v \cdot \sin(\theta) \cdot \Delta t$$
+
+$$\theta_{new} = \theta + \omega \cdot \Delta t$$
+
+
 ### 运动学公式
 
 ```python
@@ -392,7 +466,32 @@ pos, orn = p.getBasePositionAndOrientation(robot)
 print(f"最终位置: x={pos[0]:.2f}, y={pos[1]:.2f}, z={pos[2]:.2f}")
 ```
 
-#### 运动学公式回顾
+#
+
+### LaTeX公式表示
+
+运动学基本公式：
+
+$$v = \frac{v_l + v_r}{2}$$
+
+$$\omega = \frac{v_r - v_l}{L}$$
+
+其中：
+- $v$ = 线速度 (m/s)
+- $v_l, v_r$ = 左/右轮速度 (m/s)
+- $\omega$ = 角速度 (rad/s)
+- $L$ = 轮间距 (m)
+
+位置更新公式：
+
+$$x_{new} = x + v \cdot \cos(\theta) \cdot \Delta t$$
+
+$$y_{new} = y + v \cdot \sin(\theta) \cdot \Delta t$$
+
+$$\theta_{new} = \theta + \omega \cdot \Delta t$$
+
+
+### 运动学公式回顾
 
 ```
 ┌─────────────────────────────────────────────────────────────┐

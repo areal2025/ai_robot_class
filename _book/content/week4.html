@@ -3,7 +3,7 @@
 <html lang="zh-hans" >
     <head>
         <meta charset="UTF-8">
-        <title>2.1.1 坐标系概念 · ROS2机器人编程基础课程</title>
+        <title>2.1.1 坐标系概念 · AI机器人课程</title>
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="description" content="">
         <meta name="generator" content="HonKit 6.1.6">
@@ -1075,6 +1075,52 @@
 </tr>
 </tbody>
 </table>
+<h3 id="2d坐标系svg表示">2D坐标系SVG表示</h3>
+<svg width="300" height="250" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="300" height="250" fill="#f8f9fa"></rect>
+
+  <!-- Grid lines -->
+  <line x1="30" y1="30" x2="280" y2="30" stroke="#e0e0e0" stroke-width="1"></line>
+  <line x1="30" y1="80" x2="280" y2="80" stroke="#e0e0e0" stroke-width="1"></line>
+  <line x1="30" y1="130" x2="280" y2="130" stroke="#e0e0e0" stroke-width="1"></line>
+  <line x1="30" y1="180" x2="280" y2="180" stroke="#e0e0e0" stroke-width="1"></line>
+
+  <line x1="30" y1="30" x2="30" y2="230" stroke="#e0e0e0" stroke-width="1"></line>
+  <line x1="80" y1="30" x2="80" y2="230" stroke="#e0e0e0" stroke-width="1"></line>
+  <line x1="130" y1="30" x2="130" y2="230" stroke="#e0e0e0" stroke-width="1"></line>
+  <line x1="180" y1="30" x2="180" y2="230" stroke="#e0e0e0" stroke-width="1"></line>
+  <line x1="230" y1="30" x2="230" y2="230" stroke="#e0e0e0" stroke-width="1"></line>
+
+  <!-- Axes -->
+  <line x1="30" y1="200" x2="280" y2="200" stroke="black" stroke-width="2"></line>
+  <line x1="30" y1="200" x2="30" y2="50" stroke="black" stroke-width="2"></line>
+
+  <!-- Arrow heads -->
+  <polygon points="280,200 270,195 270,205" fill="black"></polygon>
+  <polygon points="30,50 25,60 35,60" fill="black"></polygon>
+
+  <!-- Axis labels -->
+  <text x="260" y="220" font-size="16" fill="black">X</text>
+  <text x="15" y="55" font-size="16" fill="black">Y</text>
+
+  <!-- Origin -->
+  <text x="40" y="220" font-size="12" fill="#666">(0,0)</text>
+
+  <!-- Robot position -->
+  <circle cx="150" cy="120" r="15" fill="#3498db" opacity="0.7"></circle>
+  <text x="135" y="125" font-size="10" fill="white">Robot</text>
+
+  <!-- Position vector -->
+  <line x1="30" y1="200" x2="150" y2="120" stroke="#e74c3c" stroke-width="2" stroke-dasharray="5,5"></line>
+  <text x="80" y="170" font-size="11" fill="#e74c3c">P(x,y)</text>
+
+  <!-- Theta arrow -->
+  <path d="M 150 155 Q 170 165 165 180" stroke="green" fill="none" stroke-width="2"></path>
+  <text x="170" y="175" font-size="11" fill="green">θ</text>
+</svg>
+
+
 <h3 id="机器人的位置表示">机器人的位置表示</h3>
 <pre><code>机器人在世界坐标系中的位置：
 
@@ -1267,7 +1313,22 @@ x: 5.44, y: 6.44, theta: 0.0
 
 按←键左转后：
 x: 5.44, y: 6.44, theta: 1.57 (90°)
-</code></pre><h3 id="运动学公式">运动学公式</h3>
+</code></pre><h3 id="latex公式表示">LaTeX公式表示</h3>
+<p>运动学基本公式：</p>
+<p>$$v = \frac{v_l + v_r}{2}$$</p>
+<p>$$\omega = \frac{v_r - v_l}{L}$$</p>
+<p>其中：</p>
+<ul>
+<li>$v$ = 线速度 (m/s)</li>
+<li>$v_l, v_r$ = 左/右轮速度 (m/s)</li>
+<li>$\omega$ = 角速度 (rad/s)</li>
+<li>$L$ = 轮间距 (m)</li>
+</ul>
+<p>位置更新公式：</p>
+<p>$$x_{new} = x + v \cdot \cos(\theta) \cdot \Delta t$$</p>
+<p>$$y_{new} = y + v \cdot \sin(\theta) \cdot \Delta t$$</p>
+<p>$$\theta_{new} = \theta + \omega \cdot \Delta t$$</p>
+<h3 id="运动学公式">运动学公式</h3>
 <pre><code class="lang-python"><span class="hljs-comment"># 差速驱动机器人的运动学</span>
 
 <span class="hljs-comment"># 线速度</span>
@@ -1395,7 +1456,23 @@ move_robot(<span class="hljs-number">0</span>, <span class="hljs-number">0</span
 pos, orn = p.getBasePositionAndOrientation(robot)
 <span class="hljs-built_in">print</span>(<span class="hljs-string">f"最终位置: x=<span class="hljs-subst">{pos[<span class="hljs-number">0</span>]:<span class="hljs-number">.2</span>f}</span>, y=<span class="hljs-subst">{pos[<span class="hljs-number">1</span>]:<span class="hljs-number">.2</span>f}</span>, z=<span class="hljs-subst">{pos[<span class="hljs-number">2</span>]:<span class="hljs-number">.2</span>f}</span>"</span>)
 </code></pre>
-<h4 id="运动学公式回顾">运动学公式回顾</h4>
+<p>#</p>
+<h3 id="latex公式表示">LaTeX公式表示</h3>
+<p>运动学基本公式：</p>
+<p>$$v = \frac{v_l + v_r}{2}$$</p>
+<p>$$\omega = \frac{v_r - v_l}{L}$$</p>
+<p>其中：</p>
+<ul>
+<li>$v$ = 线速度 (m/s)</li>
+<li>$v_l, v_r$ = 左/右轮速度 (m/s)</li>
+<li>$\omega$ = 角速度 (rad/s)</li>
+<li>$L$ = 轮间距 (m)</li>
+</ul>
+<p>位置更新公式：</p>
+<p>$$x_{new} = x + v \cdot \cos(\theta) \cdot \Delta t$$</p>
+<p>$$y_{new} = y + v \cdot \sin(\theta) \cdot \Delta t$$</p>
+<p>$$\theta_{new} = \theta + \omega \cdot \Delta t$$</p>
+<h3 id="运动学公式回顾">运动学公式回顾</h3>
 <pre><code>┌─────────────────────────────────────────────────────────────┐
 │                    运动学公式                                │
 ├─────────────────────────────────────────────────────────────┤
@@ -1930,7 +2007,7 @@ y_both = [L1 * math.sin(t) + L2 * math.sin(t*<span class="hljs-number">2</span>)
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"2.1.1 坐标系概念","level":"7.1","depth":1,"previous":{"title":"课程简介","level":"1.1","depth":1,"path":"README.md","ref":"README.md","articles":[]},"dir":"ltr"},"config":{"plugins":[],"root":".","styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","author":"Your Name","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56},"embedFonts":false},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"ROS2机器人编程基础课程","language":"zh-hans","gitbook":"*","description":"第一阶段：基础与环境搭建"},"file":{"path":"content/week4.md","mtime":"2026-03-02T09:31:40.638Z","type":"markdown"},"gitbook":{"version":"6.1.6","time":"2026-03-02T09:31:49.009Z"},"basePath":"..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"2.1.1 坐标系概念","level":"7.1","depth":1,"previous":{"title":"课程简介","level":"1.1","depth":1,"path":"README.md","ref":"README.md","articles":[]},"dir":"ltr"},"config":{"plugins":[],"root":".","styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","author":"Your Name","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56},"embedFonts":false},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"AI机器人课程","language":"zh-hans","gitbook":"*","description":"15周ROS2机器人编程入门课程"},"file":{"path":"content/week4.md","mtime":"2026-03-02T09:41:42.103Z","type":"markdown"},"gitbook":{"version":"6.1.6","time":"2026-03-02T09:41:49.674Z"},"basePath":"..","book":{"language":""}});
         });
     </script>
 </div>
