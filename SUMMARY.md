@@ -5,31 +5,19 @@
 ## 第一阶段：基础与环境搭建
 
 - [第1周：课程介绍与仿真环境搭建](content/week1.md)
-  - [1.1 机器人与AI的区别与联系](content/week1.md#11-机器人与ai的区别与联系)
-  - [1.2 ROS2简介](content/week1.md#12-ros2简介)
-  - [1.3 网络基础知识](content/week1.md#14-网络基础知识)
-  - [1.4 Docker与环境搭建](content/week1.md#15-docker与环境搭建)
 
 - [第2周：ROS2通信机制基础](content/week2.md)
-  - [2.1 节点深入理解](content/week2.md#12-1-节点深入理解)
-  - [2.2 话题深入理解](content/week2.md#12-2-话题深入理解)
-  - [2.3 速度控制原理](content/week2.md#12-4-速度控制原理)
 
 - [第3周：Python编程与机器人控制入门](content/week3.md)
   - [3.1 Python基础](content/week3.md#11-python基础回顾60分钟)
   - [3.2 ROS2 Python库](content/week3.md#12-ros2-python库)
   - [3.3 第一个Python节点](content/week3.md#13-第一个python节点)
   - [3.4 PyBullet仿真环境](content/week3.md#14-pybullet仿真环境介绍)
-  - [3.5 复杂机器人运动简介](content/week3.md#16-复杂机器人运动简介)
+  - [3.5 RosClaw与OpenClaw集成](content/week3.md#15-rosclaw与openclaw集成控制)
 
 ## 第二阶段：运动学与空间感知
 
 - [第4周：机器人运动学基础（二维）](content/week4.md)
-  - [4.1 坐标系概念](content/week4.md#21-1-坐标系概念)
-  - [4.2 里程计(odom)](content/week4.md#21-3-里程计odom简介)
-  - [4.3 逆运动学简介](content/week4.md#21-6-逆运动学简介)
-  - [4.4 自由度的定义](content/week4.md#21-7-自由度的定义)
-
 - [第5周：传感器与感知基础](content/week5.md)
 - [第6周：闭环控制初探](content/week6.md)
 - [第7周：复习与实操演练](content/week7.md)

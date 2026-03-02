@@ -1150,21 +1150,172 @@ python3 -m pybullet_data.gdf_loader
 
 
 
----
+## 1.5 RosClaw与OpenClaw集成控制
+
+### 1.5.1 RosClaw项目介绍
+
+> **RosClaw** = ROS2 + OpenClaw 的结合，让你可以用消息应用控制机器人！
+
+RosClaw是连接OpenClaw AI助手与ROS2机器人的桥梁，实现了自然语言控制机器人的能力 [1]。
+
+#### RosClaw系统架构
+
+```
+RosClaw 架构流程：
+
+┌─────────────────────────────────────────────────────────────────┐
+│  用户 (飞书/Telegram/Discord/WhatsApp/Slack)               │
+│       │  发送消息 "Move forward 1 meter"                │
+│       ▼                                                    │
+│  ┌─────────────────────────────────────────────────────┐   │
+│  │   OpenClaw Gateway (AI Agent)                      │   │
+│  │   • 理解用户意图 (LLM)                           │   │
+│  │   • 调用ROS2工具                                  │   │
+│  │   • 流式反馈                                      │   │
+│  └─────────────────────────────────────────────────────┘   │
+│       │ RosClaw Plugin                                 │
+│       ▼                                                    │
+│  ┌─────────────────────────────────────────────────────┐   │
+│  │   rosbridge_server (WebSocket)                    │   │
+│  └─────────────────────────────────────────────────────┘   │
+│       │ ROS2 DDS 通信                                   │
+│       ▼                                                    │
+│  ┌─────────────────────────────────────────────────────┐   │
+│  │   ROS2 机器人 (Nav2/MoveIt/相机)                  │   │
+│  └─────────────────────────────────────────────────────┘   │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+#### RosClaw核心工具
+
+| 工具 | 功能 |
+|------|------|
+| ros2_publish | 发布消息到任意话题 |
+| ros2_subscribe_once | 读取话题最新消息 |
+| ros2_service_call | 调用ROS2服务 |
+| ros2_action_goal | 发送动作目标 |
+| ros2_param_get/set | 获取/设置参数 |
+| ros2_camera_snapshot | 捕获相机图像 |
+
+#### 项目资源
+
+- GitHub: https://github.com/PlaiPin/rosclaw
+
+### 1.5.2 OpenClaw部署
+
+> **OpenClaw** 是一个多平台AI助手框架，可以连接ROS2机器人，实现用消息应用控制机器人！ [2]
+
+#### 支持的消息平台
+
+```
+OpenClaw 支持的平台：
+├── 飞书 (Lark)
+├── Telegram
+├── Discord
+├── WhatsApp
+├── Slack
+├── Signal
+└── iMessage
+```
+
+#### 部署方式
+
+**方式A：Docker部署（推荐）**
+
+```bash
+# 1. 克隆项目
+git clone https://github.com/openclaw/openclaw.git
+cd openclaw
+
+# 2. 配置环境
+cp .env.example .env
+# 编辑 .env 文件，配置API密钥
+
+# 3. 启动
+docker compose up -d
+
+# 4. 访问
+# http://localhost:8080
+```
+
+**方式B：手动部署**
+
+```bash
+# 1. 安装Node.js 20+
+curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
+sudo apt-get install -y nodejs
+
+# 2. 安装pnpm
+npm install -g pnpm
+
+# 3. 克隆并安装
+git clone https://github.com/openclaw/openclaw.git
+cd openclaw
+pnpm install
+pnpm build
+
+# 4. 配置
+cp .env.example .env
+
+# 5. 启动
+pnpm start
+```
+
+#### 连接飞书配置
+
+```bash
+# .env 配置示例
+# 飞书配置
+FEISHU_APP_ID=your_app_id
+FEISHU_APP_SECRET=your_app_secret
+
+# OpenAI配置（用于理解用户意图）
+OPENAI_API_KEY=sk-...
+
+# RosClaw配置
+ROSCLAW_WS_URL=ws://localhost:9090
+```
+
+### 1.5.3 自然语言控制示例
+
+```
+用户发送              →    机器人执行
+─────────────────────────────────────
+"Move forward 1m"    →    /cmd_vel 发布速度
+"Turn left 90"       →    /cmd_vel 发布角速度
+"Stop"               →    /cmd_vel 全零
+"Take a photo"       →    /camera/capture
+"Where are you?"     →    发布位置到TTS
+```
+
+### 1.5.4 飞书集成
+
+飞书是OpenClaw支持的重要消息平台之一，可以实现：
+
+- 📱 在飞书中发送消息控制机器人
+- 🔔 接收机器人状态推送
+- 👥 群聊协作控制
+- 📊 机器人在群内汇报状态
+
+#### 配置步骤
+
+1. 在[飞书开放平台](https://open.feishu.cn/)创建企业自建应用
+2. 获取App ID和App Secret
+3. 配置应用权限：im:message:send_as_bot
+4. 在OpenClaw中配置飞书凭证
+
+#### 相关资源
+
+- [飞书开放平台](https://open.feishu.cn/)
+- [OpenClaw文档](https://docs.openclaw.ai)
+- [RosClaw GitHub](https://github.com/PlaiPin/rosclaw)
 
 ### 参考文献
 
-[1] Coumans, E. (2024). *Bullet Physics Simulation*. Available: https://pybullet.org/
+[1] RosClaw Contributors. (2024). *RosClaw: Bridge between OpenClaw and ROS2*. Available: https://github.com/PlaiPin/rosclaw
 
-[2] Fei, Y. (2022). PyBullet: A Python Module for Physics Simulation. *Journal of Open Source Software*. doi:10.21105/joss.04362
+[2] OpenClaw Team. (2024). *OpenClaw: Multi-platform AI Agent Framework*. Available: https://github.com/openclaw/openclaw
 
-[3]松井藤太. (2023). *PyBullet Robotics Tutorial*. Available: https://github.com/jefflesser/pybullet-ros
-
-
-
-## 1.5 Python + OpenClaw集成控制
-
-### RosClaw Python节点
 
 ```python
 #!/usr/bin/env python3
