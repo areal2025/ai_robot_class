@@ -1567,6 +1567,196 @@ if __name__ == '__main__':
 </blockquote>
 <hr></hr>
 <p><em>第4周结束！</em></p>
+<hr></hr>
+<h2 id="🧠-拓展思考：逆运动学">🧠 拓展思考：逆运动学</h2>
+<blockquote>
+<p>除了让机器人<strong>按给定速度移动</strong>（正运动学），我们还可以<strong>反着来</strong>——给定目标位置，计算需要的关节角度！</p>
+</blockquote>
+<h3 id="什么是逆运动学？">什么是逆运动学？</h3>
+<pre><code>┌─────────────────────────────────────────────────────────────┐
+│                    正运动学 vs 逆运动学                        │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│  正运动学 (Forward Kinematics)                              │
+│  ───────────────────────────────────────                   │
+│  输入：关节角度 [θ₁, θ₂, θ₃]                                │
+│  输出：末端位置 (x, y, z)                                   │
+│                                                             │
+│  示例：给定关节角度 → 计算手在哪里                            │
+│                                                             │
+│  ───────────────────────────────────────                   │
+│                                                             │
+│  逆运动学 (Inverse Kinematics)                             │
+│  ───────────────────────────────────────                   │
+│  输入：末端位置 (x, y, z)                                   │
+│  输出：关节角度 [θ₁, θ₂, θ₃]                                │
+│                                                             │
+│  示例：想要手到达这里 → 计算关节要转多少                      │
+│                                                             │
+└─────────────────────────────────────────────────────────────┘
+</code></pre><h3 id="生活中的例子">生活中的例子</h3>
+<pre><code>伸手拿水杯：
+
+正运动学：      你转动肩膀、肘部、手腕 → 手到达某个位置
+              （关节角度 → 末端位置）
+
+逆运动学：      你想让手碰到水杯 → 大脑计算各关节要转多少
+              （目标位置 → 关节角度）
+</code></pre><h3 id="简单的2关节机械臂">简单的2关节机械臂</h3>
+<pre><code>机械臂几何：
+
+        末端
+         │
+    L2   │  θ₂
+    ─────┤
+         │
+    θ₁   │
+─────────┼─────────
+   L1    │   基座
+         │
+
+参数：
+- L1 = 上臂长度 (比如1米)
+- L2 = 前臂长度 (比如1米)
+- θ₁ = 肩关节角度
+- θ₂ = 肘关节角度
+</code></pre><h4 id="正运动学公式">正运动学公式</h4>
+<pre><code>已知：θ₁ = 45°, θ₂ = 45°, L1 = L2 = 1m
+
+计算末端位置：
+
+x = L1 × cos(θ₁) + L2 × cos(θ₁ + θ₂)
+y = L1 × sin(θ₁) + L2 × sin(θ₁ + θ₂)
+
+代入：
+x = 1 × cos(45°) + 1 × cos(90°)
+  = 0.707 + 0 = 0.707m
+
+y = 1 × sin(45°) + 1 × sin(90°)
+  = 0.707 + 1 = 1.707m
+</code></pre><h4 id="逆运动学公式（简化版）">逆运动学公式（简化版）</h4>
+<pre><code>已知：目标位置 (x, y) = (0.5, 1.5m)
+
+求解关节角度（简化）：
+
+θ₂ = arccos((x² + y² - L1² - L2²) / (2 × L1 × L2))
+
+θ₁ = atan2(y, x) - atan2(L2 × sin(θ₂), L1 + L2 × cos(θ₂))
+
+这是一个非线性方程组，通常用数值方法求解！
+</code></pre><h3 id="python计算示例">Python计算示例</h3>
+<pre><code class="lang-python"><span class="hljs-keyword">import</span> math
+
+<span class="hljs-keyword">def</span> <span class="hljs-title function_">forward_kinematics</span>(<span class="hljs-params">theta1, theta2, L1=<span class="hljs-number">1.0</span>, L2=<span class="hljs-number">1.0</span></span>):
+    <span class="hljs-string">"""正运动学：关节角度 → 末端位置"""</span>
+    x = L1 * math.cos(theta1) + L2 * math.cos(theta1 + theta2)
+    y = L1 * math.sin(theta1) + L2 * math.sin(theta1 + theta2)
+    <span class="hljs-keyword">return</span> x, y
+
+<span class="hljs-keyword">def</span> <span class="hljs-title function_">inverse_kinematics</span>(<span class="hljs-params">x, y, L1=<span class="hljs-number">1.0</span>, L2=<span class="hljs-number">1.0</span></span>):
+    <span class="hljs-string">"""逆运动学：末端位置 → 关节角度"""</span>
+    <span class="hljs-comment"># 计算肘部角度</span>
+    cos_theta2 = (x**<span class="hljs-number">2</span> + y**<span class="hljs-number">2</span> - L1**<span class="hljs-number">2</span> - L2**<span class="hljs-number">2</span>) / (<span class="hljs-number">2</span> * L1 * L2)
+    <span class="hljs-comment"># 限制范围避免数值误差</span>
+    cos_theta2 = <span class="hljs-built_in">max</span>(-<span class="hljs-number">1</span>, <span class="hljs-built_in">min</span>(<span class="hljs-number">1</span>, cos_theta2))
+    theta2 = math.acos(cos_theta2)
+
+    <span class="hljs-comment"># 计算肩部角度</span>
+    k1 = L1 + L2 * math.cos(theta2)
+    k2 = L2 * math.sin(theta2)
+    theta1 = math.atan2(y, x) - math.atan2(k2, k1)
+
+    <span class="hljs-keyword">return</span> theta1, theta2
+
+<span class="hljs-comment"># 示例</span>
+theta1, theta2 = <span class="hljs-number">0</span>, <span class="hljs-number">0</span>  <span class="hljs-comment"># 初始角度</span>
+x, y = forward_kinematics(theta1, theta2)
+<span class="hljs-built_in">print</span>(<span class="hljs-string">f"正运动学: θ1=<span class="hljs-subst">{theta1:<span class="hljs-number">.2</span>f}</span>, θ2=<span class="hljs-subst">{theta2:<span class="hljs-number">.2</span>f}</span> → 末端位置=(<span class="hljs-subst">{x:<span class="hljs-number">.2</span>f}</span>, <span class="hljs-subst">{y:<span class="hljs-number">.2</span>f}</span>)"</span>)
+
+<span class="hljs-comment"># 逆运动学</span>
+target_x, target_y = <span class="hljs-number">1.0</span>, <span class="hljs-number">1.0</span>
+theta1, theta2 = inverse_kinematics(target_x, target_y)
+<span class="hljs-built_in">print</span>(<span class="hljs-string">f"逆运动学: 目标=(<span class="hljs-subst">{target_x}</span>, <span class="hljs-subst">{target_y}</span>) → θ1=<span class="hljs-subst">{math.degrees(theta1):<span class="hljs-number">.1</span>f}</span>°, θ2=<span class="hljs-subst">{math.degrees(theta2):<span class="hljs-number">.1</span>f}</span>°"</span>)
+</code></pre>
+<h3 id="关节叠加效应">关节叠加效应</h3>
+<pre><code>演示：不同关节角度如何叠加
+
+┌─────────────────────────────────────────────────────────────┐
+│  关节1旋转45°                                            │
+│  ──────────────────                                       │
+│          ╱                                                │
+│         ╱  关节2也在旋转                                  │
+│        ╱ ──────────                                       │
+│       ╱                                                   │
+│      ╱                                                    │
+│     ╱                                                     │
+│    ─                                                        │
+│                                                             │
+│  结果：末端位置 = 关节1效果 + 关节2效果 + 交叉项           │
+│                                                             │
+│  x = L1×cos(θ1) + L2×cos(θ1+θ2)                        │
+│       └────────┘    └─────────────┘                      │
+│         单独效果      叠加效果                             │
+│                                                             │
+└─────────────────────────────────────────────────────────────┘
+</code></pre><h3 id="关节叠加的物理意义">关节叠加的物理意义</h3>
+<pre><code class="lang-python"><span class="hljs-string">"""
+关节叠加效应演示
+"""</span>
+
+<span class="hljs-keyword">import</span> math
+<span class="hljs-keyword">import</span> matplotlib.pyplot <span class="hljs-keyword">as</span> plt
+
+L1 = <span class="hljs-number">1.0</span>
+L2 = <span class="hljs-number">1.0</span>
+
+<span class="hljs-comment"># 只动关节1</span>
+theta1_range = [math.radians(a) <span class="hljs-keyword">for</span> a <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">0</span>, <span class="hljs-number">91</span>)]
+x1_only = [L1 * math.cos(t) + L2 * math.cos(t) <span class="hljs-keyword">for</span> t <span class="hljs-keyword">in</span> theta1_range]
+y1_only = [L1 * math.sin(t) + L2 * math.sin(t) <span class="hljs-keyword">for</span> t <span class="hljs-keyword">in</span> theta1_range]
+
+<span class="hljs-comment"># 两个关节同时动</span>
+theta2_range = [math.radians(a) <span class="hljs-keyword">for</span> a <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">0</span>, <span class="hljs-number">91</span>)]
+x_both = [L1 * math.cos(t) + L2 * math.cos(t*<span class="hljs-number">2</span>) <span class="hljs-keyword">for</span> t <span class="hljs-keyword">in</span> theta1_range]
+y_both = [L1 * math.sin(t) + L2 * math.sin(t*<span class="hljs-number">2</span>) <span class="hljs-keyword">for</span> t <span class="hljs-keyword">in</span> theta1_range]
+
+<span class="hljs-built_in">print</span>(<span class="hljs-string">"关节1单独运动 vs 两个关节叠加运动："</span>)
+<span class="hljs-built_in">print</span>(<span class="hljs-string">"\n角度   只动关节1       两个关节同时动"</span>)
+<span class="hljs-built_in">print</span>(<span class="hljs-string">"-"</span> * <span class="hljs-number">50</span>)
+<span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">0</span>, <span class="hljs-number">91</span>, <span class="hljs-number">30</span>):
+    <span class="hljs-built_in">print</span>(<span class="hljs-string">f"<span class="hljs-subst">{i}</span>°    (<span class="hljs-subst">{x1_only[i]:<span class="hljs-number">.2</span>f}</span>, <span class="hljs-subst">{y1_only[i]:<span class="hljs-number">.2</span>f}</span>)    (<span class="hljs-subst">{x_both[i]:<span class="hljs-number">.2</span>f}</span>, <span class="hljs-subst">{y_both[i]:<span class="hljs-number">.2</span>f}</span>)"</span>)
+</code></pre>
+<h3 id="思考题">思考题</h3>
+<blockquote>
+<p>🔥 <strong>挑战</strong>：尝试回答以下问题</p>
+</blockquote>
+<ol>
+<li><p><strong>为什么逆运动学更难？</strong></p>
+<ul>
+<li>正运动学有唯一解</li>
+<li>逆运动学可能有多个解（机械臂的"肘向上"vs"肘向下"）</li>
+</ul>
+</li>
+<li><p><strong>关节越多越难？</strong></p>
+<ul>
+<li>2关节机械臂有解析解</li>
+<li>6关节（人体手臂）需要数值迭代求解</li>
+</ul>
+</li>
+<li><p><strong>实际应用：</strong></p>
+<ul>
+<li>工业机械臂如何抓取任意位置的物体？</li>
+<li>机器人如何保证末端不碰到障碍物？</li>
+</ul>
+</li>
+</ol>
+<hr></hr>
+<h3 id="📚-延伸学习">📚 延伸学习</h3>
+<ul>
+<li><strong>PyBullet IK</strong> - PyBullet内置逆运动学求解器</li>
+<li><strong>KDL</strong> - ROS的运动学库</li>
+<li><strong>MoveIt</strong> - ROS机械臂规划框架</li>
+</ul>
 
                                 
                                 </section>
@@ -1606,7 +1796,7 @@ if __name__ == '__main__':
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"2.1.1 坐标系概念","level":"7.1","depth":1,"previous":{"title":"课程简介","level":"1.1","depth":1,"path":"README.md","ref":"README.md","articles":[]},"dir":"ltr"},"config":{"plugins":[],"root":".","styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","author":"Your Name","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56},"embedFonts":false},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"ROS2机器人编程基础课程","language":"zh-hans","gitbook":"*","description":"第一阶段：基础与环境搭建"},"file":{"path":"content/week4.md","mtime":"2026-03-02T09:21:23.275Z","type":"markdown"},"gitbook":{"version":"6.1.6","time":"2026-03-02T09:22:05.685Z"},"basePath":"..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"2.1.1 坐标系概念","level":"7.1","depth":1,"previous":{"title":"课程简介","level":"1.1","depth":1,"path":"README.md","ref":"README.md","articles":[]},"dir":"ltr"},"config":{"plugins":[],"root":".","styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","author":"Your Name","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56},"embedFonts":false},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"ROS2机器人编程基础课程","language":"zh-hans","gitbook":"*","description":"第一阶段：基础与环境搭建"},"file":{"path":"content/week4.md","mtime":"2026-03-02T09:23:47.498Z","type":"markdown"},"gitbook":{"version":"6.1.6","time":"2026-03-02T09:23:55.757Z"},"basePath":"..","book":{"language":""}});
         });
     </script>
 </div>
