@@ -345,7 +345,24 @@ v = (v_left + v_right) / 2
 
 # 角速度  
 
-### 🎮 PyBullet 3D运动学演示（进阶）
+#
+
+---
+
+### 参考文献
+
+[1] Craig, J. J. (2005). *Introduction to Robotics: Mechanics and Control* (3rd ed.). Pearson Education. ISBN: 978-0201543613
+
+[2] Spong, M. W., Hutchinson, S., & Vidyasagar, M. (2006). *Robot Modeling and Control*. John Wiley & Sons. ISBN: 978-0471649908
+
+[3] Siciliano, B., Khatib, O., & Kröger, T. (2008). *Springer Handbook of Robotics*. Springer. doi:10.1007/978-3-540-30301-5
+
+[4] Featherstone, R. (2014). *Rigid Body Dynamics Algorithms*. Springer. ISBN: 978-0387743141
+
+[5] Tsai, R. W. (1999). *A Computational Introduction to Robotics*. Springer. ISBN: 978-0387985016
+
+
+## 🎮 PyBullet 3D运动学演示（进阶）
 
 > 除了Turtlesim，我们还可以用PyBullet看更真实的3D机器人运动！
 

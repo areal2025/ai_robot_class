@@ -451,6 +451,21 @@ def control_loop(self):
 
 ---
 
+
+
+---
+
+### 参考文献
+
+[1] Åström, K. J., & Hägglund, T. (2006). *Advanced PID Control*. ISA - The Instrumentation, Systems, and Automation Society. ISBN: 978-1556179426
+
+[2] Ogata, K. (2010). *Modern Control Engineering* (5th ed.). Prentice Hall. ISBN: 978-0136156734
+
+[3] Levine, W. S. (1996). *The Control Handbook*. CRC Press. ISBN: 978-0849345960
+
+[4] Franklin, G. F., Powell, J. D., & Emami-Naeini, A. (2015). *Feedback Control of Dynamic Systems* (7th ed.). Pearson. ISBN: 978-0133496598
+
+
 ## 📚 课后阅读
 
 - [PID控制器原理](https://en.wikipedia.org/wiki/PID_controller)
