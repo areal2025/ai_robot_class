@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>双臂机器人 - 布料折叠演示</title>
+    <title>双臂机器人 - 强化学习叠布料</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: Arial, sans-serif; background: #1a1a2e; color: #fff; overflow: hidden; }
@@ -14,7 +14,7 @@
         #canvas { width: 100%; height: 100%; display: block; }
         
         .panel { 
-            width: 320px; background: #222; padding: 20px; 
+            width: 340px; background: #222; padding: 20px; 
             display: flex; flex-direction: column; gap: 15px;
             overflow-y: auto;
         }
@@ -27,113 +27,95 @@
             border: 1px solid #333;
         }
         .info-box h4 { color: #00d4ff; margin-bottom: 10px; font-size: 12px; }
-        .info-box p { font-size: 11px; color: #888; line-height: 1.6; }
         
-        .strategy-btns { display: flex; flex-direction: column; gap: 8px; }
-        
-        .strategy-btn {
-            padding: 12px; border-radius: 8px; border: 2px solid #333;
-            background: transparent; color: #fff; font-size: 12px; cursor: pointer;
-            text-align: left; transition: all 0.2s;
+        .rl-status {
+            display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px;
         }
-        .strategy-btn:hover { border-color: #00d4ff; background: rgba(0,212,255,0.1); }
-        .strategy-btn.active { border-color: #00ff88; background: rgba(0,255,136,0.1); }
-        .strategy-btn .name { font-weight: bold; color: #00d4ff; }
-        .strategy-btn .desc { font-size: 10px; color: #666; margin-top: 4px; }
+        .rl-stat {
+            background: #0a0a15; padding: 10px; border-radius: 6px; text-align: center;
+        }
+        .rl-stat .label { font-size: 10px; color: #666; }
+        .rl-stat .value { font-size: 16px; font-weight: bold; color: #00ff88; }
+        .rl-stat .value.episode { color: #ffaa00; }
         
-        .status { background: #111; padding: 15px; border-radius: 8px; }
-        .status-row { display: flex; justify-content: space-between; margin: 5px 0; font-family: monospace; font-size: 11px; }
-        .status .label { color: #666; }
-        .status .value { color: #00ff88; }
+        .progress-bar {
+            height: 6px; background: #333; border-radius: 3px; overflow: hidden;
+        }
+        .progress-fill {
+            height: 100%; background: linear-gradient(90deg, #ff4444, #ffaa00, #00ff88);
+            width: 0%; transition: width 0.2s;
+        }
         
         .control-btns { display: flex; gap: 10px; }
         .control-btn {
             flex: 1; padding: 15px; border-radius: 8px; border: none;
             font-size: 13px; font-weight: bold; cursor: pointer; color: #fff;
         }
-        .btn-start { background: #00ff88; color: #000; }
+        .btn-train { background: linear-gradient(90deg, #00d4ff, #7b2ff7); }
         .btn-reset { background: #ff4444; }
         
-        .progress-bar {
-            height: 8px; background: #333; border-radius: 4px; overflow: hidden;
+        .log-box {
+            background: #0a0a15; padding: 10px; border-radius: 6px;
+            max-height: 100px; overflow-y: auto;
+            font-family: monospace; font-size: 10px; color: #666;
         }
-        .progress-fill {
-            height: 100%; background: linear-gradient(90deg, #00d4ff, #00ff88);
-            width: 0%; transition: width 0.3s;
-        }
+        .log-box .log { margin: 2px 0; }
+        .log-box .log.success { color: #00ff88; }
+        .log-box .log.reward { color: #ffaa00; }
         
         .back { display: block; text-align: center; padding: 15px; color: #00d4ff; text-decoration: none; }
-        
-        .physics-info {
-            font-size: 10px; color: #666; text-align: center;
-        }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="simulation">
             <canvas id="canvas"></canvas>
-            <div class="status" style="position:absolute; top:10px; left:10px;">
-                <div class="status-row"><span class="label">左臂角度</span><span class="value" id="armL">0°</span></div>
-                <div class="status-row"><span class="label">右臂角度</span><span class="value" id="armR">0°</span></div>
-                <div class="status-row"><span class="label">完成度</span><span class="value" id="progress">0%</span></div>
-            </div>
         </div>
         
         <div class="panel">
             <div>
-                <div class="title">🤖 双臂机器人</div>
-                <div class="subtitle">布料折叠演示</div>
+                <div class="title">🤖 强化学习叠布料</div>
+                <div class="subtitle">Deep Q-Learning 演示</div>
             </div>
             
             <div class="info-box">
-                <h4>📋 任务说明</h4>
-                <p>使用双臂机器人将布料从左侧折叠到右侧。不同的运动规划策略会产生不同的运动轨迹和效果。</p>
-            </div>
-            
-            <div class="info-box">
-                <h4>🎯 运动规划策略</h4>
-                <div class="strategy-btns">
-                    <button class="strategy-btn active" data-strategy="ptp" onclick="setStrategy('ptp')">
-                        <div class="name">PTP (点对点)</div>
-                        <div class="desc">快速到达目标，轨迹生硬</div>
-                    </button>
-                    <button class="strategy-btn" data-strategy="linear" onclick="setStrategy('linear')">
-                        <div class="name">Linear (直线插值)</div>
-                        <div class="desc">直线运动，轨迹平滑</div>
-                    </button>
-                    <button class="strategy-btn" data-strategy="joint" onclick="setStrategy('joint')">
-                        <div class="name">Joint (关节插值)</div>
-                        <div class="desc">关节空间平滑过渡</div>
-                    </button>
-                    <button class="strategy-btn" data-strategy="circular" onclick="setStrategy('circular')">
-                        <div class="name">Circular (圆弧插值)</div>
-                        <div class="desc">沿圆弧运动</div>
-                    </button>
-                    <button class="strategy-btn" data-strategy="bezier" onclick="setStrategy('bezier')">
-                        <div class="name">Bezier (贝塞尔曲线)</div>
-                        <div class="desc">平滑曲线，优雅运动</div>
-                    </button>
+                <h4>🧠 强化学习状态</h4>
+                <div class="rl-status">
+                    <div class="rl-stat">
+                        <div class="label">Episode</div>
+                        <div class="value episode" id="episode">0</div>
+                    </div>
+                    <div class="rl-stat">
+                        <div class="label">Reward</div>
+                        <div class="value" id="reward">0</div>
+                    </div>
+                    <div class="rl-stat">
+                        <div class="label">Epsilon</div>
+                        <div class="value" id="epsilon">1.00</div>
+                    </div>
+                    <div class="rl-stat">
+                        <div class="label">成功率</div>
+                        <div class="value" id="success">0%</div>
+                    </div>
                 </div>
             </div>
             
-            <div class="status">
-                <div class="status-row"><span class="label">当前策略</span><span class="value" id="strategyName">PTP</span></div>
-                <div class="status-row"><span class="label">任务状态</span><span class="value" id="taskStatus">待机</span></div>
-                <div class="status-row"><span class="label">耗时</span><span class="value" id="elapsed">0.0s</span></div>
+            <div class="info-box">
+                <h4>📊 训练进度</h4>
+                <div class="progress-bar"><div class="progress-fill" id="progressBar"></div></div>
+                <div style="display:flex; justify-content:space-between; font-size:10px; color:#666; margin-top:5px;">
+                    <span>探索</span><span>学习</span><span>收敛</span>
+                </div>
             </div>
             
-            <div class="progress-bar">
-                <div class="progress-fill" id="progressBar"></div>
+            <div class="info-box">
+                <h4>📝 训练日志</h4>
+                <div class="log-box" id="logBox"></div>
             </div>
             
             <div class="control-btns">
-                <button class="control-btn btn-start" onclick="startTask()">▶ 开始任务</button>
-                <button class="control-btn btn-reset" onclick="resetTask()">↺ 重置</button>
-            </div>
-            
-            <div class="physics-info">
-                Cannon.js 物理引擎 | 运动学解算
+                <button class="control-btn btn-train" id="btnTrain" onclick="toggleTraining()">▶ 开始训练</button>
+                <button class="control-btn btn-reset" onclick="resetSim()">↺ 重置</button>
             </div>
             
             <a href="/demo1/" class="back">← 返回机器狗Demo</a>
@@ -145,19 +127,191 @@
         // ========== Three.js 场景 ==========
         
         let scene, camera, renderer;
-        let robot, leftArm, rightArm, cloth;
-        let arms = { left: [], right: [] };
+        let robot, leftArm, rightArm;
+        let cloth, clothVertices;
+        let leftGripper, rightGripper;
         
-        // 任务状态
-        const task = {
-            running: false,
-            strategy: 'ptp',
-            phase: 0,
-            progress: 0,
-            startTime: 0,
-            clothPos: { x: -1.5, z: 0 },
-            targetPos: { x: 1.5, z: 0 }
+        // 机器人关节
+        const joints = {
+            left: { shoulder: null, elbow: null, wrist: null, fingers: [] },
+            right: { shoulder: null, elbow: null, wrist: null, fingers: [] }
         };
+        
+        // ========== 强化学习 ==========
+        const rl = {
+            episode: 0,
+            reward: 0,
+            epsilon: 1.0,
+            epsilonDecay: 0.995,
+            minEpsilon: 0.05,
+            learningRate: 0.1,
+            gamma: 0.9,
+            successCount: 0,
+            totalEpisodes: 0,
+            training: false,
+            qTable: {},
+            state: { clothFolded: 0, gripperPos: 0 },
+            action: 0
+        };
+        
+        // 状态离散化
+        function getStateKey() {
+            const foldLevel = Math.floor(cloth.foldLevel * 5);
+            const gripperDist = Math.floor((gripperZ + 2) / 4 * 5);
+            return `${foldLevel}-${gripperDist}`;
+        }
+        
+        // Q学习
+        function qLearning(state, action, reward, nextState) {
+            const key = `${state}-${action}`;
+            const nextKey = `${nextState}-*`;
+            
+            if (!rl.qTable[key]) rl.qTable[key] = 0;
+            if (!rl.qTable[nextKey]) rl.qTable[nextKey] = 0;
+            
+            const oldQ = rl.qTable[key];
+            const maxQ = Math.max(...Object.values(rl.qTable).filter((_, i) => {
+                const k = Object.keys(rl.qTable)[i];
+                return k.startsWith(nextState);
+            }));
+            
+            rl.qTable[key] = oldQ + rl.learningRate * (reward + rl.gamma * maxQ - oldQ);
+        }
+        
+        // 选择动作
+        function chooseAction(state) {
+            if (Math.random() < rl.epsilon) {
+                return Math.floor(Math.random() * 4); // 探索
+            }
+            
+            const key = state + '-';
+            let bestAction = 0;
+            let bestQ = -Infinity;
+            
+            for (let a = 0; a < 4; a++) {
+                const q = rl.qTable[key + a] || 0;
+                if (q > bestQ) {
+                    bestQ = q;
+                    bestAction = a;
+                }
+            }
+            return bestAction;
+        }
+        
+        // 动作执行
+        function executeAction(action) {
+            const moveSpeed = 0.1;
+            
+            switch(action) {
+                case 0: // 左手伸出
+                    joints.left.wrist.position.z = Math.max(-1.5, joints.left.wrist.position.z - moveSpeed);
+                    break;
+                case 1: // 右手伸出
+                    joints.right.wrist.position.z = Math.min(1.5, joints.right.wrist.position.z + moveSpeed);
+                    break;
+                case 2: // 左手下压
+                    joints.left.wrist.position.y = Math.max(0.5, joints.left.wrist.position.y - moveSpeed);
+                    break;
+                case 3: // 右手下压
+                    joints.right.wrist.position.y = Math.max(0.5, joints.right.wrist.position.y - moveSpeed);
+                    break;
+            }
+            
+            // 更新夹爪位置
+            updateGrippers();
+        }
+        
+        // 计算奖励
+        function calculateReward() {
+            let reward = -0.1; // 每步小惩罚
+            
+            const leftZ = joints.left.wrist.position.z;
+            const rightZ = joints.right.wrist.position.z;
+            const clothZ = cloth.mesh.position.z;
+            
+            // 夹爪靠近布料
+            if (Math.abs(leftZ - clothZ) < 0.3 && Math.abs(rightZ - clothZ) < 0.3) {
+                reward += 0.5;
+            }
+            
+            // 完成折叠
+            if (cloth.foldLevel >= 0.8) {
+                reward += 10;
+                rl.successCount++;
+                log('✨ Episode ' + rl.episode + ' 成功!', 'success');
+                return true;
+            }
+            
+            return false;
+        }
+        
+        // 训练一步
+        function trainingStep() {
+            if (!rl.training) return;
+            
+            const state = getStateKey();
+            const action = chooseAction(state);
+            
+            executeAction(action);
+            updateClothPhysics();
+            
+            const done = calculateReward();
+            const nextState = getStateKey();
+            
+            qLearning(state, action, rl.reward, nextState);
+            
+            // 更新Q值显示
+            document.getElementById('reward').textContent = rl.reward.toFixed(1);
+            
+            if (done || Math.random() < 0.02) {
+                // Episode结束
+                rl.episode++;
+                rl.totalEpisodes++;
+                rl.epsilon = Math.max(rl.minEpsilon, rl.epsilon * rl.epsilonDecay);
+                
+                document.getElementById('episode').textContent = rl.episode;
+                document.getElementById('epsilon').textContent = rl.epsilon.toFixed(2);
+                document.getElementById('success').textContent = 
+                    Math.floor(rl.successCount / Math.max(1, rl.episode) * 100) + '%';
+                
+                // 重置
+                resetCloth();
+                rl.reward = 0;
+            }
+            
+            // 更新进度条
+            const progress = (1 - rl.epsilon) * 100;
+            document.getElementById('progressBar').style.width = progress + '%';
+        }
+        
+        let gripperZ = 0;
+        
+        function updateGrippers() {
+            gripperZ = joints.left.wrist.position.z;
+        }
+        
+        function log(msg, type) {
+            const box = document.getElementById('logBox');
+            const div = document.createElement('div');
+            div.className = 'log ' + (type || '');
+            div.textContent = msg;
+            box.insertBefore(div, box.firstChild);
+            if (box.children.length > 10) box.removeChild(box.lastChild);
+        }
+        
+        function toggleTraining() {
+            rl.training = !rl.training;
+            document.getElementById('btnTrain').textContent = rl.training ? '⏸ 暂停' : '▶ 继续训练';
+            if (rl.training && rl.episode === 0) {
+                rl.episode = 1;
+                document.getElementById('episode').textContent = 1;
+                log('🚀 开始强化学习训练...', 'success');
+            }
+        }
+        
+        // ========== Three.js 初始化 ==========
+        
+        let clothFoldLevel = 0;
         
         function init() {
             const canvas = document.getElementById('canvas');
@@ -166,7 +320,7 @@
             scene.background = new THREE.Color(0x1a1a2e);
             
             camera = new THREE.PerspectiveCamera(50, canvas.clientWidth / canvas.clientHeight, 0.1, 1000);
-            camera.position.set(0, 4, 6);
+            camera.position.set(0, 4, 8);
             camera.lookAt(0, 1, 0);
             
             renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
@@ -188,310 +342,242 @@
             ground.rotation.x = -Math.PI/2;
             ground.receiveShadow = true;
             scene.add(ground);
-            
-            // 网格
             scene.add(new THREE.GridHelper(10, 20, 0x00d4ff, 0x333355));
             
-            // 创建桌子
             createTable();
-            
-            // 创建机器人
             createRobot();
-            
-            // 创建布料
             createCloth();
             
             animate();
         }
         
         function createTable() {
-            // 桌子
             const tableMat = new THREE.MeshStandardMaterial({ color: 0x444444 });
-            const table = new THREE.Mesh(new THREE.BoxGeometry(6, 0.1, 2), tableMat);
+            const table = new THREE.Mesh(new THREE.BoxGeometry(4, 0.1, 2), tableMat);
             table.position.set(0, 0.8, 0);
             table.receiveShadow = true;
             scene.add(table);
-            
-            // 桌腿
-            const legMat = new THREE.MeshStandardMaterial({ color: 0x333333 });
-            [[-2.8, -0.8], [2.8, -0.8], [-2.8, 0.8], [2.8, 0.8]].forEach(pos => {
-                const leg = new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.05, 0.8), legMat);
-                leg.position.set(pos[0], 0.4, pos[1]);
-                scene.add(leg);
-            });
         }
         
         function createRobot() {
-            // 机器人基座
+            // 基座
             const baseMat = new THREE.MeshStandardMaterial({ color: 0x2a2a3a, metalness: 0.8 });
-            const base = new THREE.Mesh(new THREE.CylinderGeometry(0.3, 0.35, 0.3, 32), baseMat);
-            base.position.set(0, 0.95, 0);
+            const base = new THREE.Mesh(new THREE.CylinderGeometry(0.25, 0.3, 0.25, 32), baseMat);
+            base.position.set(0, 0.93, 0);
             base.castShadow = true;
             scene.add(base);
             
             // 躯干
-            const torso = new THREE.Mesh(new THREE.BoxGeometry(0.4, 0.5, 0.3), baseMat);
-            torso.position.set(0, 1.35, 0);
+            const torso = new THREE.Mesh(new THREE.BoxGeometry(0.35, 0.45, 0.25), baseMat);
+            torso.position.set(0, 1.28, 0);
             torso.castShadow = true;
             scene.add(torso);
             
-            // 头部
+            // 头
             const headMat = new THREE.MeshStandardMaterial({ color: 0x1a1a2a, metalness: 0.9 });
-            const head = new THREE.Mesh(new THREE.BoxGeometry(0.25, 0.2, 0.25), headMat);
-            head.position.set(0, 1.7, 0);
-            head.castShadow = true;
+            const head = new THREE.Mesh(new THREE.BoxGeometry(0.2, 0.18, 0.2), headMat);
+            head.position.set(0, 1.6, 0);
             scene.add(head);
             
             // 眼睛
             const eyeMat = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
-            [[0.06, 0.06], [0.06, -0.06]].forEach(pos => {
-                const eye = new THREE.Mesh(new THREE.SphereGeometry(0.025, 8, 8), eyeMat);
-                eye.position.set(0.13, 1.72, pos[1]);
+            [[0.04, 0.04], [0.04, -0.04]].forEach(pos => {
+                const eye = new THREE.Mesh(new THREE.SphereGeometry(0.02, 8, 8), eyeMat);
+                eye.position.set(0.11, 1.62, pos[1]);
                 scene.add(eye);
             });
             
-            // 创建双臂
-            createArm(-0.25, 'left');
-            createArm(0.25, 'right');
+            // 创建双臂 (高自由度)
+            createArm(-0.18, 'left');
+            createArm(0.18, 'right');
         }
         
         function createArm(xOffset, side) {
             const armMat = new THREE.MeshStandardMaterial({ color: 0x00d4ff, metalness: 0.7 });
             const jointMat = new THREE.MeshStandardMaterial({ color: 0x333344, metalness: 0.9 });
             
-            const armGroup = new THREE.Group();
-            armGroup.position.set(xOffset, 1.55, 0);
+            // 肩关节 (3自由度)
+            const shoulder = new THREE.Group();
+            shoulder.position.set(xOffset, 1.5, 0);
+            scene.add(shoulder);
             
-            // 肩关节
-            const shoulder = new THREE.Mesh(new THREE.SphereGeometry(0.08, 16, 16), jointMat);
-            armGroup.add(shoulder);
+            const shoulderJoint = new THREE.Mesh(new THREE.SphereGeometry(0.07, 16, 16), jointMat);
+            shoulder.add(shoulderJoint);
+            joints[side].shoulder = shoulder;
             
             // 上臂
-            const upperArm = new THREE.Mesh(new THREE.BoxGeometry(0.06, 0.4, 0.06), armMat);
-            upperArm.position.set(0, -0.2, 0);
-            upperArm.castShadow = true;
-            armGroup.add(upperArm);
+            const upperArm = new THREE.Group();
+            upperArm.position.y = -0.15;
+            shoulder.add(upperArm);
             
-            // 肘关节
-            const elbow = new THREE.Mesh(new THREE.SphereGeometry(0.06, 16, 16), jointMat);
-            elbow.position.set(0, -0.4, 0);
-            armGroup.add(elbow);
+            const upperArmMesh = new THREE.Mesh(new THREE.CylinderGeometry(0.035, 0.04, 0.25, 16), armMat);
+            upperArmMesh.position.y = -0.125;
+            upperArm.add(upperArmMesh);
+            
+            // 肘关节 (2自由度)
+            const elbow = new THREE.Group();
+            elbow.position.y = -0.25;
+            upperArm.add(elbow);
+            
+            const elbowJoint = new THREE.Mesh(new THREE.SphereGeometry(0.05, 16, 16), jointMat);
+            elbow.add(elbowJoint);
+            joints[side].elbow = elbow;
             
             // 前臂
-            const forearm = new THREE.Mesh(new THREE.BoxGeometry(0.05, 0.35, 0.05), armMat);
-            forearm.position.set(0, -0.6, 0);
-            forearm.castShadow = true;
-            armGroup.add(forearm);
+            const forearm = new THREE.Group();
+            forearm.position.y = -0.1;
+            elbow.add(forearm);
             
-            // 手/夹爪
-            const hand = new THREE.Mesh(new THREE.BoxGeometry(0.08, 0.1, 0.12), jointMat);
-            hand.position.set(0, -0.8, 0);
-            armGroup.add(hand);
+            const forearmMesh = new THREE.Mesh(new THREE.CylinderGeometry(0.03, 0.035, 0.22, 16), armMat);
+            forearmMesh.position.y = -0.11;
+            forearm.add(forearmMesh);
             
-            scene.add(armGroup);
-            arms[side].push(armGroup);
+            // 腕关节 (2自由度)
+            const wrist = new THREE.Group();
+            wrist.position.y = -0.22;
+            forearm.add(wrist);
             
-            // 保存关节角度
-            arms[side].angles = { shoulder: 0, elbow: 0 };
+            const wristJoint = new THREE.Mesh(new THREE.SphereGeometry(0.04, 16, 16), jointMat);
+            wrist.add(wristJoint);
+            joints[side].wrist = wrist;
+            
+            // 夹爪
+            const gripperBase = new THREE.Group();
+            gripperBase.position.y = -0.06;
+            wrist.add(gripperBase);
+            
+            // 夹爪手指 (2指)
+            const fingerMat = new THREE.MeshStandardMaterial({ color: 0xff6b6b, metalness: 0.8 });
+            
+            const finger1 = new THREE.Mesh(new THREE.BoxGeometry(0.015, 0.08, 0.03), fingerMat);
+            finger1.position.set(0.02, -0.04, 0);
+            gripperBase.add(finger1);
+            
+            const finger2 = new THREE.Mesh(new THREE.BoxGeometry(0.015, 0.08, 0.03), fingerMat);
+            finger2.position.set(-0.02, -0.04, 0);
+            gripperBase.add(finger2);
+            
+            joints[side].gripperBase = gripperBase;
+            joints[side].fingers = [finger1, finger2];
         }
         
         function createCloth() {
-            // 布料 (用平面模拟)
+            // 布料 - 使用布料物理模拟
+            const clothGeo = new THREE.PlaneGeometry(1.5, 1.2, 15, 12);
             const clothMat = new THREE.MeshStandardMaterial({ 
                 color: 0xff6b6b, 
                 side: THREE.DoubleSide,
-                roughness: 0.8
+                roughness: 0.9,
+                metalness: 0.1
             });
-            cloth = new THREE.Mesh(new THREE.PlaneGeometry(1.2, 0.8, 10, 8), clothMat);
+            
+            cloth = new THREE.Mesh(clothGeo, clothMat);
             cloth.rotation.x = -Math.PI/2;
-            cloth.position.set(-1.5, 0.86, 0);
+            cloth.position.set(0, 0.86, 0);
             cloth.castShadow = true;
             scene.add(cloth);
-        }
-        
-        // ========== 运动规划策略 ==========
-        
-        function setStrategy(strategy) {
-            task.strategy = strategy;
-            document.querySelectorAll('.strategy-btn').forEach(btn => {
-                btn.classList.toggle('active', btn.dataset.strategy === strategy);
-            });
-            document.getElementById('strategyName').textContent = 
-                {ptp:'PTP', linear:'Linear', joint:'Joint', circular:'Circular', bezier:'Bezier'}[strategy];
-        }
-        
-        // 路径点计算
-        function calculatePath(start, end, strategy) {
-            const points = [];
-            const steps = 50;
             
-            for (let i = 0; i <= steps; i++) {
-                const t = i / steps;
-                let x, y, z;
-                
-                switch(strategy) {
-                    case 'ptp':
-                        // 点对点 - 快速但生硬
-                        x = start.x + (end.x - start.x) * Math.min(t * 3, 1);
-                        y = start.y + (end.y - start.y) * Math.sin(t * Math.PI);
-                        z = start.z + (end.z - start.z) * Math.min(t * 3, 1);
-                        break;
-                        
-                    case 'linear':
-                        // 直线插值 - 平滑直线
-                        x = start.x + (end.x - start.x) * t;
-                        y = start.y + (end.y - start.y) * t;
-                        z = start.z + (end.z - start.z) * t;
-                        break;
-                        
-                    case 'joint':
-                        // 关节插值 - 平滑过渡
-                        constjt = (1 - Math.cos(t * Math.PI)) / 2;
-                        x = start.x + (end.x - start.x) *jt;
-                        y = start.y + (end.y - start.y) *jt;
-                        z = start.z + (end.z - start.z) *jt;
-                        break;
-                        
-                    case 'circular':
-                        // 圆弧插值
-                        const angle = t * Math.PI * 0.5;
-                        const midY = Math.max(start.y, end.y) + 0.3;
-                        x = start.x + (end.x - start.x) * t;
-                        y = start.y + (midY - start.y) * Math.sin(angle) + (end.y - start.y) * t;
-                        z = start.z + (end.z - start.z) * t;
-                        break;
-                        
-                    case 'bezier':
-                        // 贝塞尔曲线
-                        const cp = { // 控制点
-                            x: (start.x + end.x) / 2,
-                            y: Math.max(start.y, end.y) + 0.5,
-                            z: (start.z + end.z) / 2 + 0.3
-                        };
-                        const bt = 1 - t;
-                        x = bt*bt*start.x + 2*bt*t*cp.x + t*t*end.x;
-                        y = bt*bt*start.y + 2*bt*t*cp.y + t*t*end.y;
-                        z = bt*bt*start.z + 2*bt*t*cp.z + t*t*end.z;
-                        break;
-                }
-                points.push({ x, y, z });
+            // 布料顶点 (用于物理模拟)
+            clothVertices = [];
+            const positions = cloth.geometry.attributes.position;
+            for (let i = 0; i < positions.count; i++) {
+                clothVertices.push({
+                    x: positions.getX(i),
+                    y: positions.getY(i),
+                    z: positions.getZ(i),
+                    vx: 0, vy: 0, vz: 0
+                });
             }
-            return points;
+            
+            cloth.foldLevel = 0;
         }
         
-        // 逆运动学 (简化版)
-        function inverseKinematics(targetPos, side) {
-            // 简化: 根据目标位置计算关节角度
-            const dx = targetPos.x - (side === 'left' ? -0.25 : 0.25);
-            const dy = targetPos.y - 1.55;
-            const dz = targetPos.z;
+        function updateClothPhysics() {
+            const leftZ = joints.left.wrist ? joints.left.wrist.position.z : 0;
+            const rightZ = joints.right.wrist ? joints.right.wrist.position.z : 0;
             
-            const dist = Math.sqrt(dx*dx + dy*dy + dz*dz);
+            // 简化的布料物理
+            const positions = cloth.geometry.attributes.position;
+            const time = Date.now() * 0.001;
             
-            // 简化的角度计算
-            const shoulderAngle = Math.atan2(dz, -dy) * 0.5;
-            const elbowAngle = (dist - 0.6) * 0.5;
+            for (let i = 0; i < positions.count; i++) {
+                const v = clothVertices[i];
+                
+                // 基础波动
+                let wave = Math.sin(v.x * 3 + time * 2) * 0.01;
+                
+                // 折叠效果
+                if (cloth.foldLevel > 0) {
+                    const foldOffset = Math.sin(v.x * Math.PI * cloth.foldLevel) * cloth.foldLevel * 0.3;
+                    v.z += foldOffset * 0.1;
+                }
+                
+                // 重力
+                v.vy -= 0.001;
+                
+                // 约束到平面
+                v.y += v.vy;
+                v.y = Math.max(0.86, Math.min(0.9, v.y));
+                v.vy *= 0.9;
+                
+                positions.setZ(i, v.z + wave);
+            }
             
-            return { shoulder: shoulderAngle, elbow: elbowAngle };
+            positions.needsUpdate = true;
+            cloth.geometry.computeVertexNormals();
         }
         
-        // ========== 任务控制 ==========
-        
-        function startTask() {
-            if (task.running) return;
+        function resetCloth() {
+            // 重置布料
+            const positions = cloth.geometry.attributes.position;
+            for (let i = 0; i < positions.count; i++) {
+                positions.setZ(i, 0);
+                clothVertices[i].z = 0;
+                clothVertices[i].vy = 0;
+            }
+            positions.needsUpdate = true;
             
-            task.running = true;
-            task.phase = 1;
-            task.progress = 0;
-            task.startTime = Date.now();
-            
-            document.getElementById('taskStatus').textContent = '运行中';
-            
-            // 运动路径
-            const startPos = { x: -1.2, y: 0.9, z: 0 };
-            const liftPos = { x: -0.5, y: 1.5, z: 0 };
-            const foldPos = { x: 0.5, y: 1.5, z: 0 };
-            const endPos = { x: 1.2, y: 0.9, z: 0 };
-            
-            task.path = [
-                ...calculatePath(startPos, liftPos, task.strategy),
-                ...calculatePath(liftPos, foldPos, task.strategy),
-                ...calculatePath(foldPos, endPos, task.strategy)
-            ];
-        }
-        
-        function resetTask() {
-            task.running = false;
-            task.phase = 0;
-            task.progress = 0;
-            
-            // 重置布料位置
-            cloth.position.set(-1.5, 0.86, 0);
-            cloth.rotation.set(-Math.PI/2, 0, 0);
+            cloth.foldLevel = 0;
+            cloth.mesh.position.set(0, 0.86, 0);
             
             // 重置手臂
-            arms.left[0].rotation.set(0, 0, 0);
-            arms.right[0].rotation.set(0, 0, 0);
-            
-            document.getElementById('taskStatus').textContent = '待机';
-            document.getElementById('progress').textContent = '0%';
-            document.getElementById('progressBar').style.width = '0%';
-            document.getElementById('elapsed').textContent = '0.0s';
+            ['left', 'right'].forEach(side => {
+                if (joints[side].shoulder) {
+                    joints[side].shoulder.rotation.set(0, 0, 0);
+                }
+            });
         }
         
-        function updateTask() {
-            if (!task.running) return;
+        function resetSim() {
+            rl.episode = 0;
+            rl.reward = 0;
+            rl.epsilon = 1.0;
+            rl.successCount = 0;
+            rl.qTable = {};
+            rl.training = false;
             
-            const pathIndex = Math.floor(task.progress * task.path.length);
+            document.getElementById('episode').textContent = '0';
+            document.getElementById('reward').textContent = '0';
+            document.getElementById('epsilon').textContent = '1.00';
+            document.getElementById('success').textContent = '0%';
+            document.getElementById('progressBar').style.width = '0%';
+            document.getElementById('btnTrain').textContent = '▶ 开始训练';
+            document.getElementById('logBox').innerHTML = '';
             
-            if (pathIndex >= task.path.length) {
-                // 任务完成
-                task.running = false;
-                task.progress = 1;
-                document.getElementById('taskStatus').textContent = '完成!';
-                
-                // 更新布料最终位置
-                cloth.position.set(1.5, 0.86, 0);
-                return;
-            }
-            
-            const target = task.path[pathIndex];
-            
-            // 移动布料
-            cloth.position.x = target.x;
-            cloth.position.y = target.y - 0.05;
-            
-            // 移动手臂 (两只手臂一起)
-            const ik = inverseKinematics(target, 'left');
-            arms.left[0].rotation.z = ik.shoulder;
-            arms.left[0].rotation.x = ik.elbow;
-            
-            arms.right[0].rotation.z = ik.shoulder;
-            arms.right[0].rotation.x = -ik.elbow;
-            
-            // 更新UI
-            const angle = (ik.shoulder * 180 / Math.PI).toFixed(0);
-            document.getElementById('armL').textContent = angle + '°';
-            document.getElementById('armR').textContent = angle + '°';
-            
-            // 更新进度
-            document.getElementById('progress').textContent = Math.floor(task.progress * 100) + '%';
-            document.getElementById('progressBar').style.width = (task.progress * 100) + '%';
-            
-            // 更新耗时
-            const elapsed = (Date.now() - task.startTime) / 1000;
-            document.getElementById('elapsed').textContent = elapsed.toFixed(1) + 's';
-            
-            // 推进进度
-            task.progress += 0.008;
+            resetCloth();
         }
         
         function animate() {
             requestAnimationFrame(animate);
             
-            updateTask();
+            // 训练步骤
+            if (rl.training) {
+                trainingStep();
+            }
             
-            // 渲染
+            // 布料物理
+            updateClothPhysics();
+            
             renderer.render(scene, camera);
         }
         
