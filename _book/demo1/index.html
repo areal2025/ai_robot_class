@@ -206,7 +206,7 @@
             scene.add(ground);
             
             // 网格
-            const grid = new THREE.GridHelper(20, 20, 0x00d4ff, 0x333355);
+            const grid = new THREE.GridHelper(20, 20, 0x2a2a3a, 0x333355);
             grid.position.y = 0.01;
             scene.add(grid);
             
@@ -218,8 +218,8 @@
             robot = new THREE.Group();
             
             // 身体
-            const bodyMat = new THREE.MeshStandardMaterial({ color: 0x00d4ff, metalness: 0.3, roughness: 0.7 });
-            const body = new THREE.Mesh(new THREE.BoxGeometry(0.4, 0.2, 0.3), bodyMat);
+            const bodyMat = new THREE.MeshStandardMaterial({ color: 0x2a2a3a, metalness: 0.3, roughness: 0.7 });
+            const body = new THREE.Mesh(new THREE.BoxGeometry(0.35, 0.12, 0.18), bodyMat);
             body.position.y = 0;
             body.castShadow = true;
             robot.add(body);
@@ -231,7 +231,7 @@
             robot.add(head);
             
             // 眼睛
-            const eyeMat = new THREE.MeshBasicMaterial({ color: 0xff0000 });
+            const eyeMat = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
             const leftEye = new THREE.Mesh(new THREE.SphereGeometry(0.025, 16, 16), eyeMat);
             leftEye.position.set(0.35, 0.1, 0.05);
             robot.add(leftEye);
@@ -240,7 +240,7 @@
             robot.add(rightEye);
             
             // 腿部
-            const legMat = new THREE.MeshStandardMaterial({ color: 0x0088aa, metalness: 0.5, roughness: 0.5 });
+            const legMat = new THREE.MeshStandardMaterial({ color: 0x404050, metalness: 0.5, roughness: 0.5 });
             const legGeo = new THREE.BoxGeometry(0.06, 0.18, 0.06);
             const legPositions = [[0.18, 0.12], [0.18, -0.12], [-0.18, 0.12], [-0.18, -0.12]];
             
@@ -318,8 +318,9 @@
             if (speed > 0.1 || Math.abs(control.yaw) > 0.1) {
                 const walkCycle = Date.now() * 0.01;
                 robot.legs.forEach((leg, i) => {
+                    if (i % 2 === 0) leg.position.y = -0.06 + Math.sin(walkCycle + i * 0.5) * 0.02;
                     const offset = i < 2 ? 0 : Math.PI;
-                    leg.position.y = -0.1 + Math.sin(walkCycle + offset) * 0.03;
+                    leg.position.y = -0.18 + Math.sin(walkCycle + offset) * 0.03;
                 });
                 // 尾巴摇摆
                 if (robot.tail) {
