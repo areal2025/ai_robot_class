@@ -1,0 +1,938 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>宇树机器狗遥控器 - Unitree Control</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', 'Microsoft YaHei', Arial, sans-serif;
+            background: linear-gradient(180deg, #1a1a2e 0%, #0f0f1a 100%);
+            min-height: 100vh;
+            color: #fff;
+            overflow-x: hidden;
+        }
+        
+        /* Header */
+        .header {
+            background: linear-gradient(90deg, #00d4ff 0%, #7b2ff7 100%);
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 20px rgba(0, 212, 255, 0.3);
+        }
+        
+        .header h1 {
+            font-size: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .header .logo {
+            width: 40px;
+            height: 40px;
+            background: #fff;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: #00d4ff;
+        }
+        
+        .header .status {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .status-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #ff4444;
+            animation: pulse 2s infinite;
+        }
+        
+        .status-dot.connected {
+            background: #00ff88;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        
+        /* Main Layout */
+        .container {
+            display: flex;
+            padding: 20px;
+            gap: 20px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        /* Simulation View */
+        .simulation-panel {
+            flex: 2;
+            background: #000;
+            border-radius: 15px;
+            overflow: hidden;
+            position: relative;
+            box-shadow: 0 0 30px rgba(0, 212, 255, 0.2);
+        }
+        
+        .sim-header {
+            background: rgba(255,255,255,0.1);
+            padding: 10px 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 12px;
+            color: #888;
+        }
+        
+        #canvas-container {
+            width: 100%;
+            height: 500px;
+            position: relative;
+        }
+        
+        #sim-canvas {
+            width: 100%;
+            height: 100%;
+        }
+        
+        /* Robot Info Overlay */
+        .robot-info {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: rgba(0,0,0,0.7);
+            padding: 10px 15px;
+            border-radius: 8px;
+            font-family: 'Consolas', monospace;
+            font-size: 11px;
+            border: 1px solid #00d4ff;
+        }
+        
+        .robot-info .label {
+            color: #888;
+        }
+        
+        .robot-info .value {
+            color: #00ff88;
+        }
+        
+        /* Remote Controller */
+        .controller-panel {
+            flex: 1;
+            background: linear-gradient(180deg, #2a2a3a 0%, #1a1a2a 100%);
+            border-radius: 20px;
+            padding: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+            position: relative;
+        }
+        
+        /* Controller Body - Unitree Remote Style */
+        .controller-body {
+            background: linear-gradient(145deg, #3a3a4a, #2a2a3a);
+            border-radius: 30px;
+            padding: 20px;
+            box-shadow: 
+                inset 0 1px 0 rgba(255,255,255,0.1),
+                0 10px 30px rgba(0,0,0,0.5);
+        }
+        
+        .controller-title {
+            text-align: center;
+            color: #00d4ff;
+            font-size: 14px;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        
+        /* Screen */
+        .controller-screen {
+            background: #000;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 20px;
+            border: 2px solid #333;
+        }
+        
+        .screen-line {
+            display: flex;
+            justify-content: space-between;
+            font-family: 'Consolas', monospace;
+            font-size: 11px;
+            margin: 5px 0;
+        }
+        
+        .screen-line .label {
+            color: #666;
+        }
+        
+        .screen-line .value {
+            color: #00ff88;
+        }
+        
+        .screen-line .value.warning {
+            color: #ffaa00;
+        }
+        
+        .screen-line .value.error {
+            color: #ff4444;
+        }
+        
+        /* Joystick Area */
+        .joystick-area {
+            display: flex;
+            justify-content: space-around;
+            margin: 20px 0;
+        }
+        
+        /* Left Joystick - Movement */
+        .joystick-container {
+            width: 120px;
+            height: 120px;
+            background: radial-gradient(circle, #1a1a2a 0%, #0a0a1a 100%);
+            border-radius: 50%;
+            position: relative;
+            border: 3px solid #333;
+            box-shadow: inset 0 0 20px rgba(0,0,0,0.5);
+        }
+        
+        .joystick-base {
+            width: 80px;
+            height: 80px;
+            background: radial-gradient(circle, #444 0%, #333 100%);
+            border-radius: 50%;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            border: 2px solid #555;
+        }
+        
+        .joystick-stick {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(145deg, #00d4ff, #0088aa);
+            border-radius: 50%;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            cursor: pointer;
+            box-shadow: 
+                0 5px 15px rgba(0, 212, 255, 0.4),
+                inset 0 -2px 5px rgba(0,0,0,0.3);
+            transition: transform 0.05s;
+        }
+        
+        .joystick-label {
+            text-align: center;
+            margin-top: 10px;
+            font-size: 12px;
+            color: #888;
+        }
+        
+        /* Right Joystick - Camera/Body */
+        .joystick-container-right {
+            width: 100px;
+            height: 100px;
+            background: radial-gradient(circle, #1a1a2a 0%, #0a0a1a 100%);
+            border-radius: 50%;
+            position: relative;
+            border: 3px solid #333;
+        }
+        
+        .joystick-stick-right {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(145deg, #ff6b6b, #cc4444);
+            border-radius: 50%;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            cursor: pointer;
+        }
+        
+        /* Buttons */
+        .button-row {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .ctrl-btn {
+            width: 60px;
+            height: 60px;
+            border-radius: 15px;
+            border: none;
+            cursor: pointer;
+            font-size: 11px;
+            font-weight: bold;
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+            transition: all 0.1s;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
+        
+        .ctrl-btn:active {
+            transform: scale(0.95);
+        }
+        
+        .ctrl-btn.emergency {
+            background: linear-gradient(145deg, #ff4444, #cc0000);
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+        }
+        
+        .ctrl-btn.jump {
+            background: linear-gradient(145deg, #ffaa00, #cc8800);
+        }
+        
+        .ctrl-btn.stand {
+            background: linear-gradient(145deg, #00ff88, #00cc66);
+        }
+        
+        .ctrl-btn.sit {
+            background: linear-gradient(145deg, #4ecdc4, #3aa8a0);
+        }
+        
+        .ctrl-btn.walk {
+            background: linear-gradient(145deg, #00d4ff, #0088aa);
+        }
+        
+        .ctrl-btn.trot {
+            background: linear-gradient(145deg, #7b2ff7, #5a1ac7);
+        }
+        
+        /* Body Control Sliders */
+        .body-control {
+            margin: 20px 0;
+        }
+        
+        .slider-group {
+            margin: 15px 0;
+        }
+        
+        .slider-label {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            color: #888;
+            margin-bottom: 5px;
+        }
+        
+        .slider-label .value {
+            color: #00d4ff;
+        }
+        
+        input[type="range"] {
+            width: 100%;
+            height: 8px;
+            -webkit-appearance: none;
+            background: #1a1a2a;
+            border-radius: 4px;
+            outline: none;
+        }
+        
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 20px;
+            height: 20px;
+            background: linear-gradient(145deg, #00d4ff, #0088aa);
+            border-radius: 50%;
+            cursor: pointer;
+        }
+        
+        /* Mode Switch */
+        .mode-switch {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin: 20px 0;
+        }
+        
+        .mode-btn {
+            padding: 10px 20px;
+            border: 2px solid #333;
+            background: transparent;
+            color: #666;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: all 0.2s;
+        }
+        
+        .mode-btn.active {
+            border-color: #00d4ff;
+            background: rgba(0, 212, 255, 0.2);
+            color: #00d4ff;
+        }
+        
+        /* Connection Status */
+        .connection-status {
+            text-align: center;
+            padding: 15px;
+            background: rgba(0,0,0,0.3);
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+        
+        .connection-status .icon {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+        
+        .connection-status .text {
+            font-size: 12px;
+            color: #888;
+        }
+        
+        /* Token Input */
+        .token-input {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.9);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+        
+        .token-box {
+            background: #1a1a2a;
+            padding: 40px;
+            border-radius: 20px;
+            text-align: center;
+            border: 2px solid #00d4ff;
+            box-shadow: 0 0 50px rgba(0, 212, 255, 0.3);
+        }
+        
+        .token-box h2 {
+            margin-bottom: 20px;
+            color: #00d4ff;
+        }
+        
+        .token-box input {
+            width: 300px;
+            padding: 15px;
+            border: 2px solid #333;
+            background: #0a0a1a;
+            color: #fff;
+            border-radius: 10px;
+            font-size: 16px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .token-box button {
+            padding: 15px 40px;
+            background: linear-gradient(90deg, #00d4ff, #7b2ff7);
+            border: none;
+            color: #fff;
+            border-radius: 10px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        
+        .token-box button:hover {
+            transform: scale(1.05);
+        }
+        
+        .hidden {
+            display: none !important;
+        }
+        
+        /* Back to home */
+        .back-link {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            color: #00d4ff;
+            text-decoration: none;
+            font-size: 14px;
+        }
+        
+        /* Responsive */
+        @media (max-width: 900px) {
+            .container {
+                flex-direction: column;
+            }
+            
+            .controller-body {
+                padding: 15px;
+            }
+            
+            .joystick-container {
+                width: 100px;
+                height: 100px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Token Input Modal -->
+    <div class="token-input" id="tokenModal">
+        <div class="token-box">
+            <h2>🔐 输入访问令牌</h2>
+            <input type="text" id="tokenInput" placeholder="请输入访问令牌...">
+            <br>
+            <button onclick="connect()">连接仿真服务器</button>
+            <p style="margin-top: 20px; color: #666; font-size: 12px;">
+                令牌: ai-robotics-course-2026
+            </p>
+        </div>
+    </div>
+
+    <div class="header">
+        <h1>
+            <div class="logo">U</div>
+            Unitree 机器狗遥控器
+        </h1>
+        <div class="status">
+            <span id="connectionText">未连接</span>
+            <div class="status-dot" id="statusDot"></div>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- Simulation Panel -->
+        <div class="simulation-panel">
+            <div class="sim-header">
+                <span>PyBullet 仿真</span>
+                <span id="fps">FPS: --</span>
+            </div>
+            <div id="canvas-container">
+                <canvas id="sim-canvas"></canvas>
+            </div>
+            <div class="robot-info">
+                <div><span class="label">位置 X:</span> <span class="value" id="posX">0.00</span></div>
+                <div><span class="label">位置 Y:</span> <span class="value" id="posY">0.00</span></div>
+                <div><span class="label">位置 Z:</span> <span class="value" id="posZ">0.00</span></div>
+                <div><span class="label">速度:</span> <span class="value" id="vel">0.00</span></div>
+                <div><span class="label">模式:</span> <span class="value" id="mode">STAND</span></div>
+            </div>
+        </div>
+
+        <!-- Controller Panel -->
+        <div class="controller-panel">
+            <div class="controller-body">
+                <div class="controller-title">UNITREE REMOTE CONTROLLER</div>
+                
+                <!-- Status Screen -->
+                <div class="controller-screen">
+                    <div class="screen-line">
+                        <span class="label">电池</span>
+                        <span class="value" id="battery">98%</span>
+                    </div>
+                    <div class="screen-line">
+                        <span class="label">信号</span>
+                        <span class="value" id="signal">Excellent</span>
+                    </div>
+                    <div class="screen-line">
+                        <span class="label">模式</span>
+                        <span class="value" id="currentMode">STAND</span>
+                    </div>
+                    <div class="screen-line">
+                        <span class="label">时间</span>
+                        <span class="value" id="runtime">00:00:00</span>
+                    </div>
+                    <div class="screen-line">
+                        <span class="label">状态</span>
+                        <span class="value" id="robotStatus">已连接</span>
+                    </div>
+                </div>
+                
+                <!-- Mode Switch -->
+                <div class="mode-switch">
+                    <button class="mode-btn active" data-mode="walk">🐢 低速</button>
+                    <button class="mode-btn" data-mode="trot">🐎  trot</button>
+                    <button class="mode-btn" data-mode="run">🏃 奔跑</button>
+                </div>
+                
+                <!-- Joysticks -->
+                <div class="joystick-area">
+                    <div>
+                        <div class="joystick-container" id="leftJoystick">
+                            <div class="joystick-base"></div>
+                            <div class="joystick-stick" id="leftStick"></div>
+                        </div>
+                        <div class="joystick-label">移动控制</div>
+                    </div>
+                    <div>
+                        <div class="joystick-container-right" id="rightJoystick">
+                            <div class="joystick-base"></div>
+                            <div class="joystick-stick-right" id="rightStick"></div>
+                        </div>
+                        <div class="joystick-label">视角/身体</div>
+                    </div>
+                </div>
+                
+                <!-- Action Buttons -->
+                <div class="button-row">
+                    <button class="ctrl-btn stand" onclick="setMode('stand')">
+                        🧍 站立
+                    </button>
+                    <button class="ctrl-btn sit" onclick="setMode('sit')">
+                        🪑 坐下
+                    </button>
+                </div>
+                <div class="button-row">
+                    <button class="ctrl-btn jump" onclick="action('jump')">
+                        🦘 跳跃
+                    </button>
+                    <button class="ctrl-btn emergency" onclick="action('emergency')">
+                        🛑 紧急
+                    </button>
+                </div>
+                
+                <!-- Body Control -->
+                <div class="body-control">
+                    <div class="slider-group">
+                        <div class="slider-label">
+                            <span>身体高度</span>
+                            <span class="value" id="heightValue">0.30m</span>
+                        </div>
+                        <input type="range" min="0.2" max="0.5" step="0.01" value="0.3" id="heightSlider">
+                    </div>
+                    <div class="slider-group">
+                        <div class="slider-label">
+                            <span>翻滚角度</span>
+                            <span class="value" id="rollValue">0°</span>
+                        </div>
+                        <input type="range" min="-30" max="30" step="1" value="0" id="rollSlider">
+                    </div>
+                </div>
+                
+                <!-- Connection Status -->
+                <div class="connection-status">
+                    <div class="icon">📶</div>
+                    <div class="text" id="connText">正在连接...</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <a href="/" class="back-link">← 返回课程首页</a>
+
+    <script>
+        // WebSocket连接
+        let ws = null;
+        let authenticated = false;
+        let clientId = null;
+        
+        // 控制状态
+        const controlState = {
+            forward: 0,
+            lateral: 0,
+            yaw: 0,
+            height: 0,
+            roll: 0,
+            pitch: 0
+        };
+        
+        // 计时
+        let startTime = Date.now();
+        
+        // Token
+        const TOKEN = "ai-robotics-course-2026";
+        
+        function connect() {
+            const tokenInput = document.getElementById('tokenInput').value;
+            
+            if (!tokenInput) {
+                alert('请输入令牌');
+                return;
+            }
+            
+            // 连接WebSocket
+            ws = new WebSocket('ws://localhost:8765');
+            
+            ws.onopen = () => {
+                console.log('WebSocket连接中...');
+            };
+            
+            ws.onmessage = (event) => {
+                const data = JSON.parse(event.data);
+                handleMessage(data);
+            };
+            
+            ws.onerror = (error) => {
+                console.error('WebSocket错误:', error);
+                document.getElementById('connText').textContent = '连接失败';
+            };
+            
+            ws.onclose = () => {
+                document.getElementById('statusDot').classList.remove('connected');
+                document.getElementById('connectionText').textContent = '未连接';
+                document.getElementById('robotStatus').textContent = '未连接';
+                document.getElementById('tokenModal').classList.remove('hidden');
+            };
+        }
+        
+        function handleMessage(data) {
+            switch(data.type) {
+                case 'welcome':
+                    // 发送认证
+                    ws.send(JSON.stringify({
+                        type: 'auth',
+                        token: document.getElementById('tokenInput').value
+                    }));
+                    break;
+                    
+                case 'auth_success':
+                    authenticated = true;
+                    clientId = data.client_id;
+                    document.getElementById('tokenModal').classList.add('hidden');
+                    document.getElementById('statusDot').classList.add('connected');
+                    document.getElementById('connectionText').textContent = '已连接';
+                    document.getElementById('robotStatus').textContent = '就绪';
+                    document.getElementById('connText').textContent = '仿真已连接';
+                    startTime = Date.now();
+                    break;
+                    
+                case 'auth_failed':
+                    alert('令牌错误！');
+                    break;
+                    
+                case 'state':
+                    updateRobotDisplay(data.data);
+                    break;
+                    
+                case 'reset_done':
+                    document.getElementById('robotStatus').textContent = '已重置';
+                    break;
+            }
+        }
+        
+        function updateRobotDisplay(state) {
+            document.getElementById('posX').textContent = state.position[0].toFixed(2);
+            document.getElementById('posY').textContent = state.position[1].toFixed(2);
+            document.getElementById('posZ').textContent = state.position[2].toFixed(2);
+            
+            const vel = Math.sqrt(
+                state.velocity[0]**2 + 
+                state.velocity[1]**2 + 
+                state.velocity[2]**2
+            );
+            document.getElementById('vel').textContent = vel.toFixed(2);
+            
+            // 更新时间
+            const elapsed = Math.floor((Date.now() - startTime) / 1000);
+            const hours = Math.floor(elapsed / 3600).toString().padStart(2, '0');
+            const mins = Math.floor((elapsed % 3600) / 60).toString().padStart(2, '0');
+            const secs = (elapsed % 60).toString().padStart(2, '0');
+            document.getElementById('runtime').textContent = `${hours}:${mins}:${secs}`;
+        }
+        
+        function sendAction() {
+            if (!ws || !authenticated) return;
+            
+            ws.send(JSON.stringify({
+                type: 'action',
+                action: controlState
+            }));
+        }
+        
+        function setMode(mode) {
+            document.getElementById('currentMode').textContent = mode.toUpperCase();
+            document.getElementById('mode').textContent = mode.toUpperCase();
+            
+            // 发送模式命令
+            if (ws && authenticated) {
+                ws.send(JSON.stringify({
+                    type: 'action',
+                    action: { mode: mode }
+                }));
+            }
+        }
+        
+        function action(actionName) {
+            if (!ws || !authenticated) return;
+            
+            switch(actionName) {
+                case 'jump':
+                    document.getElementById('robotStatus').textContent = '跳跃中!';
+                    break;
+                case 'emergency':
+                    document.getElementById('robotStatus').textContent = '紧急停止!';
+                    controlState.forward = 0;
+                    controlState.yaw = 0;
+                    break;
+            }
+            
+            ws.send(JSON.stringify({
+                type: 'action',
+                action: { action: actionName }
+            }));
+            
+            setTimeout(() => {
+                document.getElementById('robotStatus').textContent = '就绪';
+            }, 1000);
+        }
+        
+        // 摇杆控制
+        const leftJoystick = document.getElementById('leftJoystick');
+        const leftStick = document.getElementById('leftStick');
+        const rightJoystick = document.getElementById('rightJoystick');
+        const rightStick = document.getElementById('rightStick');
+        
+        let leftActive = false;
+        let rightActive = false;
+        
+        // 左摇杆 - 移动控制
+        leftJoystick.addEventListener('mousedown', () => leftActive = true);
+        leftJoystick.addEventListener('touchstart', (e) => { e.preventDefault(); leftActive = true; });
+        
+        document.addEventListener('mouseup', () => {
+            leftActive = false;
+            leftStick.style.transform = 'translate(-50%, -50%)';
+            controlState.forward = 0;
+            controlState.lateral = 0;
+            sendAction();
+        });
+        
+        document.addEventListener('touchend', () => {
+            leftActive = false;
+            leftStick.style.transform = 'translate(-50%, -50%)';
+            controlState.forward = 0;
+            controlState.lateral = 0;
+            sendAction();
+        });
+        
+        leftJoystick.addEventListener('mousemove', (e) => {
+            if (!leftActive) return;
+            const rect = leftJoystick.getBoundingClientRect();
+            const x = (e.clientX - rect.left) / rect.width;
+            const y = (e.clientY - rect.top) / rect.height;
+            
+            const dx = (x - 0.5) * 2;
+            const dy = (y - 0.5) * 2;
+            
+            const maxOffset = 30;
+            leftStick.style.transform = `translate(calc(-50% + ${dx * maxOffset}px), calc(-50% + ${dy * maxOffset}px))`;
+            
+            controlState.forward = -dy;
+            controlState.lateral = dx;
+            sendAction();
+        });
+        
+        // 右摇杆 - 转向
+        rightJoystick.addEventListener('mousedown', () => rightActive = true);
+        rightJoystick.addEventListener('touchstart', (e) => { e.preventDefault(); rightActive = true; });
+        
+        document.addEventListener('mouseup', () => {
+            rightActive = false;
+            rightStick.style.transform = 'translate(-50%, -50%)';
+            controlState.yaw = 0;
+            sendAction();
+        });
+        
+        document.addEventListener('touchend', () => {
+            rightActive = false;
+            rightStick.style.transform = 'translate(-50%, -50%)';
+            controlState.yaw = 0;
+            sendAction();
+        });
+        
+        rightJoystick.addEventListener('mousemove', (e) => {
+            if (!rightActive) return;
+            const rect = rightJoystick.getBoundingClientRect();
+            const x = (e.clientX - rect.left) / rect.width;
+            const y = (e.clientY - rect.top) / rect.height;
+            
+            const dx = (x - 0.5) * 2;
+            const dy = (y - 0.5) * 2;
+            
+            const maxOffset = 25;
+            rightStick.style.transform = `translate(calc(-50% + ${dx * maxOffset}px), calc(-50% + ${dy * maxOffset}px))`;
+            
+            controlState.yaw = -dx;
+            controlState.pitch = dy;
+            sendAction();
+        });
+        
+        // 滑块控制
+        document.getElementById('heightSlider').addEventListener('input', (e) => {
+            const val = parseFloat(e.target.value);
+            controlState.height = (val - 0.3) * 10;
+            document.getElementById('heightValue').textContent = val.toFixed(2) + 'm';
+            sendAction();
+        });
+        
+        document.getElementById('rollSlider').addEventListener('input', (e) => {
+            const val = parseInt(e.target.value);
+            controlState.roll = val / 30;
+            document.getElementById('rollValue').textContent = val + '°';
+            sendAction();
+        });
+        
+        // 模式按钮
+        document.querySelectorAll('.mode-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                setMode(btn.dataset.mode);
+            });
+        });
+        
+        // 键盘控制
+        const keys = {};
+        document.addEventListener('keydown', (e) => {
+            keys[e.key.toLowerCase()] = true;
+            updateKeyboardControl();
+        });
+        
+        document.addEventListener('keyup', (e) => {
+            keys[e.key.toLowerCase()] = false;
+            updateKeyboardControl();
+        });
+        
+        function updateKeyboardControl() {
+            controlState.forward = (keys['w'] ? 1 : 0) - (keys['s'] ? 1 : 0);
+            controlState.lateral = (keys['d'] ? 1 : 0) - (keys['a'] ? 1 : 0);
+            controlState.yaw = (keys['arrowright'] ? 1 : 0) - (keys['arrowleft'] ? 1 : 0);
+            
+            if (keys['w'] || keys['s'] || keys['a'] || keys['d'] || keys['arrowleft'] || keys['arrowright']) {
+                sendAction();
+            }
+            
+            if (keys[' ']) action('jump');
+            if (keys['escape']) action('emergency');
+        }
+        
+        // 电池电量模拟
+        setInterval(() => {
+            const batt = 98 - Math.floor(Math.random() * 2);
+            document.getElementById('battery').textContent = batt + '%';
+        }, 5000);
+        
+        // 启动时焦点在令牌输入
+        document.getElementById('tokenInput').focus();
+    </script>
+</body>
+</html>
