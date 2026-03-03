@@ -3,541 +3,382 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>机器狗仿真 - PyBullet Demo</title>
+    <title>宇树机器狗遥控器 - Unitree Control</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Arial, sans-serif; background: linear-gradient(180deg, #1a1a2e 0%, #0f0f1a 100%); min-height: 100vh; color: #fff; }
         
-        body {
-            font-family: 'Segoe UI', Arial, sans-serif;
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
-            min-height: 100vh;
-            color: white;
-        }
+        .header { background: linear-gradient(90deg, #00d4ff 0%, #7b2ff7 100%); padding: 15px 30px; display: flex; justify-content: space-between; align-items: center; }
+        .header h1 { font-size: 20px; display: flex; align-items: center; gap: 10px; }
+        .header .logo { width: 40px; height: 40px; background: #fff; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: bold; color: #00d4ff; }
+        .status-dot { width: 10px; height: 10px; border-radius: 50%; background: #00ff88; animation: pulse 2s infinite; }
         
-        .header {
-            background: rgba(0,0,0,0.5);
-            padding: 15px 30px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
+        .container { display: flex; padding: 20px; gap: 20px; max-width: 1400px; margin: 0 auto; flex-wrap: wrap; }
         
-        .header h1 {
-            font-size: 24px;
-            color: #00ff88;
-        }
+        .simulation-panel { flex: 2; min-width: 500px; background: #000; border-radius: 15px; overflow: hidden; position: relative; }
+        #canvas-container { width: 100%; height: 450px; position: relative; }
         
-        .header a {
-            color: #00ff88;
-            text-decoration: none;
-        }
+        .robot-info { position: absolute; top: 10px; left: 10px; background: rgba(0,0,0,0.8); padding: 15px; border-radius: 10px; font-family: monospace; font-size: 12px; }
+        .robot-info .label { color: #888; }
+        .robot-info .value { color: #00ff88; }
         
-        .container {
-            display: flex;
-            padding: 20px;
-            gap: 20px;
-        }
+        .controller-panel { flex: 1; min-width: 350px; background: linear-gradient(180deg, #2a2a3a 0%, #1a1a2a 100%); border-radius: 20px; padding: 20px; }
+        .controller-title { text-align: center; color: #00d4ff; font-size: 14px; margin-bottom: 15px; letter-spacing: 2px; }
         
-        .simulation {
-            flex: 2;
-            background: #000;
-            border-radius: 10px;
-            overflow: hidden;
-            position: relative;
-        }
+        .controller-screen { background: #000; border-radius: 10px; padding: 15px; margin-bottom: 20px; }
+        .screen-line { display: flex; justify-content: space-between; font-family: monospace; font-size: 12px; margin: 8px 0; }
+        .screen-line .label { color: #666; }
+        .screen-line .value { color: #00ff88; }
         
-        #canvas-container {
-            width: 100%;
-            height: 500px;
-        }
+        .joystick-area { display: flex; justify-content: space-around; margin: 20px 0; }
+        .joystick-container { width: 120px; height: 120px; background: radial-gradient(circle, #1a1a2a 0%, #0a0a1a 100%); border-radius: 50%; position: relative; border: 3px solid #333; }
+        .joystick-base { width: 80px; height: 80px; background: #333; border-radius: 50%; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); }
+        .joystick-stick { width: 50px; height: 50px; background: linear-gradient(145deg, #00d4ff, #0088aa); border-radius: 50%; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); cursor: pointer; }
+        .joystick-label { text-align: center; margin-top: 10px; font-size: 12px; color: #888; }
+        .joystick-container-right { width: 100px; height: 100px; }
+        .joystick-stick-right { width: 40px; height: 40px; background: linear-gradient(145deg, #ff6b6b, #cc4444); }
         
-        .controls {
-            flex: 1;
-            background: rgba(255,255,255,0.1);
-            border-radius: 10px;
-            padding: 20px;
-        }
+        .button-row { display: flex; justify-content: center; gap: 15px; margin: 15px 0; flex-wrap: wrap; }
+        .ctrl-btn { width: 70px; height: 70px; border-radius: 15px; border: none; cursor: pointer; font-size: 11px; font-weight: bold; color: #fff; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 5px; }
+        .ctrl-btn.emergency { width: 80px; height: 80px; border-radius: 50%; background: linear-gradient(145deg, #ff4444, #cc0000); }
+        .ctrl-btn.jump { background: linear-gradient(145deg, #ffaa00, #cc8800); }
+        .ctrl-btn.stand { background: linear-gradient(145deg, #00ff88, #00cc66); }
+        .ctrl-btn.sit { background: linear-gradient(145deg, #4ecdc4, #3aa8a0); }
         
-        .controls h2 {
-            color: #00ff88;
-            margin-bottom: 20px;
-            font-size: 18px;
-        }
+        .mode-switch { display: flex; justify-content: center; gap: 10px; margin: 15px 0; flex-wrap: wrap; }
+        .mode-btn { padding: 10px 20px; border: 2px solid #333; background: transparent; color: #666; border-radius: 20px; cursor: pointer; font-size: 12px; }
+        .mode-btn.active { border-color: #00d4ff; background: rgba(0, 212, 255, 0.2); color: #00d4ff; }
         
-        .gamepad {
-            display: grid;
-            grid-template-columns: repeat(3, 60px);
-            grid-template-rows: repeat(3, 60px);
-            gap: 5px;
-            justify-content: center;
-            margin: 20px 0;
-        }
+        .body-control { margin: 15px 0; }
+        .slider-group { margin: 12px 0; }
+        .slider-label { display: flex; justify-content: space-between; font-size: 12px; color: #888; margin-bottom: 5px; }
+        .slider-label .value { color: #00d4ff; }
+        input[type="range"] { width: 100%; height: 8px; -webkit-appearance: none; background: #1a1a2a; border-radius: 4px; }
+        input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 20px; height: 20px; background: #00d4ff; border-radius: 50%; cursor: pointer; }
         
-        .btn {
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            background: linear-gradient(145deg, #3a3a5c, #2a2a4c);
-            border: 2px solid #00ff88;
-            color: #00ff88;
-            font-size: 12px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.1s;
-            user-select: none;
-        }
+        .keyboard-hint { text-align: center; padding: 10px; background: rgba(0,0,0,0.3); border-radius: 8px; font-size: 12px; color: #888; margin-top: 15px; }
+        .back-link { display: block; text-align: center; padding: 20px; color: #00d4ff; text-decoration: none; }
         
-        .btn:active, .btn.active {
-            background: #00ff88;
-            color: #1a1a2e;
-            transform: scale(0.95);
-        }
-        
-        .btn-up { grid-column: 2; grid-row: 1; }
-        .btn-left { grid-column: 1; grid-row: 2; }
-        .btn-stop { grid-column: 2; grid-row: 2; background: #ff4444; border-color: #ff4444; }
-        .btn-right { grid-column: 3; grid-row: 2; }
-        .btn-down { grid-column: 2; grid-row: 3; }
-        
-        .btn-a { grid-column: 3; grid-row: 1; background: #ff6b6b; border-color: #ff6b6b; }
-        .btn-b { grid-column: 2; grid-row: 1; background: #4ecdc4; border-color: #4ecdc4; }
-        
-        .action-btns {
-            display: flex;
-            gap: 10px;
-            justify-content: center;
-            margin-top: 20px;
-        }
-        
-        .action-btn {
-            padding: 15px 30px;
-            border: none;
-            border-radius: 8px;
-            font-size: 14px;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-        
-        .jump-btn {
-            background: linear-gradient(145deg, #ff6b6b, #ee5a5a);
-            color: white;
-        }
-        
-        .shake-btn {
-            background: linear-gradient(145deg, #4ecdc4, #3dbdb5);
-            color: white;
-        }
-        
-        .action-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 20px rgba(0,255,136,0.3);
-        }
-        
-        .action-btn:active {
-            transform: translateY(0);
-        }
-        
-        .status {
-            margin-top: 20px;
-            padding: 15px;
-            background: rgba(0,0,0,0.3);
-            border-radius: 8px;
-            font-family: monospace;
-            font-size: 12px;
-        }
-        
-        .status-item {
-            display: flex;
-            justify-content: space-between;
-            margin: 5px 0;
-        }
-        
-        .status-label { color: #888; }
-        .status-value { color: #00ff88; }
-        
-        .keyboard-hint {
-            margin-top: 20px;
-            padding: 10px;
-            background: rgba(255,255,255,0.05);
-            border-radius: 5px;
-            font-size: 12px;
-            color: #888;
-            text-align: center;
-        }
-        
-        @keyframes bounce {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-20px); }
-        }
-        
-        @keyframes shake {
-            0%, 100% { transform: rotate(0deg); }
-            25% { transform: rotate(-15deg); }
-            75% { transform: rotate(15deg); }
-        }
-        
-        .bounce { animation: bounce 0.5s ease; }
-        .shake { animation: shake 0.3s ease; }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
     </style>
 </head>
 <body>
     <div class="header">
-        <h1>🐕 基于PyBullet的机器狗仿真</h1>
-        <a href="/">← 返回课程首页</a>
+        <h1><div class="logo">U</div>Unitree 机器狗遥控器</h1>
+        <div class="status-dot"></div>
     </div>
-    
+
     <div class="container">
-        <div class="simulation">
-            <div id="canvas-container"></div>
+        <div class="simulation-panel">
+            <div id="canvas-container">
+                <canvas id="sim-canvas"></canvas>
+            </div>
+            <div class="robot-info">
+                <div><span class="label">位置 X:</span> <span class="value" id="posX">0.00</span></div>
+                <div><span class="label">位置 Y:</span> <span class="value" id="posY">0.00</span></div>
+                <div><span class="label">速度:</span> <span class="value" id="vel">0.00</span></div>
+                <div><span class="label">模式:</span> <span class="value" id="mode">STAND</span></div>
+            </div>
         </div>
-        
-        <div class="controls">
-            <h2>🎮 游戏手柄控制面板</h2>
+
+        <div class="controller-panel">
+            <div class="controller-title">UNITREE REMOTE CONTROLLER</div>
             
-            <div class="gamepad">
-                <button class="btn btn-up" data-key="w">▲</button>
-                <button class="btn btn-left" data-key="a">◀</button>
-                <button class="btn btn-stop" data-key="s">■</button>
-                <button class="btn btn-right" data-key="d">▶</button>
-                <button class="btn btn-down" data-key="x">▼</button>
-                <button class="btn btn-a" data-key="j">A</button>
-                <button class="btn btn-b" data-key="k">B</button>
+            <div class="controller-screen">
+                <div class="screen-line"><span class="label">电池</span><span class="value" id="battery">98%</span></div>
+                <div class="screen-line"><span class="label">信号</span><span class="value" id="signal">Excellent</span></div>
+                <div class="screen-line"><span class="label">模式</span><span class="value" id="currentMode">STAND</span></div>
+                <div class="screen-line"><span class="label">时间</span><span class="value" id="runtime">00:00:00</span></div>
             </div>
             
-            <div class="action-btns">
-                <button class="action-btn jump-btn" id="jumpBtn">🦘 跳跃 (J)</button>
-                <button class="action-btn shake-btn" id="shakeBtn">💫 摇头 (K)</button>
+            <div class="mode-switch">
+                <button class="mode-btn active" data-mode="walk">低速</button>
+                <button class="mode-btn" data-mode="trot">Trot</button>
+                <button class="mode-btn" data-mode="run">奔跑</button>
             </div>
             
-            <div class="status">
-                <div class="status-item">
-                    <span class="status-label">状态</span>
-                    <span class="status-value" id="status">待机</span>
+            <div class="joystick-area">
+                <div>
+                    <div class="joystick-container" id="leftJoystick"><div class="joystick-base"></div><div class="joystick-stick" id="leftStick"></div></div>
+                    <div class="joystick-label">移动控制</div>
                 </div>
-                <div class="status-item">
-                    <span class="status-label">位置 X</span>
-                    <span class="status-value" id="posX">0.00</span>
+                <div>
+                    <div class="joystick-container joystick-container-right" id="rightJoystick"><div class="joystick-base"></div><div class="joystick-stick joystick-stick-right" id="rightStick"></div></div>
+                    <div class="joystick-label">视角/身体</div>
                 </div>
-                <div class="status-item">
-                    <span class="status-label">位置 Y</span>
-                    <span class="status-value" id="posY">0.00</span>
-                </div>
-                <div class="status-item">
-                    <span class="status-label">速度</span>
-                    <span class="status-value" id="velocity">0.00</span>
-                </div>
-                <div class="status-item">
-                    <span class="status-label">角度</span>
-                    <span class="status-value" id="angle">0°</span>
+            </div>
+            
+            <div class="button-row">
+                <button class="ctrl-btn stand" onclick="setMode('stand')">站立</button>
+                <button class="ctrl-btn sit" onclick="setMode('sit')">坐下</button>
+            </div>
+            <div class="button-row">
+                <button class="ctrl-btn jump" onclick="action('jump')">跳跃</button>
+                <button class="ctrl-btn emergency" onclick="action('emergency')">紧急</button>
+            </div>
+            
+            <div class="body-control">
+                <div class="slider-group">
+                    <div class="slider-label"><span>身体高度</span><span class="value" id="heightValue">0.30m</span></div>
+                    <input type="range" min="0.2" max="0.5" step="0.01" value="0.3" id="heightSlider">
                 </div>
             </div>
             
             <div class="keyboard-hint">
-                键盘控制: W/A/S/D 移动 | J 跳跃 | K 摇头
+                键盘: W/A/S/D 移动 | 空格 跳跃 | Esc 紧急停止
             </div>
         </div>
     </div>
 
+    <a href="/" class="back-link">← 返回课程首页</a>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/cannon@0.6.2/build/cannon.min.js"></script>
     <script>
-        // Three.js setup
-        const container = document.getElementById('canvas-container');
-        const scene = new THREE.Scene();
-        scene.background = new THREE.Color(0x1a1a2e);
+        // Three.js 3D 仿真
+        let scene, camera, renderer, robot;
+        let robotState = { x: 0, y: 0, z: 0, vx: 0, vz: 0, yaw: 0 };
+        let targetHeight = 0.3;
+        let isJumping = false;
+        let isSitting = false;
+        let walkCycle = 0;
         
-        const camera = new THREE.PerspectiveCamera(75, container.clientWidth / container.clientHeight, 0.1, 1000);
-        camera.position.set(5, 5, 5);
-        camera.lookAt(0, 0, 0);
+        const controlState = { forward: 0, lateral: 0, yaw: 0 };
         
-        const renderer = new THREE.WebGLRenderer({ antialias: true });
-        renderer.setSize(container.clientWidth, container.clientHeight);
-        renderer.shadowMap.enabled = true;
-        container.appendChild(renderer.domElement);
-        
-        // Lights
-        const ambientLight = new THREE.AmbientLight(0x404040, 0.5);
-        scene.add(ambientLight);
-        
-        const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
-        directionalLight.position.set(10, 20, 10);
-        directionalLight.castShadow = true;
-        scene.add(directionalLight);
-        
-        // Ground
-        const groundGeometry = new THREE.PlaneGeometry(30, 30);
-        const groundMaterial = new THREE.MeshStandardMaterial({ 
-            color: 0x222233,
-            side: THREE.DoubleSide
-        });
-        const ground = new THREE.Mesh(groundGeometry, groundMaterial);
-        ground.rotation.x = -Math.PI / 2;
-        ground.receiveShadow = true;
-        scene.add(ground);
-        
-        // Grid
-        const gridHelper = new THREE.GridHelper(30, 30, 0x00ff88, 0x333355);
-        scene.add(gridHelper);
-        
-        // Robot Dog (simplified as a body with legs)
-        const robotDog = new THREE.Group();
-        
-        // Body
-        const bodyGeometry = new THREE.BoxGeometry(2, 0.5, 1);
-        const bodyMaterial = new THREE.MeshStandardMaterial({ color: 0x00ff88 });
-        const body = new THREE.Mesh(bodyGeometry, bodyMaterial);
-        body.position.y = 1;
-        body.castShadow = true;
-        robotDog.add(body);
-        
-        // Head
-        const headGeometry = new THREE.BoxGeometry(0.6, 0.5, 0.5);
-        const head = new THREE.Mesh(headGeometry, bodyMaterial);
-        head.position.set(1.3, 1.2, 0);
-        robotDog.add(head);
-        
-        // Eyes
-        const eyeGeometry = new THREE.SphereGeometry(0.08, 8, 8);
-        const eyeMaterial = new THREE.MeshBasicMaterial({ color: 0xff0000 });
-        const leftEye = new THREE.Mesh(eyeGeometry, eyeMaterial);
-        leftEye.position.set(1.6, 1.3, 0.2);
-        robotDog.add(leftEye);
-        
-        const rightEye = new THREE.Mesh(eyeGeometry, eyeMaterial);
-        rightEye.position.set(1.6, 1.3, -0.2);
-        robotDog.add(rightEye);
-        
-        // Legs
-        const legGeometry = new THREE.BoxGeometry(0.2, 0.8, 0.2);
-        const legMaterial = new THREE.MeshStandardMaterial({ color: 0x00cc66 });
-        
-        const legPositions = [
-            { x: 0.7, z: 0.4 },   // front-left
-            { x: 0.7, z: -0.4 },  // front-right
-            { x: -0.7, z: 0.4 },  // back-left
-            { x: -0.7, z: -0.4 }  // back-right
-        ];
-        
-        const legs = [];
-        legPositions.forEach(pos => {
-            const leg = new THREE.Mesh(legGeometry, legMaterial);
-            leg.position.set(pos.x, 0.4, pos.z);
-            leg.castShadow = true;
-            robotDog.add(leg);
-            legs.push(leg);
-        });
-        
-        // Tail
-        const tailGeometry = new THREE.BoxGeometry(0.4, 0.15, 0.15);
-        const tail = new THREE.Mesh(tailGeometry, bodyMaterial);
-        tail.position.set(-1.3, 1.3, 0);
-        robotDog.add(tail);
-        
-        scene.add(robotDog);
-        
-        // Physics (Cannon.js - PyBullet-like)
-        const world = new CANNON.World();
-        world.gravity.set(0, -9.82, 0);
-        
-        // Ground physics
-        const groundBody = new CANNON.Body({
-            mass: 0,
-            shape: new CANNON.Plane()
-        });
-        groundBody.quaternion.setFromAxisAngle(new CANNON.Vec3(1, 0, 0), -Math.PI / 2);
-        world.addBody(groundBody);
-        
-        // Robot physics
-        const robotBody = new CANNON.Body({
-            mass: 5,
-            shape: new CANNON.Box(new CANNON.Vec3(1, 0.25, 0.5)),
-            position: new CANNON.Vec3(0, 2, 0),
-            linearDamping: 0.5,
-            angularDamping: 0.5
-        });
-        world.addBody(robotBody);
-        
-        // Control state
-        const state = {
-            moving: false,
-            direction: { x: 0, z: 0 },
-            velocity: 0,
-            jumping: false,
-            shaking: false
-        };
-        
-        // Keyboard controls
-        const keys = {};
-        document.addEventListener('keydown', (e) => {
-            keys[e.key.toLowerCase()] = true;
-            handleKey(e.key.toLowerCase());
-        });
-        
-        document.addEventListener('keyup', (e) => {
-            keys[e.key.toLowerCase()] = false;
-        });
-        
-        function handleKey(key) {
-            const btnMap = {
-                'w': '.btn-up',
-                'a': '.btn-left', 
-                's': '.btn-stop',
-                'd': '.btn-right',
-                'j': '#jumpBtn',
-                'k': '#shakeBtn'
-            };
+        function init3D() {
+            const container = document.getElementById('canvas-container');
+            const canvas = document.getElementById('sim-canvas');
             
-            const btn = document.querySelector(btnMap[key]);
-            if (btn) {
-                btn.classList.add('active');
-                setTimeout(() => btn.classList.remove('active'), 150);
-            }
+            scene = new THREE.Scene();
+            scene.background = new THREE.Color(0x1a1a2e);
             
-            switch(key) {
-                case 'w': moveForward(); break;
-                case 's': stop(); break;
-                case 'a': turnLeft(); break;
-                case 'd': turnRight(); break;
-                case 'j': jump(); break;
-                case 'k': shake(); break;
-            }
+            camera = new THREE.PerspectiveCamera(60, container.clientWidth / container.clientHeight, 0.1, 1000);
+            camera.position.set(3, 3, 3);
+            camera.lookAt(0, 0, 0);
+            
+            renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
+            renderer.setSize(container.clientWidth, container.clientHeight);
+            renderer.shadowMap.enabled = true;
+            
+            // 灯光
+            const ambient = new THREE.AmbientLight(0x404040, 0.5);
+            scene.add(ambient);
+            const dirLight = new THREE.DirectionalLight(0xffffff, 1);
+            dirLight.position.set(10, 20, 10);
+            dirLight.castShadow = true;
+            scene.add(dirLight);
+            
+            // 地面
+            const groundGeo = new THREE.PlaneGeometry(20, 20);
+            const groundMat = new THREE.MeshStandardMaterial({ color: 0x222233 });
+            const ground = new THREE.Mesh(groundGeo, groundMat);
+            ground.rotation.x = -Math.PI/2;
+            ground.receiveShadow = true;
+            scene.add(ground);
+            
+            // 网格
+            const grid = new THREE.GridHelper(20, 20, 0x00d4ff, 0x333355);
+            scene.add(grid);
+            
+            // 机器狗模型
+            createRobot();
+            
+            animate();
         }
         
-        // Button controls
-        document.querySelector('.btn-up').addEventListener('click', moveForward);
-        document.querySelector('.btn-left').addEventListener('click', turnLeft);
-        document.querySelector('.btn-stop').addEventListener('click', stop);
-        document.querySelector('.btn-right').addEventListener('click', turnRight);
-        document.querySelector('#jumpBtn').addEventListener('click', jump);
-        document.querySelector('#shakeBtn').addEventListener('click', shake);
-        
-        function moveForward() {
-            state.direction.z = -1;
-            state.velocity = 3;
-            updateStatus('前进');
+        function createRobot() {
+            robot = new THREE.Group();
+            
+            // 身体
+            const bodyGeo = new THREE.BoxGeometry(0.4, 0.15, 0.2);
+            const bodyMat = new THREE.MeshStandardMaterial({ color: 0x00d4ff });
+            const body = new THREE.Mesh(bodyGeo, bodyMat);
+            body.position.y = 0.25;
+            body.castShadow = true;
+            robot.add(body);
+            
+            // 头部
+            const headGeo = new THREE.BoxGeometry(0.15, 0.12, 0.15);
+            const head = new THREE.Mesh(headGeo, bodyMat);
+            head.position.set(0.25, 0.32, 0);
+            robot.add(head);
+            
+            // 眼睛
+            const eyeGeo = new THREE.SphereGeometry(0.02, 8, 8);
+            const eyeMat = new THREE.MeshBasicMaterial({ color: 0xff0000 });
+            const leftEye = new THREE.Mesh(eyeGeo, eyeMat);
+            leftEye.position.set(0.32, 0.34, 0.05);
+            robot.add(leftEye);
+            const rightEye = new THREE.Mesh(eyeGeo, eyeMat);
+            rightEye.position.set(0.32, 0.34, -0.05);
+            robot.add(rightEye);
+            
+            // 腿部 (4条)
+            const legGeo = new THREE.BoxGeometry(0.05, 0.2, 0.05);
+            const legMat = new THREE.MeshStandardMaterial({ color: 0x0088aa });
+            const positions = [[0.15, 0.1, 0.1], [0.15, 0.1, -0.1], [-0.15, 0.1, 0.1], [-0.15, 0.1, -0.1]];
+            robot.legs = [];
+            positions.forEach(pos => {
+                const leg = new THREE.Mesh(legGeo, legMat);
+                leg.position.set(...pos);
+                leg.castShadow = true;
+                robot.add(leg);
+                robot.legs.push(leg);
+            });
+            
+            // 尾巴
+            const tailGeo = new THREE.BoxGeometry(0.1, 0.04, 0.04);
+            const tail = new THREE.Mesh(tailGeo, bodyMat);
+            tail.position.set(-0.25, 0.3, 0);
+            robot.add(tail);
+            robot.tail = tail;
+            
+            scene.add(robot);
         }
         
-        function turnLeft() {
-            robotBody.angularVelocity.y = 2;
-            updateStatus('左转');
-        }
-        
-        function turnRight() {
-            robotBody.angularVelocity.y = -2;
-            updateStatus('右转');
-        }
-        
-        function stop() {
-            state.direction = { x: 0, z: 0 };
-            state.velocity = 0;
-            robotBody.velocity.x = 0;
-            robotBody.velocity.z = 0;
-            robotBody.angularVelocity.y = 0;
-            updateStatus('待机');
-        }
-        
-        function jump() {
-            if (!state.jumping && robotBody.position.y < 1.5) {
-                state.jumping = true;
-                robotBody.velocity.y = 8;
-                updateStatus('跳跃');
-                
-                // Leg animation
-                legs.forEach((leg, i) => {
-                    setTimeout(() => {
-                        leg.position.y = 0.8;
-                        setTimeout(() => leg.position.y = 0.4, 200);
-                    }, i * 50);
-                });
-                
-                setTimeout(() => {
-                    state.jumping = false;
-                }, 1000);
-            }
-        }
-        
-        function shake() {
-            if (!state.shaking) {
-                state.shaking = true;
-                updateStatus('摇头');
-                
-                let shakeCount = 0;
-                const shakeInterval = setInterval(() => {
-                    head.rotation.z = Math.sin(shakeCount * Math.PI / 2) * 0.3;
-                    tail.rotation.z = Math.sin(shakeCount * Math.PI / 2) * 0.5;
-                    shakeCount++;
-                    
-                    if (shakeCount > 6) {
-                        clearInterval(shakeInterval);
-                        head.rotation.z = 0;
-                        tail.rotation.z = 0;
-                        state.shaking = false;
-                    }
-                }, 100);
-            }
-        }
-        
-        function updateStatus(status) {
-            document.getElementById('status').textContent = status;
-        }
-        
-        // Animation loop
-        let time = 0;
         function animate() {
             requestAnimationFrame(animate);
-            time += 0.01;
             
-            // Update physics
-            world.step(1/60);
+            // 更新物理
+            const speed = 0.02;
+            robotState.vx = controlState.forward * speed;
+            robotState.vz = controlState.lateral * speed;
+            robotState.yaw += controlState.yaw * 0.05;
             
-            // Apply movement
-            if (state.velocity > 0) {
-                const angle = robotBody.quaternion.y || 0;
-                robotBody.velocity.x = Math.sin(angle) * state.velocity;
-                robotBody.velocity.z = Math.cos(angle) * state.velocity;
-                
-                // Leg animation when moving
-                legs.forEach((leg, i) => {
-                    leg.position.y = 0.4 + Math.sin(time * 10 + i * Math.PI / 2) * 0.1;
+            robotState.x += robotState.vx * Math.cos(robotState.yaw) - robotState.vz * Math.sin(robotState.yaw);
+            robotState.z += robotState.vx * Math.sin(robotState.yaw) + robotState.vz * Math.cos(robotState.yaw);
+            
+            // 跳跃
+            if (isJumping) {
+                robotState.y = Math.sin(Date.now() * 0.01) * 0.3;
+                if (robotState.y < 0) robotState.y = 0;
+                if (robotState.y < 0.05) isJumping = false;
+            }
+            
+            // 坐下/站立
+            const targetY = isSitting ? 0.15 : targetHeight;
+            robotState.y += (targetY - robotState.y) * 0.1;
+            
+            // 行走动画
+            if (Math.abs(robotState.vx) > 0.001 || Math.abs(robotState.vz) > 0.001 || Math.abs(controlState.yaw) > 0.1) {
+                walkCycle += 0.2;
+                robot.legs.forEach((leg, i) => {
+                    const offset = i < 2 ? 0 : Math.PI;
+                    leg.position.y = 0.1 + Math.sin(walkCycle + offset) * 0.03;
                 });
             }
             
-            // Sync Three.js with physics
-            robotDog.position.copy(robotBody.position);
-            robotDog.quaternion.copy(robotBody.quaternion);
+            // 更新3D模型
+            robot.position.set(robotState.x, robotState.y, robotState.z);
+            robot.rotation.y = robotState.yaw;
             
-            // Update UI
-            document.getElementById('posX').textContent = robotBody.position.x.toFixed(2);
-            document.getElementById('posY').textContent = robotBody.position.y.toFixed(2);
-            document.getElementById('velocity').textContent = 
-                Math.sqrt(robotBody.velocity.x**2 + robotBody.velocity.z**2).toFixed(2);
-            
-            // Camera follow
-            camera.position.x = robotDog.position.x + 5;
-            camera.position.z = robotDog.position.z + 5;
-            camera.lookAt(robotDog.position);
+            // 相机跟随
+            camera.position.x = robotState.x + 3;
+            camera.position.z = robotState.z + 3;
+            camera.lookAt(robotState.x, robotState.y + 0.2, robotState.z);
             
             renderer.render(scene, camera);
+            
+            // 更新UI
+            document.getElementById('posX').textContent = robotState.x.toFixed(2);
+            document.getElementById('posY').textContent = robotState.y.toFixed(2);
+            document.getElementById('vel').textContent = Math.sqrt(robotState.vx**2 + robotState.vz**2).toFixed(2);
         }
         
-        // Handle resize
+        function setMode(m) {
+            document.getElementById('currentMode').textContent = m.toUpperCase();
+            document.getElementById('mode').textContent = m.toUpperCase();
+            isSitting = (m === 'sit');
+        }
+        
+        function action(a) {
+            if (a === 'jump' && !isJumping && !isSitting) {
+                isJumping = true;
+            } else if (a === 'emergency') {
+                controlState.forward = 0;
+                controlState.lateral = 0;
+                controlState.yaw = 0;
+                robotState.vx = 0;
+                robotState.vz = 0;
+                // 重置摇杆UI
+                document.getElementById('leftStick').style.transform = 'translate(-50%,-50%)';
+                document.getElementById('rightStick').style.transform = 'translate(-50%,-50%)';
+            }
+        }
+        
+        // 摇杆控制
+        const leftStick = document.getElementById('leftStick');
+        let leftActive = false;
+        document.getElementById('leftJoystick').addEventListener('mousedown', () => leftActive = true);
+        document.addEventListener('mouseup', () => { leftActive = false; leftStick.style.transform = 'translate(-50%,-50%)'; controlState.forward=0; controlState.lateral=0; });
+        document.getElementById('leftJoystick').addEventListener('mousemove', (e) => {
+            if(!leftActive) return;
+            const r = document.getElementById('leftJoystick').getBoundingClientRect();
+            const x = Math.max(-1, Math.min(1, (e.clientX-r.left)/r.width*2-1));
+            const y = Math.max(-1, Math.min(1, (e.clientY-r.top)/r.height*2-1));
+            leftStick.style.transform = `translate(calc(-50%+${x*30}px), calc(-50%+${y*30}px))`;
+            controlState.forward = -y; controlState.lateral = x;
+        });
+        
+        const rightStick = document.getElementById('rightStick');
+        let rightActive = false;
+        document.getElementById('rightJoystick').addEventListener('mousedown', () => rightActive = true);
+        document.addEventListener('mouseup', () => { rightActive = false; rightStick.style.transform = 'translate(-50%,-50%)'; controlState.yaw=0; });
+        document.getElementById('rightJoystick').addEventListener('mousemove', (e) => {
+            if(!rightActive) return;
+            const r = document.getElementById('rightJoystick').getBoundingClientRect();
+            const x = Math.max(-1, Math.min(1, (e.clientX-r.left)/r.width*2-1));
+            rightStick.style.transform = `translate(calc(-50%+${x*25}px), calc(-50%+${x*25}px))`;
+            controlState.yaw = -x;
+        });
+        
+        // 滑块
+        document.getElementById('heightSlider').addEventListener('input', (e) => {
+            targetHeight = parseFloat(e.target.value);
+            document.getElementById('heightValue').textContent = targetHeight.toFixed(2) + 'm';
+        });
+        
+        // 键盘
+        const keys = {};
+        document.addEventListener('keydown', (e) => { keys[e.key.toLowerCase()] = true; updateKbd(); });
+        document.addEventListener('keyup', (e) => { keys[e.key.toLowerCase()] = false; updateKbd(); });
+        function updateKbd() {
+            controlState.forward = (keys['w']?1:0) - (keys['s']?1:0);
+            controlState.lateral = (keys['d']?1:0) - (keys['a']?1:0);
+            controlState.yaw = (keys['arrowright']?1:0) - (keys['arrowleft']?1:0);
+            if(keys[' ']) action('jump');
+            if(keys['escape']) action('emergency');
+        }
+        
+        // 模式按钮
+        document.querySelectorAll('.mode-btn').forEach(b => b.addEventListener('click', () => {
+            document.querySelectorAll('.mode-btn').forEach(x => x.classList.remove('active'));
+            b.classList.add('active');
+            setMode(b.dataset.mode);
+        }));
+        
+        // 初始化
+        init3D();
+        
+        // 窗口调整
         window.addEventListener('resize', () => {
+            const container = document.getElementById('canvas-container');
             camera.aspect = container.clientWidth / container.clientHeight;
             camera.updateProjectionMatrix();
             renderer.setSize(container.clientWidth, container.clientHeight);
         });
         
-        animate();
+        // 电池模拟
+        setInterval(() => document.getElementById('battery').textContent = (97+Math.floor(Math.random()*2))+'%', 5000);
         
-        // Welcome message
-        console.log('🐕 机器狗仿真已启动！');
-        console.log('使用键盘 W/A/S/D 控制移动，J 跳跃，K 摇头');
+        // 运行时间
+        const startTime = Date.now();
+        setInterval(() => {
+            const t = Math.floor((Date.now() - startTime)/1000);
+            document.getElementById('runtime').textContent = 
+                Math.floor(t/3600).toString().padStart(2,'0') + ':' + 
+                Math.floor(t%3600/60).toString().padStart(2,'0') + ':' + 
+                (t%60).toString().padStart(2,'0');
+        }, 1000);
     </script>
 </body>
 </html>
