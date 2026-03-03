@@ -119,7 +119,7 @@
 </head>
 <body>
     <div class="container">
-        <h1>🤖 课前问卷</h1>
+        <h1>📝 课前问卷</h1>
         <p class="subtitle">AI机器人课程 - 帮助老师了解大家的学习背景</p>
         
         <form id="surveyForm">
@@ -131,6 +131,7 @@
                     <label class="option"><input type="radio" name="major" value="cs"> 计算机科学/软件工程</label>
                     <label class="option"><input type="radio" name="major" value="ee"> 电子/电气工程</label>
                     <label class="option"><input type="radio" name="major" value="me"> 机械工程</label>
+                    <label class="option"><input type="radio" name="major" value="ai"> 人工智能</label>
                     <label class="option"><input type="radio" name="major" value="other"> 其他专业</label>
                 </div>
             </div>
@@ -245,27 +246,33 @@
     </div>
     
     <script>
+        // 使用 Google Forms 或简单日志收集
+        // 这里使用 localStorage 本地存储示例
+        
         document.getElementById('surveyForm').addEventListener('submit', function(e) {
             e.preventDefault();
             
-            // 简单的客户端验证
             const formData = new FormData(this);
-            let answered = 0;
+            const data = {};
+            
+            // 收集所有数据
             for (let [key, value] of formData.entries()) {
-                answered++;
+                data[key] = value;
             }
             
-            if (answered < 8) {
-                alert('请至少回答前8道选择题');
-                return;
-            }
+            // 添加时间戳
+            data.timestamp = new Date().toISOString();
+            
+            // 保存到本地存储（演示用）
+            const responses = JSON.parse(localStorage.getItem('survey_responses') || '[]');
+            responses.push(data);
+            localStorage.setItem('survey_responses', JSON.stringify(responses));
             
             // 显示感谢
             this.style.display = 'none';
             document.getElementById('thanks').style.display = 'block';
             
-            // 可以在这里添加提交到服务器的逻辑
-            console.log('Survey submitted');
+            console.log('Survey submitted:', data);
         });
         
         // 添加选项点击效果
