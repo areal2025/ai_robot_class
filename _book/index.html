@@ -544,7 +544,7 @@
 </blockquote>
 <h3 id="🤖-ai助手--ros2机器人-互联设计">🤖 AI助手 + ROS2机器人 互联设计</h3>
 <blockquote>
-<p>本课程特色：<strong>让AI语音助手控制ROS2机器人！</strong></p>
+<p>本课程特色：<strong>让AI助手控制ROS2机器人！</strong></p>
 </blockquote>
 <pre><code>┌─────────────────────────────────────────────────────────────────┐
 │                    课程中的AI+机器人互联架构                      │
@@ -552,11 +552,11 @@
 │                                                                 │
 │   用户                          机器人                           │
 │     │                            │                              │
-│     │  "Siri/小爱同学/小艺..."   │                              │
+│     │  语音/文字指令            │                              │
 │     ▼                            │                              │
 │  ┌─────────┐                    │                              │
 │  │ AI助手  │                    │                              │
-│  │(语音输入)│                    │                              │
+│  │(意图理解)│                    │                              │
 │  └────┬────┘                    │                              │
 │       │                         │                              │
 │       │  意图识别+指令转换       │                              │
@@ -567,10 +567,10 @@
 │  │ 中枢)  │                    │                              │
 │  └────┬────┘                    │                              │
 │       │                         │                              │
-│       │ ROS2话题/服务           │                              │
+│       │ WebSocket/ROS2          │                              │
 │       ▼                         ▼                              │
 │  ┌─────────────────────────────────────────────────────────┐    │
-│  │                    ROS2 机器人                          │    │
+│  │                    仿真/真机机器人                      │    │
 │  │  /cmd_vel ← 速度命令    /tts ← 语音播报               │    │
 │  └─────────────────────────────────────────────────────────┘    │
 │                                                                 │
@@ -579,39 +579,36 @@
 <table>
 <thead>
 <tr>
-<th>AI平台</th>
-<th>互联方式</th>
-<th>课程中的应用</th>
+<th>连接方式</th>
+<th>说明</th>
+<th>课程应用</th>
 </tr>
 </thead>
 <tbody>
 <tr>
+<td><strong>WebSocket</strong></td>
+<td>实时双向通信</td>
+<td>仿真演示Demo</td>
+</tr>
+<tr>
+<td><strong>ROS2话题/服务</strong></td>
+<td>ROS2原生通信</td>
+<td>机器人控制</td>
+</tr>
+<tr>
 <td><strong>OpenCLAW</strong></td>
-<td>直接ROS2话题/服务</td>
-<td>本课程主要使用</td>
-</tr>
-<tr>
-<td><strong>Siri</strong></td>
-<td>Shortcuts + API</td>
-<td>进阶：iOS捷径</td>
-</tr>
-<tr>
-<td><strong>小爱同学</strong></td>
-<td>技能开发平台</td>
-<td>进阶：小爱技能</td>
-</tr>
-<tr>
-<td><strong>小度/DuerOS</strong></td>
-<td>DuerOS SDK</td>
-<td>进阶：百度能力</td>
-</tr>
-<tr>
-<td><strong>天猫精灵</strong></td>
-<td>AliGenie</td>
-<td>进阶：阿里生态</td>
+<td>多平台AI助手框架</td>
+<td>飞书/Telegram控制</td>
 </tr>
 </tbody>
 </table>
+<blockquote>
+<p>📺 <strong>课程演示Demo</strong>：</p>
+<ul>
+<li><a href="demo1">机器狗遥控仿真</a> - WebSocket控制Cannon.js物理引擎</li>
+<li><a href="demo2">双臂机器人叠布料</a> - 强化学习运动规划</li>
+</ul>
+</blockquote>
 <h4 id="📡-ros2消息类型">📡 ROS2消息类型</h4>
 <pre><code>速度控制：
 /robot/cmd_vel   → geometry_msgs/Twist
@@ -1072,6 +1069,56 @@ Level 4 🌲 综合项目（13-15周）
 </tbody>
 </table>
 <hr></hr>
+<h2 id="📦-小组项目说明">📦 小组项目说明</h2>
+<h3 id="项目形式">项目形式</h3>
+<p>期末项目可以是以下形式之一：</p>
+<table>
+<thead>
+<tr>
+<th>类型</th>
+<th>说明</th>
+<th>示例</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>纯仿真</strong></td>
+<td>完全在仿真环境中完成</td>
+<td>Gazebo/PyBullet仿真项目</td>
+</tr>
+<tr>
+<td><strong>纯软件</strong></td>
+<td>纯算法/代码，无实体</td>
+<td>视觉识别算法、运动规划</td>
+</tr>
+<tr>
+<td><strong>硬件结合</strong></td>
+<td>结合ROS小车等硬件</td>
+<td>实体机器人控制</td>
+</tr>
+<tr>
+<td><strong>3D打印</strong></td>
+<td>3D打印零件组装机器人</td>
+<td>自定义机械臂、夹爪</td>
+</tr>
+</tbody>
+</table>
+<h3 id="项目要求">项目要求</h3>
+<ol>
+<li><strong>选题</strong>：第5周截止，需提交选题和分工计划</li>
+<li><strong>形式</strong>：2-4人小组合作</li>
+<li><strong>展示</strong>：第14周进行Demo展示</li>
+</ol>
+<h3 id="参考方向">参考方向</h3>
+<ul>
+<li>🤖 语音控制机器人导航</li>
+<li>👋 手势识别控制机器人</li>
+<li>🗺️ 自主路径规划与避障</li>
+<li>📷 视觉引导抓取/放置</li>
+<li>🐕 机器狗运动控制</li>
+<li>🎨 双臂机器人任务执行</li>
+</ul>
+<hr></hr>
 <p><em>准备好开启你的机器人之旅了吗？让我们出发吧！ 🚀</em></p>
 
                                 
@@ -1112,7 +1159,7 @@ Level 4 🌲 综合项目（13-15周）
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"课程简介","level":"1.1","depth":1,"next":{"title":"第1周：课程介绍与仿真环境搭建","level":"2.1","depth":1,"path":"content/week1.md","ref":"content/week1.md","articles":[]},"dir":"ltr"},"config":{"plugins":[],"root":".","styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","author":"Your Name","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56},"embedFonts":false},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"AI机器人课程","language":"zh-hans","gitbook":"*","description":"15周ROS2机器人编程入门课程"},"file":{"path":"README.md","mtime":"2026-03-03T16:14:39.764Z","type":"markdown"},"gitbook":{"version":"6.1.6","time":"2026-03-03T16:15:05.979Z"},"basePath":".","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"课程简介","level":"1.1","depth":1,"next":{"title":"第1周：课程介绍与仿真环境搭建","level":"2.1","depth":1,"path":"content/week1.md","ref":"content/week1.md","articles":[]},"dir":"ltr"},"config":{"plugins":[],"root":".","styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","author":"Your Name","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56},"embedFonts":false},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"AI机器人课程","language":"zh-hans","gitbook":"*","description":"15周ROS2机器人编程入门课程"},"file":{"path":"README.md","mtime":"2026-03-03T16:20:55.753Z","type":"markdown"},"gitbook":{"version":"6.1.6","time":"2026-03-03T16:21:04.241Z"},"basePath":".","book":{"language":""}});
         });
     </script>
 </div>
