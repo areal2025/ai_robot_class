@@ -276,9 +276,9 @@
             robotBody.angularVelocity.y = control.yaw * turnSpeed;
             
             // 跳跃 - 直接应用脉冲
-            if (state.jumping) {
+            if (state.jumping && (!state.jumpCooldown || state.jumpCooldown <= 0)) {
                 robotBody.velocity.y = 8;  // 更大的跳跃力
-                state.jumping = false;  // 立即重置
+                state.jumping = false; state.jumpCooldown = 30
             }
             
             // 高度控制 (PD控制器)
@@ -288,6 +288,7 @@
             
             // 物理步进
             world.step(PHYSICS.timeStep);
+            if (state.jumpCooldown > 0) state.jumpCooldown--;
             
             // 同步状态
             state.x = robotBody.position.x;
