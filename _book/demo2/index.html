@@ -225,8 +225,8 @@
         function calculateReward() {
             let reward = -0.1; // 每步小惩罚
             
-            const leftZ = joints.left.wrist.position.z;
-            const rightZ = joints.right.wrist.position.z;
+            const leftZ = joints.left.wrist ? joints.left.wrist.position.z : 1.0;
+            const rightZ = joints.right.wrist ? joints.right.wrist.position.z : 1.0;
             const clothZ = cloth.mesh.position.z;
             
             // 夹爪靠近布料
@@ -543,7 +543,7 @@
             // 重置手臂
             ['left', 'right'].forEach(side => {
                 if (joints[side].shoulder) {
-                    joints[side].shoulder.rotation.set(0, 0, 0);
+                    joints[side].shoulder.rotation.set(-0.3, 0, 0.2);
                 }
             });
         }
