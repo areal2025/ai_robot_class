@@ -275,18 +275,16 @@
             robotBody.velocity.z = control.forward * speed * sin + control.lateral * speed * cos;
             robotBody.angularVelocity.y = control.yaw * turnSpeed;
             
-            // 跳跃
-            if (state.jumping && robotBody.position.y < 0.5) {
-                robotBody.velocity.y = 5;
-                state.jumping = false;
+            // 跳跃 - 直接应用脉冲
+            if (state.jumping) {
+                robotBody.velocity.y = 8;  // 更大的跳跃力
+                state.jumping = false;  // 立即重置
             }
             
             // 高度控制 (PD控制器)
-            if (!state.jumping) {
-                const targetY = state.sitting ? 0.2 : state.h;
-                const dy = targetY - robotBody.position.y;
-                robotBody.velocity.y = dy * 50;
-            }
+            const targetY = state.sitting ? 0.2 : state.h;
+            const dy = targetY - robotBody.position.y;
+            robotBody.velocity.y += dy * 30;  // 弹簧效果
             
             // 物理步进
             world.step(PHYSICS.timeStep);
