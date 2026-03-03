@@ -3,93 +3,144 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>机器狗仿真 - PyBullet</title>
+    <title>PyBullet 机器狗仿真 - 真实物理引擎</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: Arial, sans-serif; background: #1a1a2e; color: #fff; overflow: hidden; }
+        body { font-family: Arial, sans-serif; background: #1a1a2e; color: #fff; }
         
         .container { display: flex; height: 100vh; }
         
-        .simulation { flex: 1; position: relative; background: #000; }
-        #canvas { width: 100%; height: 100%; display: block; }
+        .simulation { flex: 1; position: relative; background: #000; display: flex; align-items: center; justify-content: center; }
+        
+        .sim-viewer {
+            width: 100%; height: 100%;
+            display: flex; flex-direction: column;
+            align-items: center; justify-content: center;
+            background: linear-gradient(135deg, #0a0a15 0%, #1a1a2e 100%);
+        }
+        
+        .sim-viewer img {
+            max-width: 90%; max-height: 80%;
+            border: 2px solid #00d4ff;
+            border-radius: 8px;
+        }
+        
+        .sim-status {
+            margin-top: 20px;
+            padding: 15px 30px;
+            background: rgba(0, 212, 255, 0.1);
+            border: 1px solid #00d4ff;
+            border-radius: 8px;
+            text-align: center;
+        }
+        
+        .sim-status h3 { color: #00d4ff; margin-bottom: 10px; }
+        .sim-status p { color: #888; font-size: 12px; }
+        
+        .sim-status.connected {
+            background: rgba(0, 255, 136, 0.1);
+            border-color: #00ff88;
+        }
+        
+        .sim-status.connected h3 { color: #00ff88; }
         
         .panel { 
-            width: 280px; background: #222; padding: 15px; 
-            display: flex; flex-direction: column; gap: 10px;
+            width: 300px; background: #222; padding: 20px; 
+            display: flex; flex-direction: column; gap: 15px;
             overflow-y: auto;
         }
         
-        .title { color: #00d4ff; text-align: center; font-size: 14px; margin-bottom: 5px; }
+        .title { color: #00d4ff; text-align: center; font-size: 16px; font-weight: bold; }
+        .subtitle { color: #ff6b6b; text-align: center; font-size: 12px; margin-top: -10px; }
         
-        .status { background: #111; padding: 10px; border-radius: 8px; font-family: monospace; font-size: 11px; }
-        .status-row { display: flex; justify-content: space-between; margin: 3px 0; }
+        .status { background: #111; padding: 15px; border-radius: 8px; }
+        .status-row { display: flex; justify-content: space-between; margin: 5px 0; font-family: monospace; font-size: 12px; }
         .status .label { color: #666; }
         .status .value { color: #00ff88; }
+        .status .value.warning { color: #ffaa00; }
+        .status .value.error { color: #ff4444; }
         
         .dpad { 
-            display: grid; grid-template-columns: repeat(3, 50px); 
-            grid-template-rows: repeat(3, 50px); gap: 5px; 
+            display: grid; grid-template-columns: repeat(3, 60px); 
+            grid-template-rows: repeat(3, 60px); gap: 8px; 
             justify-content: center;
         }
         
         .btn {
-            width: 50px; height: 50px; border-radius: 10px;
-            border: none; font-size: 20px; cursor: pointer;
+            width: 60px; height: 60px; border-radius: 12px;
+            border: none; font-size: 22px; cursor: pointer;
             background: #333; color: #fff;
-            user-select: none; -webkit-user-select: none;
+            user-select: none;
+            transition: all 0.1s;
         }
-        .btn:active, .btn.active { background: #00d4ff; color: #000; }
+        .btn:active, .btn.active { 
+            background: #00d4ff; color: #000;
+            transform: scale(0.95);
+        }
         
         .btn-up { grid-column: 2; grid-row: 1; }
         .btn-left { grid-column: 1; grid-row: 2; }
         .btn-right { grid-column: 3; grid-row: 2; }
         .btn-down { grid-column: 2; grid-row: 3; }
         
-        .action-btns { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
-        
+        .action-btns { display: flex; gap: 10px; }
         .action-btn {
-            padding: 12px 20px; border-radius: 8px; border: none;
-            font-size: 12px; font-weight: bold; cursor: pointer;
-            color: #fff; flex: 1;
+            flex: 1; padding: 15px; border-radius: 10px; border: none;
+            font-size: 13px; font-weight: bold; cursor: pointer; color: #fff;
         }
         .btn-jump { background: #ffaa00; }
         .btn-stop { background: #ff4444; }
-        .btn-stand { background: #00ff88; color: #000; }
-        .btn-sit { background: #4ecdc4; }
         
-        .slider-box { background: #111; padding: 10px; border-radius: 8px; }
-        .slider-label { display: flex; justify-content: space-between; font-size: 11px; margin-bottom: 5px; }
+        .mode-btns { display: flex; gap: 5px; }
+        .mode-btn {
+            flex: 1; padding: 10px; border-radius: 8px; border: 2px solid #333;
+            background: transparent; color: #666; font-size: 11px; cursor: pointer;
+        }
+        .mode-btn.active { border-color: #00d4ff; background: rgba(0,212,255,0.2); color: #00d4ff; }
+        
+        .slider-box { background: #111; padding: 15px; border-radius: 8px; }
+        .slider-label { display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 8px; }
         .slider-label .value { color: #00d4ff; }
         
-        .hint { 
-            background: #111; padding: 10px; border-radius: 8px; 
-            font-size: 10px; color: #666; text-align: center;
-        }
+        .hint { background: #111; padding: 12px; border-radius: 8px; font-size: 11px; color: #666; text-align: center; }
         
-        .back { 
-            display: block; text-align: center; padding: 10px; 
-            color: #00d4ff; text-decoration: none; font-size: 12px;
+        .back { display: block; text-align: center; padding: 15px; color: #00d4ff; text-decoration: none; }
+        
+        .connection-info {
+            background: #111; padding: 10px; border-radius: 8px;
+            font-family: monospace; font-size: 10px; color: #666; text-align: center;
         }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="simulation">
-            <canvas id="canvas"></canvas>
-            <div class="status" style="position:absolute; top:10px; left:10px;">
-                <div class="status-row"><span class="label">X:</span><span class="value" id="posX">0.00</span></div>
-                <div class="status-row"><span class="label">Y:</span><span class="value" id="posY">0.00</span></div>
-                <div class="status-row"><span class="label">速度:</span><span class="value" id="vel">0.00</span></div>
-                <div class="status-row"><span class="label">模式:</span><span class="value" id="mode">STAND</span></div>
+            <div class="sim-viewer" id="simViewer">
+                <div class="sim-status" id="simStatus">
+                    <h3>🔌 PyBullet 仿真</h3>
+                    <p>等待连接...</p>
+                </div>
             </div>
         </div>
         
         <div class="panel">
-            <div class="title">🤖 机器狗遥控器</div>
+            <div>
+                <div class="title">🤖 PyBullet 控制器</div>
+                <div class="subtitle">真实物理引擎</div>
+            </div>
+            
+            <div class="connection-info">
+                服务器: localhost:8765<br>
+                令牌: ai-robotics-course-2026
+            </div>
             
             <div class="status">
-                <div class="status-row"><span class="label">电量</span><span class="value" id="battery">98%</span></div>
-                <div class="status-row"><span class="label">模式</span><span class="value" id="curMode">STAND</span></div>
+                <div class="status-row"><span class="label">连接状态</span><span class="value" id="connStatus">未连接</span></div>
+                <div class="status-row"><span class="label">位置 X</span><span class="value" id="posX">--</span></div>
+                <div class="status-row"><span class="label">位置 Y</span><span class="value" id="posY">--</span></div>
+                <div class="status-row"><span class="label">位置 Z</span><span class="value" id="posZ">--</span></div>
+                <div class="status-row"><span class="label">速度</span><span class="value" id="velocity">--</span></div>
+                <div class="status-row"><span class="label">模式</span><span class="value" id="mode">WAIT</span></div>
             </div>
             
             <div class="dpad">
@@ -100,12 +151,14 @@
             </div>
             
             <div class="action-btns">
-                <button class="action-btn btn-stand" id="btnStand">站立</button>
-                <button class="action-btn btn-sit" id="btnSit">坐下</button>
+                <button class="action-btn btn-jump" id="btnJump">🦘 跳跃</button>
+                <button class="action-btn btn-stop" id="btnStop">🛑 停止</button>
             </div>
-            <div class="action-btns">
-                <button class="action-btn btn-jump" id="btnJump">跳跃</button>
-                <button class="action-btn btn-stop" id="btnStop">停止</button>
+            
+            <div class="mode-btns">
+                <button class="mode-btn active" data-mode="walk">低速</button>
+                <button class="mode-btn" data-mode="trot">Trot</button>
+                <button class="mode-btn" data-mode="run">奔跑</button>
             </div>
             
             <div class="slider-box">
@@ -119,154 +172,196 @@
         </div>
     </div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/cannon.js/0.6.2/cannon.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script>
-        let world, robotBody, scene, camera, renderer, robot;
-        const control = { forward: 0, lateral: 0, yaw: 0 };
-        const state = { x: 0, y: 0.35, z: 0, vx: 0, vz: 0, yaw: 0, jumping: false, sitting: false, h: 0.3 };
+        const TOKEN = "ai-robotics-course-2026";
+        const WS_URL = `ws://${window.location.hostname || 'localhost'}:8765`;
         
-        function init() {
-            // Physics
-            world = new CANNON.World();
-            world.gravity.set(0, -9.81, 0);
-            world.addBody(new CANNON.Body({ mass: 0, shape: new CANNON.Plane() }). quaternion.setFromAxisAngle(new CANNON.Vec3(1,0,0), -Math.PI/2));
-            robotBody = new CANNON.Body({ mass: 5, position: new CANNON.Vec3(0, 0.35, 0), linearDamping: 0.5, angularDamping: 0.5 });
-            robotBody.addShape(new CANNON.Box(new CANNON.Vec3(0.2, 0.1, 0.15)));
-            world.addBody(robotBody);
+        let ws = null;
+        let authenticated = false;
+        let controlState = { forward: 0, lateral: 0, yaw: 0, height: 0.3 };
+        
+        function connect() {
+            console.log("连接WebSocket:", WS_URL);
+            ws = new WebSocket(WS_URL);
             
-            // 3D
-            scene = new THREE.Scene();
-            scene.background = new THREE.Color(0x1a1a2e);
-            const canvas = document.getElementById('canvas');
-            camera = new THREE.PerspectiveCamera(60, canvas.clientWidth / canvas.clientHeight, 0.1, 1000);
-            camera.position.set(3, 2.5, 3);
-            renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
-            renderer.setSize(canvas.clientWidth, canvas.clientHeight);
-            renderer.shadowMap.enabled = true;
+            ws.onopen = () => {
+                console.log("WebSocket已连接");
+            };
             
-            scene.add(new THREE.AmbientLight(0x404040, 0.6));
-            const light = new THREE.DirectionalLight(0xffffff, 1);
-            light.position.set(10, 20, 10);
-            light.castShadow = true;
-            scene.add(light);
+            ws.onmessage = (event) => {
+                const data = JSON.parse(event.data);
+                handleMessage(data);
+            };
             
-            const ground = new THREE.Mesh(new THREE.PlaneGeometry(20, 20), new THREE.MeshStandardMaterial({ color: 0x222233 }));
-            ground.rotation.x = -Math.PI/2;
-            ground.receiveShadow = true;
-            scene.add(ground);
-            scene.add(new THREE.GridHelper(20, 20, 0x00d4ff, 0x333355));
+            ws.onerror = (error) => {
+                console.error("WebSocket错误:", error);
+                updateStatus("error", "连接错误");
+            };
             
-            // Robot
-            robot = new THREE.Group();
-            const mat = new THREE.MeshStandardMaterial({ color: 0x00d4ff, metalness: 0.3 });
-            robot.add(new THREE.Mesh(new THREE.BoxGeometry(0.4, 0.2, 0.3), mat));
-            robot.add(new THREE.Mesh(new THREE.BoxGeometry(0.15, 0.12, 0.18), mat).translateXYZ(0.28, 0.08, 0));
-            robot.add(new THREE.Mesh(new THREE.SphereGeometry(0.025, 8, 8), new THREE.MeshBasicMaterial({ color: 0xff0000 })).translateXYZ(0.35, 0.1, 0.05));
-            robot.add(new THREE.Mesh(new THREE.SphereGeometry(0.025, 8, 8), new THREE.MeshBasicMaterial({ color: 0xff0000 })).translateXYZ(0.35, 0.1, -0.05));
-            const legMat = new THREE.MeshStandardMaterial({ color: 0x0088aa });
-            [[0.18, 0.12], [0.18, -0.12], [-0.18, 0.12], [-0.18, -0.12]].forEach(p => {
-                robot.add(new THREE.Mesh(new THREE.BoxGeometry(0.06, 0.18, 0.06), legMat).translateXYZ(p[0], -0.1, p[1]));
-            });
-            scene.add(robot);
-            
-            animate();
+            ws.onclose = () => {
+                console.log("WebSocket断开");
+                updateStatus("error", "断开连接");
+                authenticated = false;
+                // 尝试重连
+                setTimeout(connect, 3000);
+            };
         }
         
-        function animate() {
-            requestAnimationFrame(animate);
-            
-            // Physics
-            const speed = 3, turn = 2;
-            const c = Math.cos(state.yaw), s = Math.sin(state.yaw);
-            robotBody.velocity.x = control.forward * speed * c - control.lateral * speed * s;
-            robotBody.velocity.z = control.forward * speed * s + control.lateral * speed * c;
-            robotBody.angularVelocity.y = control.yaw * turn;
-            
-            if (state.jumping && robotBody.position.y < 0.5) { robotBody.velocity.y = 5; state.jumping = false; }
-            if (!state.jumping) {
-                const target = state.sitting ? 0.2 : state.h;
-                robotBody.velocity.y = (target - robotBody.position.y) * 50;
+        function handleMessage(data) {
+            switch(data.type) {
+                case 'welcome':
+                    // 发送认证
+                    ws.send(JSON.stringify({ type: 'auth', token: TOKEN }));
+                    break;
+                    
+                case 'auth_success':
+                    authenticated = true;
+                    updateStatus("connected", "已连接");
+                    document.getElementById('simStatus').classList.add('connected');
+                    document.getElementById('simStatus').innerHTML = '<h3>✅ PyBullet 运行中</h3><p>真实物理仿真</p>';
+                    break;
+                    
+                case 'auth_failed':
+                    updateStatus("error", "认证失败");
+                    break;
+                    
+                case 'state':
+                    if (data.data) {
+                        updateRobotState(data.data);
+                    }
+                    break;
+                    
+                case 'reset_done':
+                    console.log("已重置");
+                    break;
             }
-            
-            world.step(1/240);
-            
-            state.x = robotBody.position.x;
-            state.y = robotBody.position.y;
-            state.z = robotBody.position.z;
-            state.vx = robotBody.velocity.x;
-            state.vz = robotBody.velocity.z;
-            
-            // Render
-            robot.position.set(state.x, state.y, state.z);
-            robot.rotation.y = state.yaw;
-            
-            camera.position.x += (state.x + 3 - camera.position.x) * 0.05;
-            camera.position.z += (state.z + 3 - camera.position.z) * 0.05;
-            camera.lookAt(state.x, state.y + 0.2, state.z);
-            
-            renderer.render(scene, camera);
-            
-            // UI
-            document.getElementById('posX').textContent = state.x.toFixed(2);
-            document.getElementById('posY').textContent = state.y.toFixed(2);
-            document.getElementById('vel').textContent = Math.sqrt(state.vx**2 + state.vz**2).toFixed(2);
         }
         
-        function updateBtn(id, active) {
-            const btn = document.getElementById(id);
-            if (active) btn.classList.add('active');
-            else btn.classList.remove('active');
+        function updateStatus(status, text) {
+            const el = document.getElementById('connStatus');
+            el.textContent = text;
+            el.className = 'value' + (status === 'connected' ? '' : status === 'error' ? ' error' : '');
         }
         
-        // Direction buttons
-        const dpad = {
-            btnUp: () => { control.forward = 1; updateBtn('btnUp', true); },
-            btnDown: () => { control.forward = -1; updateBtn('btnDown', true); },
-            btnLeft: () => { control.yaw = 1; updateBtn('btnLeft', true); },
-            btnRight: () => { control.yaw = -1; updateBtn('btnRight', true); },
-            end: () => { control.forward = 0; control.yaw = 0; ['btnUp','btnDown','btnLeft','btnRight'].forEach(id => updateBtn(id, false)); }
-        };
+        function updateRobotState(state) {
+            if (state.position) {
+                document.getElementById('posX').textContent = state.position[0].toFixed(2);
+                document.getElementById('posY').textContent = state.position[1].toFixed(2);
+                document.getElementById('posZ').textContent = state.position[2].toFixed(2);
+            }
+            if (state.velocity) {
+                const v = Math.sqrt(state.velocity[0]**2 + state.velocity[2]**2);
+                document.getElementById('velocity').textContent = v.toFixed(2);
+            }
+        }
         
+        function sendAction() {
+            if (!ws || !authenticated) return;
+            
+            ws.send(JSON.stringify({
+                type: 'action',
+                action: controlState
+            }));
+        }
+        
+        // 方向控制
+        function setDirection(forward, yaw) {
+            controlState.forward = forward;
+            controlState.yaw = yaw;
+            sendAction();
+            
+            // 更新按钮状态
+            document.getElementById('btnUp').classList.toggle('active', forward > 0);
+            document.getElementById('btnDown').classList.toggle('active', forward < 0);
+            document.getElementById('btnLeft').classList.toggle('active', yaw > 0);
+            document.getElementById('btnRight').classList.toggle('active', yaw < 0);
+        }
+        
+        // 按钮事件
+        document.getElementById('btnUp').addEventListener('mousedown', () => setDirection(1, 0));
+        document.getElementById('btnUp').addEventListener('mouseup', () => setDirection(0, 0));
+        document.getElementById('btnUp').addEventListener('mouseleave', () => setDirection(0, 0));
+        
+        document.getElementById('btnDown').addEventListener('mousedown', () => setDirection(-1, 0));
+        document.getElementById('btnDown').addEventListener('mouseup', () => setDirection(0, 0));
+        document.getElementById('btnDown').addEventListener('mouseleave', () => setDirection(0, 0));
+        
+        document.getElementById('btnLeft').addEventListener('mousedown', () => setDirection(0, 1));
+        document.getElementById('btnLeft').addEventListener('mouseup', () => setDirection(0, 0));
+        document.getElementById('btnLeft').addEventListener('mouseleave', () => setDirection(0, 0));
+        
+        document.getElementById('btnRight').addEventListener('mousedown', () => setDirection(0, -1));
+        document.getElementById('btnRight').addEventListener('mouseup', () => setDirection(0, 0));
+        document.getElementById('btnRight').addEventListener('mouseleave', () => setDirection(0, 0));
+        
+        // 触摸支持
         ['Up','Down','Left','Right'].forEach(dir => {
             const btn = document.getElementById('btn' + dir);
-            btn.addEventListener('mousedown', dpad['btn' + dir]);
-            btn.addEventListener('mouseup', dpad.end);
-            btn.addEventListener('mouseleave', dpad.end);
-            btn.addEventListener('touchstart', e => { e.preventDefault(); dpad['btn' + dir](); });
-            btn.addEventListener('touchend', dpad.end);
+            btn.addEventListener('touchstart', e => { e.preventDefault(); 
+                if(dir==='Up') setDirection(1,0);
+                if(dir==='Down') setDirection(-1,0);
+                if(dir==='Left') setDirection(0,1);
+                if(dir==='Right') setDirection(0,-1);
+            });
+            btn.addEventListener('touchend', e => { e.preventDefault(); setDirection(0,0); });
         });
         
-        // Action buttons
-        document.getElementById('btnStand').addEventListener('click', () => { state.sitting = false; document.getElementById('curMode').textContent = 'STAND'; document.getElementById('mode').textContent = 'STAND'; });
-        document.getElementById('btnSit').addEventListener('click', () => { state.sitting = true; document.getElementById('curMode').textContent = 'SIT'; document.getElementById('mode').textContent = 'SIT'; });
-        document.getElementById('btnJump').addEventListener('click', () => { if (!state.sitting) state.jumping = true; });
-        document.getElementById('btnStop').addEventListener('click', () => { robotBody.velocity.set(0,0,0); robotBody.angularVelocity.set(0,0,0); control = {forward:0,lateral:0,yaw:0}; dpad.end(); });
+        // 动作按钮
+        document.getElementById('btnJump').addEventListener('click', () => {
+            if (!ws || !authenticated) return;
+            ws.send(JSON.stringify({ type: 'action', action: { jump: true } }));
+        });
         
-        // Height slider
-        document.getElementById('heightSlider').addEventListener('input', e => { state.h = parseFloat(e.target.value); document.getElementById('heightVal').textContent = state.h.toFixed(2) + 'm'; });
+        document.getElementById('btnStop').addEventListener('click', () => {
+            setDirection(0, 0);
+            controlState.height = 0.3;
+            if (!ws || !authenticated) return;
+            ws.send(JSON.stringify({ type: 'reset' }));
+        });
         
-        // Keyboard
+        // 高度滑块
+        document.getElementById('heightSlider').addEventListener('input', e => {
+            controlState.height = parseFloat(e.target.value);
+            document.getElementById('heightVal').textContent = controlState.height.toFixed(2) + 'm';
+            sendAction();
+        });
+        
+        // 模式按钮
+        document.querySelectorAll('.mode-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                document.getElementById('mode').textContent = btn.dataset.mode.toUpperCase();
+            });
+        });
+        
+        // 键盘控制
+        const keys = {};
         document.addEventListener('keydown', e => {
-            const k = e.key.toLowerCase();
-            if (k === 'w') { control.forward = 1; updateBtn('btnUp', true); }
-            if (k === 's') { control.forward = -1; updateBtn('btnDown', true); }
-            if (k === 'a') { control.yaw = 1; updateBtn('btnLeft', true); }
-            if (k === 'd') { control.yaw = -1; updateBtn('btnRight', true); }
-            if (k === ' ') { if (!state.sitting) state.jumping = true; }
-            if (k === 'escape') document.getElementById('btnStop').click();
+            keys[e.key.toLowerCase()] = true;
+            updateKeyboard();
         });
         document.addEventListener('keyup', e => {
-            const k = e.key.toLowerCase();
-            if (k === 'w' || k === 's') control.forward = 0;
-            if (k === 'a' || k === 'd') control.yaw = 0;
-            dpad.end();
+            keys[e.key.toLowerCase()] = false;
+            updateKeyboard();
         });
         
-        // Battery
-        setInterval(() => document.getElementById('battery').textContent = (97 + Math.floor(Math.random() * 2)) + '%', 5000);
+        function updateKeyboard() {
+            const forward = (keys['w'] ? 1 : 0) - (keys['s'] ? 1 : 0);
+            const yaw = (keys['arrowright'] ? 1 : 0) - (keys['arrowleft'] ? 1 : 0);
+            if (forward !== controlState.forward || yaw !== controlState.yaw) {
+                setDirection(forward, yaw);
+            }
+            if (keys[' ']) {
+                document.getElementById('btnJump').click();
+            }
+            if (keys['escape']) {
+                document.getElementById('btnStop').click();
+            }
+        }
         
-        init();
+        // 启动连接
+        connect();
     </script>
 </body>
 </html>
