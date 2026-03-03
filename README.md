@@ -2,7 +2,7 @@
 
 ![ROS2](https://img.shields.io/badge/ROS2-Humble-green)
 ![Python](https://img.shields.io/badge/Python-3.10+-blue)
-![Docker](https://img.shields.io/badge/Docker-Ready-blue)
+![PyBullet](https://img.shields.io/badge/PyBullet-Ready-green)
 
 ---
 
@@ -33,7 +33,7 @@
 | 💻 **Python编程** | Python基础、ROS2 API、节点开发 |
 | 👁️ **传感器** | 激光雷达、相机、里程计 |
 | 🔄 **闭环控制** | 反馈控制、避障逻辑 |
-| 🖥️ **仿真** | Turtlesim、Gazebo、Docker |
+| 🖥️ **仿真** | PyBullet（网页3D） |
 
 > 💡 **课程目标**：让你对机器人领域有**全面认识**，找到自己感兴趣的方向，为后续深入学习打下基础！
 
@@ -204,7 +204,7 @@
 
 | 周次 | 主题 | 第一次课 | 第二次课 |
 |------|------|---------|---------|
-| **第1周** | 课程介绍与仿真环境搭建 | 机器人与AI的前世今生（1.5h） | Docker与仿真环境实战（1.5h） |
+| **第1周** | 课程介绍与仿真环境搭建 | 机器人与AI的前世今生（1.5h） | PyBullet网页仿真（1.5h） |
 | **第2周** | ROS2通信机制基础 | 节点与话题初体验（1.5h） | 让机器人画个圆（1.5h） |
 | **第3周** | Python编程与机器人控制 | 第一个Python机器人程序（1.5h） | 机器人走正方形（1.5h） |
 
@@ -354,8 +354,8 @@ Level 4 🌲 综合项目（13-15周）
 
 ### 🌐 官方文档
 - [ROS2官方文档 (Humble)](https://docs.ros.org/en/humble/)
-- [Turtlesim官方教程](https://docs.ros.org/en/humble/Tutorials/Beginner-CLI-Tools/Introducing-Turtlesim/Introducing-Turtlesim.html)
-- [Docker官方文档](https://docs.docker.com/)
+
+
 
 ### 🛠️ 开发工具
 - VS Code - 代码编辑器
@@ -375,7 +375,7 @@ Level 4 🌲 综合项目（13-15周）
 | 网络 | 稳定连接 | 稳定连接 |
 
 ### 软件环境
-- Docker Desktop
+- PyBullet (浏览器运行)
 - VS Code
 - 浏览器（Chrome推荐）
 
@@ -384,7 +384,7 @@ Level 4 🌲 综合项目（13-15周）
 ## 常见问题
 
 ### Q: 没有机器人能学吗？
-**A**: 当然可以！我们使用仿真软件（Turtlesim、Gazebo），在虚拟环境中学习，效果一样！
+**A**: 当然可以！我们使用PyBullet网页仿真，在浏览器中直接运行，无需安装！
 
 ### Q: 编程基础差怎么办？
 **A**: 课程从零开始，第三周会专门讲解Python基础，边学边练！
@@ -417,7 +417,7 @@ Level 4 🌲 综合项目（13-15周）
 
 | 类型 | 说明 | 示例 |
 |------|------|------|
-| **纯仿真** | 完全在仿真环境中完成 | Gazebo/PyBullet仿真项目 |
+| **纯仿真** | 完全在仿真环境中完成 | PyBullet网页仿真项目 |
 | **纯软件** | 纯算法/代码，无实体 | 视觉识别算法、运动规划 |
 | **硬件结合** | 结合ROS小车等硬件 | 实体机器人控制 |
 | **3D打印** | 3D打印零件组装机器人 | 自定义机械臂、夹爪 |
