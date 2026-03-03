@@ -2,212 +2,154 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>机器狗仿真 - PyBullet Physics</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>机器狗仿真 - PyBullet</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Segoe UI', Arial, sans-serif; background: linear-gradient(180deg, #1a1a2e 0%, #0f0f1a 100%); min-height: 100vh; color: #fff; touch-action: none; }
+        body { font-family: Arial, sans-serif; background: #1a1a2e; color: #fff; overflow: hidden; }
         
-        .header { background: linear-gradient(90deg, #00d4ff 0%, #7b2ff7 100%); padding: 15px 30px; display: flex; justify-content: space-between; align-items: center; }
-        .header h1 { font-size: 20px; }
-        .status-dot { width: 10px; height: 10px; border-radius: 50%; background: #00ff88; animation: pulse 2s infinite; }
+        .container { display: flex; height: 100vh; }
         
-        .container { display: flex; padding: 10px; gap: 10px; max-width: 1400px; margin: 0 auto; flex-wrap: wrap; }
+        .simulation { flex: 1; position: relative; background: #000; }
+        #canvas { width: 100%; height: 100%; display: block; }
         
-        .simulation-panel { flex: 2; min-width: 400px; background: #000; border-radius: 15px; overflow: hidden; position: relative; }
-        #canvas-container { width: 100%; height: 350px; }
-        
-        .robot-info { position: absolute; top: 10px; left: 10px; background: rgba(0,0,0,0.8); padding: 10px; border-radius: 8px; font-family: monospace; font-size: 11px; }
-        .robot-info .label { color: #888; }
-        .robot-info .value { color: #00ff88; }
-        
-        .controller-panel { flex: 1; min-width: 320px; background: linear-gradient(180deg, #2a2a3a 0%, #1a1a2a 100%); border-radius: 15px; padding: 15px; }
-        .controller-title { text-align: center; color: #00d4ff; font-size: 12px; margin-bottom: 10px; letter-spacing: 2px; }
-        
-        .controller-screen { background: #000; border-radius: 8px; padding: 10px; margin-bottom: 15px; }
-        .screen-line { display: flex; justify-content: space-between; font-family: monospace; font-size: 11px; margin: 5px 0; }
-        .screen-line .label { color: #666; }
-        .screen-line .value { color: #00ff88; }
-        
-        .joystick-area { display: flex; justify-content: space-around; margin: 15px 0; }
-        
-        .joystick-container { 
-            width: 100px; height: 100px; 
-            background: radial-gradient(circle, #1a1a2a 0%, #0a0a1a 100%); 
-            border-radius: 50%; position: relative; 
-            border: 3px solid #444;
-            touch-action: none;
+        .panel { 
+            width: 280px; background: #222; padding: 15px; 
+            display: flex; flex-direction: column; gap: 10px;
+            overflow-y: auto;
         }
-        .joystick-base { 
-            width: 60px; height: 60px; background: #333; 
-            border-radius: 50%; position: absolute; 
-            top: 50%; left: 50%; transform: translate(-50%, -50%); 
+        
+        .title { color: #00d4ff; text-align: center; font-size: 14px; margin-bottom: 5px; }
+        
+        .status { background: #111; padding: 10px; border-radius: 8px; font-family: monospace; font-size: 11px; }
+        .status-row { display: flex; justify-content: space-between; margin: 3px 0; }
+        .status .label { color: #666; }
+        .status .value { color: #00ff88; }
+        
+        .dpad { 
+            display: grid; grid-template-columns: repeat(3, 50px); 
+            grid-template-rows: repeat(3, 50px); gap: 5px; 
+            justify-content: center;
         }
-        .joystick-stick { 
-            width: 40px; height: 40px; 
-            background: linear-gradient(145deg, #00d4ff, #0088aa); 
-            border-radius: 50%; position: absolute; 
-            top: 50%; left: 50%; 
-            transform: translate(-50%, -50%);
-            box-shadow: 0 0 10px rgba(0, 212, 255, 0.5);
+        
+        .btn {
+            width: 50px; height: 50px; border-radius: 10px;
+            border: none; font-size: 20px; cursor: pointer;
+            background: #333; color: #fff;
+            user-select: none; -webkit-user-select: none;
         }
-        .joystick-label { text-align: center; margin-top: 8px; font-size: 11px; color: #888; }
+        .btn:active, .btn.active { background: #00d4ff; color: #000; }
         
-        .joystick-container-right { width: 80px; height: 80px; }
-        .joystick-stick-right { width: 30px; height: 30px; background: linear-gradient(145deg, #ff6b6b, #cc4444); }
+        .btn-up { grid-column: 2; grid-row: 1; }
+        .btn-left { grid-column: 1; grid-row: 2; }
+        .btn-right { grid-column: 3; grid-row: 2; }
+        .btn-down { grid-column: 2; grid-row: 3; }
         
-        .button-row { display: flex; justify-content: center; gap: 10px; margin: 10px 0; flex-wrap: wrap; }
-        .ctrl-btn { 
-            width: 55px; height: 55px; border-radius: 12px; border: none; cursor: pointer; 
-            font-size: 10px; font-weight: bold; color: #            display: flexfff; 
-; flex-direction: column; align-items: center; justify-content: center; gap: 3px;
+        .action-btns { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+        
+        .action-btn {
+            padding: 12px 20px; border-radius: 8px; border: none;
+            font-size: 12px; font-weight: bold; cursor: pointer;
+            color: #fff; flex: 1;
         }
-        .ctrl-btn:active { transform: scale(0.95); }
-        .ctrl-btn.emergency { width: 65px; height: 65px; border-radius: 50%; background: linear-gradient(145deg, #ff4444, #cc0000); }
-        .ctrl-btn.jump { background: linear-gradient(145deg, #ffaa00, #cc8800); }
-        .ctrl-btn.stand { background: linear-gradient(145deg, #00ff88, #00cc66); }
-        .ctrl-btn.sit { background: linear-gradient(145deg, #4ecdc4, #3aa8a0); }
+        .btn-jump { background: #ffaa00; }
+        .btn-stop { background: #ff4444; }
+        .btn-stand { background: #00ff88; color: #000; }
+        .btn-sit { background: #4ecdc4; }
         
-        .mode-switch { display: flex; justify-content: center; gap: 8px; margin: 10px 0; flex-wrap: wrap; }
-        .mode-btn { padding: 8px 15px; border: 2px solid #444; background: transparent; color: #666; border-radius: 15px; cursor: pointer; font-size: 11px; }
-        .mode-btn.active { border-color: #00d4ff; background: rgba(0, 212, 255, 0.2); color: #00d4ff; }
-        
-        .body-control { margin: 10px 0; }
-        .slider-group { margin: 8px 0; }
-        .slider-label { display: flex; justify-content: space-between; font-size: 11px; color: #888; }
+        .slider-box { background: #111; padding: 10px; border-radius: 8px; }
+        .slider-label { display: flex; justify-content: space-between; font-size: 11px; margin-bottom: 5px; }
         .slider-label .value { color: #00d4ff; }
-        input[type="range"] { width: 100%; height: 6px; -webkit-appearance: none; background: #1a1a2a; border-radius: 3px; }
-        input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 16px; height: 16px; background: #00d4ff; border-radius: 50%; cursor: pointer; }
         
-        .keyboard-hint { text-align: center; padding: 8px; background: rgba(0,0,0,0.3); border-radius: 6px; font-size: 10px; color: #666; margin-top: 10px; }
-        .back-link { display: block; text-align: center; padding: 15px; color: #00d4ff; text-decoration: none; }
+        .hint { 
+            background: #111; padding: 10px; border-radius: 8px; 
+            font-size: 10px; color: #666; text-align: center;
+        }
         
-        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+        .back { 
+            display: block; text-align: center; padding: 10px; 
+            color: #00d4ff; text-decoration: none; font-size: 12px;
+        }
     </style>
 </head>
 <body>
-    <div class="header">
-        <h1>🤖 PyBullet 机器狗仿真</h1>
-        <div class="status-dot"></div>
-    </div>
-
     <div class="container">
-        <div class="simulation-panel">
-            <div id="canvas-container">
-                <canvas id="sim-canvas"></canvas>
-            </div>
-            <div class="robot-info">
-                <div><span class="label">X:</span> <span class="value" id="posX">0.00</span></div>
-                <div><span class="label">Y:</span> <span class="value" id="posY">0.00</span></div>
-                <div><span class="label">速度:</span> <span class="value" id="vel">0.00</span></div>
-                <div><span class="label">模式:</span> <span class="value" id="mode">STAND</span></div>
+        <div class="simulation">
+            <canvas id="canvas"></canvas>
+            <div class="status" style="position:absolute; top:10px; left:10px;">
+                <div class="status-row"><span class="label">X:</span><span class="value" id="posX">0.00</span></div>
+                <div class="status-row"><span class="label">Y:</span><span class="value" id="posY">0.00</span></div>
+                <div class="status-row"><span class="label">速度:</span><span class="value" id="vel">0.00</span></div>
+                <div class="status-row"><span class="label">模式:</span><span class="value" id="mode">STAND</span></div>
             </div>
         </div>
-
-        <div class="controller-panel">
-            <div class="controller-title">UNITREE 遥控器</div>
+        
+        <div class="panel">
+            <div class="title">🤖 机器狗遥控器</div>
             
-            <div class="controller-screen">
-                <div class="screen-line"><span class="label">电量</span><span class="value" id="battery">98%</span></div>
-                <div class="screen-line"><span class="label">模式</span><span class="value" id="currentMode">STAND</span></div>
-            </div>
-            
-            <div class="mode-switch">
-                <button class="mode-btn active" data-mode="walk">低速</button>
-                <button class="mode-btn" data-mode="trot">Trot</button>
-                <button class="mode-btn" data-mode="run">奔跑</button>
+            <div class="status">
+                <div class="status-row"><span class="label">电量</span><span class="value" id="battery">98%</span></div>
+                <div class="status-row"><span class="label">模式</span><span class="value" id="curMode">STAND</span></div>
             </div>
             
-            <div class="joystick-area">
-                <div>
-                    <div class="joystick-container" id="leftJoystick">
-                        <div class="joystick-base"></div>
-                        <div class="joystick-stick" id="leftStick"></div>
-                    </div>
-                    <div class="joystick-label">移动</div>
-                </div>
-                <div>
-                    <div class="joystick-container joystick-container-right" id="rightJoystick">
-                        <div class="joystick-base"></div>
-                        <div class="joystick-stick joystick-stick-right" id="rightStick"></div>
-                    </div>
-                    <div class="joystick-label">转向</div>
-                </div>
+            <div class="dpad">
+                <button class="btn btn-up" id="btnUp">▲</button>
+                <button class="btn btn-left" id="btnLeft">◀</button>
+                <button class="btn btn-right" id="btnRight">▶</button>
+                <button class="btn btn-down" id="btnDown">▼</button>
             </div>
             
-            <div class="button-row">
-                <button class="ctrl-btn stand" id="btnStand">🧍站立</button>
-                <button class="ctrl-btn sit" id="btnSit">🪑坐下</button>
+            <div class="action-btns">
+                <button class="action-btn btn-stand" id="btnStand">站立</button>
+                <button class="action-btn btn-sit" id="btnSit">坐下</button>
             </div>
-            <div class="button-row">
-                <button class="ctrl-btn jump" id="btnJump">🦘跳跃</button>
-                <button class="ctrl-btn emergency" id="btnStop">🛑停止</button>
-            </div>
-            
-            <div class="body-control">
-                <div class="slider-group">
-                    <div class="slider-label"><span>高度</span><span class="value" id="heightValue">0.30m</span></div>
-                    <input type="range" min="0.2" max="0.5" step="0.01" value="0.3" id="heightSlider">
-                </div>
+            <div class="action-btns">
+                <button class="action-btn btn-jump" id="btnJump">跳跃</button>
+                <button class="action-btn btn-stop" id="btnStop">停止</button>
             </div>
             
-            <div class="keyboard-hint">
-                键盘: W/A/S/D 移动 | 空格 跳跃 | Esc 停止
+            <div class="slider-box">
+                <div class="slider-label"><span>身体高度</span><span class="value" id="heightVal">0.30m</span></div>
+                <input type="range" min="0.2" max="0.5" step="0.01" value="0.3" id="heightSlider" style="width:100%">
             </div>
+            
+            <div class="hint">键盘: W/A/S/D 移动 | 空格 跳跃 | Esc 停止</div>
+            
+            <a href="/" class="back">← 返回首页</a>
         </div>
     </div>
-
-    <a href="/" class="back-link">← 返回课程首页</a>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/cannon.js/0.6.2/cannon.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    
     <script>
-        // Physics
-        let world, robotBody, groundBody;
-        let scene, camera, renderer;
+        let world, robotBody, scene, camera, renderer, robot;
+        const control = { forward: 0, lateral: 0, yaw: 0 };
+        const state = { x: 0, y: 0.35, z: 0, vx: 0, vz: 0, yaw: 0, jumping: false, sitting: false, h: 0.3 };
         
-        const physicsState = { gravity: -9.81, timeStep: 1/240 };
-        const controlState = { forward: 0, lateral: 0, yaw: 0 };
-        const robotState = { x: 0, y: 0.35, z: 0, vx: 0, vz: 0, yaw: 0 };
-        let targetHeight = 0.3, isJumping = false, isSitting = false, walkCycle = 0;
-        
-        function initPhysics() {
+        function init() {
+            // Physics
             world = new CANNON.World();
-            world.gravity.set(0, physicsState.gravity, 0);
-            
-            const groundShape = new CANNON.Plane();
-            groundBody = new CANNON.Body({ mass: 0 });
-            groundBody.addShape(groundShape);
-            groundBody.quaternion.setFromAxisAngle(new CANNON.Vec3(1, 0, 0), -Math.PI/2);
-            world.addBody(groundBody);
-            
-            const robotShape = new CANNON.Box(new CANNON.Vec3(0.2, 0.1, 0.15));
+            world.gravity.set(0, -9.81, 0);
+            world.addBody(new CANNON.Body({ mass: 0, shape: new CANNON.Plane() }). quaternion.setFromAxisAngle(new CANNON.Vec3(1,0,0), -Math.PI/2));
             robotBody = new CANNON.Body({ mass: 5, position: new CANNON.Vec3(0, 0.35, 0), linearDamping: 0.5, angularDamping: 0.5 });
-            robotBody.addShape(robotShape);
+            robotBody.addShape(new CANNON.Box(new CANNON.Vec3(0.2, 0.1, 0.15)));
             world.addBody(robotBody);
-        }
-        
-        function init3D() {
-            const container = document.getElementById('canvas-container');
-            const canvas = document.getElementById('sim-canvas');
             
+            // 3D
             scene = new THREE.Scene();
             scene.background = new THREE.Color(0x1a1a2e);
-            
-            camera = new THREE.PerspectiveCamera(60, container.clientWidth / container.clientHeight, 0.1, 1000);
+            const canvas = document.getElementById('canvas');
+            camera = new THREE.PerspectiveCamera(60, canvas.clientWidth / canvas.clientHeight, 0.1, 1000);
             camera.position.set(3, 2.5, 3);
-            camera.lookAt(0, 0, 0);
-            
             renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
-            renderer.setSize(container.clientWidth, container.clientHeight);
+            renderer.setSize(canvas.clientWidth, canvas.clientHeight);
             renderer.shadowMap.enabled = true;
             
             scene.add(new THREE.AmbientLight(0x404040, 0.6));
-            const dirLight = new THREE.DirectionalLight(0xffffff, 1);
-            dirLight.position.set(10, 20, 10);
-            dirLight.castShadow = true;
-            scene.add(dirLight);
+            const light = new THREE.DirectionalLight(0xffffff, 1);
+            light.position.set(10, 20, 10);
+            light.castShadow = true;
+            scene.add(light);
             
             const ground = new THREE.Mesh(new THREE.PlaneGeometry(20, 20), new THREE.MeshStandardMaterial({ color: 0x222233 }));
             ground.rotation.x = -Math.PI/2;
@@ -215,161 +157,116 @@
             scene.add(ground);
             scene.add(new THREE.GridHelper(20, 20, 0x00d4ff, 0x333355));
             
-            createRobot();
-        }
-        
-        function createRobot() {
+            // Robot
             robot = new THREE.Group();
-            
-            const bodyMat = new THREE.MeshStandardMaterial({ color: 0x00d4ff, metalness: 0.3 });
-            const body = new THREE.Mesh(new THREE.BoxGeometry(0.4, 0.2, 0.3), bodyMat);
-            body.position.y = 0;
-            body.castShadow = true;
-            robot.add(body);
-            
-            const head = new THREE.Mesh(new THREE.BoxGeometry(0.15, 0.12, 0.18), bodyMat);
-            head.position.set(0.28, 0.08, 0);
-            robot.add(head);
-            
-            const eyeMat = new THREE.MeshBasicMaterial({ color: 0xff0000 });
-            robot.add(new THREE.Mesh(new THREE.SphereGeometry(0.025, 8, 8), eyeMat).translateXYZ(0.35, 0.1, 0.05));
-            robot.add(new THREE.Mesh(new THREE.SphereGeometry(0.025, 8, 8), eyeMat).translateXYZ(0.35, 0.1, -0.05));
-            
-            const legMat = new THREE.MeshStandardMaterial({ color: 0x0088aa, metalness: 0.5 });
-            const legGeo = new THREE.BoxGeometry(0.06, 0.18, 0.06);
-            [[0.18, 0.12], [0.18, -0.12], [-0.18, 0.12], [-0.18, -0.12]].forEach((pos, i) => {
-                const leg = new THREE.Mesh(legGeo, legMat);
-                leg.position.set(pos[0], -0.1, pos[1]);
-                robot.add(leg);
+            const mat = new THREE.MeshStandardMaterial({ color: 0x00d4ff, metalness: 0.3 });
+            robot.add(new THREE.Mesh(new THREE.BoxGeometry(0.4, 0.2, 0.3), mat));
+            robot.add(new THREE.Mesh(new THREE.BoxGeometry(0.15, 0.12, 0.18), mat).translateXYZ(0.28, 0.08, 0));
+            robot.add(new THREE.Mesh(new THREE.SphereGeometry(0.025, 8, 8), new THREE.MeshBasicMaterial({ color: 0xff0000 })).translateXYZ(0.35, 0.1, 0.05));
+            robot.add(new THREE.Mesh(new THREE.SphereGeometry(0.025, 8, 8), new THREE.MeshBasicMaterial({ color: 0xff0000 })).translateXYZ(0.35, 0.1, -0.05));
+            const legMat = new THREE.MeshStandardMaterial({ color: 0x0088aa });
+            [[0.18, 0.12], [0.18, -0.12], [-0.18, 0.12], [-0.18, -0.12]].forEach(p => {
+                robot.add(new THREE.Mesh(new THREE.BoxGeometry(0.06, 0.18, 0.06), legMat).translateXYZ(p[0], -0.1, p[1]));
             });
-            
             scene.add(robot);
+            
+            animate();
         }
         
-        function updatePhysics() {
-            const speed = 3.0, turnSpeed = 2.0;
-            const cos = Math.cos(robotState.yaw), sin = Math.sin(robotState.yaw);
+        function animate() {
+            requestAnimationFrame(animate);
             
-            robotBody.velocity.x = controlState.forward * speed * cos - controlState.lateral * speed * sin;
-            robotBody.velocity.z = controlState.forward * speed * sin + controlState.lateral * speed * cos;
-            robotBody.angularVelocity.y = controlState.yaw * turnSpeed;
+            // Physics
+            const speed = 3, turn = 2;
+            const c = Math.cos(state.yaw), s = Math.sin(state.yaw);
+            robotBody.velocity.x = control.forward * speed * c - control.lateral * speed * s;
+            robotBody.velocity.z = control.forward * speed * s + control.lateral * speed * c;
+            robotBody.angularVelocity.y = control.yaw * turn;
             
-            if (isJumping && robotBody.position.y < 0.5) { robotBody.velocity.y = 5; isJumping = false; }
-            
-            if (!isJumping) {
-                const targetY = isSitting ? 0.2 : targetHeight;
-                robotBody.velocity.y = (targetY - robotBody.position.y) * 50;
+            if (state.jumping && robotBody.position.y < 0.5) { robotBody.velocity.y = 5; state.jumping = false; }
+            if (!state.jumping) {
+                const target = state.sitting ? 0.2 : state.h;
+                robotBody.velocity.y = (target - robotBody.position.y) * 50;
             }
             
-            world.step(physicsState.timeStep);
+            world.step(1/240);
             
-            robotState.x = robotBody.position.x;
-            robotState.y = robotBody.position.y;
-            robotState.z = robotBody.position.z;
-            robotState.vx = robotBody.velocity.x;
-            robotState.vz = robotBody.velocity.z;
+            state.x = robotBody.position.x;
+            state.y = robotBody.position.y;
+            state.z = robotBody.position.z;
+            state.vx = robotBody.velocity.x;
+            state.vz = robotBody.velocity.z;
             
-            const euler = new THREE.Euler().setFromQuaternion(new THREE.Quaternion(robotBody.quaternion.x, robotBody.quaternion.y, robotBody.quaternion.z, robotBody.quaternion.w));
-            robotState.yaw = euler.y;
-        }
-        
-        function updateVisuals() {
-            robot.position.set(robotState.x, robotState.y, robotState.z);
-            robot.rotation.y = robotState.yaw;
+            // Render
+            robot.position.set(state.x, state.y, state.z);
+            robot.rotation.y = state.yaw;
             
-            const speed = Math.sqrt(robotState.vx**2 + robotState.vz**2);
-            if (speed > 0.1 || Math.abs(controlState.yaw) > 0.1) {
-                walkCycle += speed * 0.5;
-                robot.children.forEach((c, i) => { if (i >= 4 && i < 8) c.position.y = -0.1 + Math.sin(walkCycle + i) * 0.03; });
-            }
-            
-            camera.position.x += (robotState.x + 3 - camera.position.x) * 0.05;
-            camera.position.z += (robotState.z + 3 - camera.position.z) * 0.05;
-            camera.lookAt(robotState.x, robotState.y + 0.2, robotState.z);
+            camera.position.x += (state.x + 3 - camera.position.x) * 0.05;
+            camera.position.z += (state.z + 3 - camera.position.z) * 0.05;
+            camera.lookAt(state.x, state.y + 0.2, state.z);
             
             renderer.render(scene, camera);
             
-            document.getElementById('posX').textContent = robotState.x.toFixed(2);
-            document.getElementById('posY').textContent = robotState.y.toFixed(2);
-            document.getElementById('vel').textContent = Math.sqrt(robotState.vx**2 + robotState.vz**2).toFixed(2);
+            // UI
+            document.getElementById('posX').textContent = state.x.toFixed(2);
+            document.getElementById('posY').textContent = state.y.toFixed(2);
+            document.getElementById('vel').textContent = Math.sqrt(state.vx**2 + state.vz**2).toFixed(2);
         }
         
-        function animate() { requestAnimationFrame(animate); updatePhysics(); updateVisuals(); }
-        
-        function setMode(m) { isSitting = (m === 'sit'); document.getElementById('currentMode').textContent = m.toUpperCase(); document.getElementById('mode').textContent = m.toUpperCase(); }
-        function doJump() { if (!isJumping && !isSitting) isJumping = true; }
-        function doStop() { robotBody.velocity.set(0, 0, 0); robotBody.angularVelocity.set(0, 0, 0); controlState = { forward: 0, lateral: 0, yaw: 0 }; }
-        
-        // ========== JOYSTICK FIX ==========
-        function setupJoystick(joystickId, stickId, callback) {
-            const joystick = document.getElementById(joystickId);
-            const stick = document.getElementById(stickId);
-            const rect = () => joystick.getBoundingClientRect();
-            const maxDist = 25;
-            
-            function updateStick(x, y) {
-                const r = rect();
-                const cx = r.width / 2, cy = r.height / 2;
-                const dx = Math.max(-1, Math.min(1, (x - r.left - cx) / maxDist));
-                const dy = Math.max(-1, Math.min(1, (y - r.top - cy) / maxDist));
-                stick.style.transform = `translate(calc(-50% + ${dx * maxDist}px), calc(-50% + ${dy * maxDist}px))`;
-                callback(dx, dy);
-            }
-            
-            function reset() { stick.style.transform = 'translate(-50%, -50%)'; callback(0, 0); }
-            
-            // Mouse events
-            joystick.addEventListener('mousedown', e => { e.preventDefault(); updateStick(e.clientX, e.clientY); });
-            document.addEventListener('mousemove', e => { if (e.buttons === 1) updateStick(e.clientX, e.clientY); });
-            document.addEventListener('mouseup', reset);
-            
-            // Touch events
-            joystick.addEventListener('touchstart', e => { e.preventDefault(); updateStick(e.touches[0].clientX, e.touches[0].clientY); });
-            joystick.addEventListener('touchmove', e => { e.preventDefault(); updateStick(e.touches[0].clientX, e.touches[0].clientY); });
-            joystick.addEventListener('touchend', reset);
+        function updateBtn(id, active) {
+            const btn = document.getElementById(id);
+            if (active) btn.classList.add('active');
+            else btn.classList.remove('active');
         }
         
-        setupJoystick('leftJoystick', 'leftStick', (x, y) => { controlState.forward = -y; controlState.lateral = x; });
-        setupJoystick('rightJoystick', 'rightStick', (x, y) => { controlState.yaw = -x; });
+        // Direction buttons
+        const dpad = {
+            btnUp: () => { control.forward = 1; updateBtn('btnUp', true); },
+            btnDown: () => { control.forward = -1; updateBtn('btnDown', true); },
+            btnLeft: () => { control.yaw = 1; updateBtn('btnLeft', true); },
+            btnRight: () => { control.yaw = -1; updateBtn('btnRight', true); },
+            end: () => { control.forward = 0; control.yaw = 0; ['btnUp','btnDown','btnLeft','btnRight'].forEach(id => updateBtn(id, false)); }
+        };
         
-        // Button events
-        document.getElementById('btnStand').addEventListener('click', () => setMode('stand'));
-        document.getElementById('btnSit').addEventListener('click', () => setMode('sit'));
-        document.getElementById('btnJump').addEventListener('click', doJump);
-        document.getElementById('btnStop').addEventListener('click', doStop);
-        
-        // Height slider
-        document.getElementById('heightSlider').addEventListener('input', e => {
-            targetHeight = parseFloat(e.target.value);
-            document.getElementById('heightValue').textContent = targetHeight.toFixed(2) + 'm';
+        ['Up','Down','Left','Right'].forEach(dir => {
+            const btn = document.getElementById('btn' + dir);
+            btn.addEventListener('mousedown', dpad['btn' + dir]);
+            btn.addEventListener('mouseup', dpad.end);
+            btn.addEventListener('mouseleave', dpad.end);
+            btn.addEventListener('touchstart', e => { e.preventDefault(); dpad['btn' + dir](); });
+            btn.addEventListener('touchend', dpad.end);
         });
         
+        // Action buttons
+        document.getElementById('btnStand').addEventListener('click', () => { state.sitting = false; document.getElementById('curMode').textContent = 'STAND'; document.getElementById('mode').textContent = 'STAND'; });
+        document.getElementById('btnSit').addEventListener('click', () => { state.sitting = true; document.getElementById('curMode').textContent = 'SIT'; document.getElementById('mode').textContent = 'SIT'; });
+        document.getElementById('btnJump').addEventListener('click', () => { if (!state.sitting) state.jumping = true; });
+        document.getElementById('btnStop').addEventListener('click', () => { robotBody.velocity.set(0,0,0); robotBody.angularVelocity.set(0,0,0); control = {forward:0,lateral:0,yaw:0}; dpad.end(); });
+        
+        // Height slider
+        document.getElementById('heightSlider').addEventListener('input', e => { state.h = parseFloat(e.target.value); document.getElementById('heightVal').textContent = state.h.toFixed(2) + 'm'; });
+        
         // Keyboard
-        const keys = {};
-        document.addEventListener('keydown', e => { keys[e.key.toLowerCase()] = true; updateKbd(); });
-        document.addEventListener('keyup', e => { keys[e.key.toLowerCase()] = false; updateKbd(); });
-        function updateKbd() {
-            controlState.forward = (keys['w'] ? 1 : 0) - (keys['s'] ? 1 : 0);
-            controlState.lateral = (keys['d'] ? 1 : 0) - (keys['a'] ? 1 : 0);
-            controlState.yaw = (keys['arrowright'] ? 1 : 0) - (keys['arrowleft'] ? 1 : 0);
-            if (keys[' ']) doJump();
-            if (keys['escape']) doStop();
-        }
-        
-        // Mode buttons
-        document.querySelectorAll('.mode-btn').forEach(b => b.addEventListener('click', () => {
-            document.querySelectorAll('.mode-btn').forEach(x => x.classList.remove('active'));
-            b.classList.add('active');
-            setMode(b.dataset.mode);
-        }));
-        
-        // Init
-        initPhysics();
-        init3D();
-        animate();
+        document.addEventListener('keydown', e => {
+            const k = e.key.toLowerCase();
+            if (k === 'w') { control.forward = 1; updateBtn('btnUp', true); }
+            if (k === 's') { control.forward = -1; updateBtn('btnDown', true); }
+            if (k === 'a') { control.yaw = 1; updateBtn('btnLeft', true); }
+            if (k === 'd') { control.yaw = -1; updateBtn('btnRight', true); }
+            if (k === ' ') { if (!state.sitting) state.jumping = true; }
+            if (k === 'escape') document.getElementById('btnStop').click();
+        });
+        document.addEventListener('keyup', e => {
+            const k = e.key.toLowerCase();
+            if (k === 'w' || k === 's') control.forward = 0;
+            if (k === 'a' || k === 'd') control.yaw = 0;
+            dpad.end();
+        });
         
         // Battery
         setInterval(() => document.getElementById('battery').textContent = (97 + Math.floor(Math.random() * 2)) + '%', 5000);
+        
+        init();
     </script>
 </body>
 </html>
