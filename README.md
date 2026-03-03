@@ -84,7 +84,15 @@
 #### 联系信息
 
 - 📧 邮箱: z_ruinan@hotmail.com
-- 💬 Kakao: ![Kakao](images/kakao-qr.jpg)
+
+#### 扫码加入
+
+| | |
+|:---:|:---:|
+| ![课程讲义](images/course-qr.png) | ![Kakao群聊](images/kakao-chat.jpg) |
+| **课程讲义** | **Kakao群聊** |
+
+> 📱 **提示**: 请使用**相机扫码**（微信扫码可能无法打开链接）
 
 ---
 
