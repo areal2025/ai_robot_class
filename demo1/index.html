@@ -206,7 +206,7 @@
             scene.add(ground);
             
             // 网格
-            const grid = new THREE.GridHelper(20, 20, 0x2a2a3a, 0x333355);
+            const grid = new THREE.GridHelper(20, 20, 0xff6600, 0x333355);
             grid.position.y = 0.01;
             scene.add(grid);
             
@@ -218,7 +218,7 @@
             robot = new THREE.Group();
             
             // 身体
-            const bodyMat = new THREE.MeshStandardMaterial({ color: 0x2a2a3a, metalness: 0.3, roughness: 0.7 });
+            const bodyMat = new THREE.MeshStandardMaterial({ color: 0xff6600, metalness: 0.3, roughness: 0.7 });
             const body = new THREE.Mesh(new THREE.BoxGeometry(0.35, 0.12, 0.18), bodyMat);
             body.position.y = 0;
             body.castShadow = true;
@@ -240,7 +240,7 @@
             robot.add(rightEye);
             
             // 腿部
-            const legMat = new THREE.MeshStandardMaterial({ color: 0x404050, metalness: 0.5, roughness: 0.5 });
+            const legMat = new THREE.MeshStandardMaterial({ color: 0xffaa00, metalness: 0.5, roughness: 0.5 });
             const legGeo = new THREE.BoxGeometry(0.06, 0.18, 0.06);
             const legPositions = [[0.18, 0.12], [0.18, -0.12], [-0.18, 0.12], [-0.18, -0.12]];
             
