@@ -1,115 +1,336 @@
-# AI로봇 교과목 Syllabus
-
----
-
-## 1. 교과목 소개 (Course Introduction)
-
-| 항목 | 내용 |
-|------|------|
-| **교과목명** | AI로봇 (AI Robotics) |
-| **학점** | 3학점 |
-| **수업形態** | 이론 + 실습 |
-| **수업시간** | 주 1회, 3시간/회 (총 15주) |
-| **선수과목** | 없음 (초급 과정) |
-| **교재** | 자체 제작 교재 + 온라인 자료 |
-
-**수업 목표**: AI 어시스턴트를 활용하여 ROS2 로봇을 제어하는 방법을 학습합니다.
-
----
-
-## 2. 교육목표 (Course Objectives)
-
-### (1) 기초 이해
-로봇 공학, AI, ROS2의 기본 개념과 원리를 이해한다.
-
-### (2) 프로그래밍 역량
-Python 프로그래밍 능력을 갖추고 로봇 제어 코드를 작성할 수 있다.
-
-### (3) 시스템 구현
-AI 어시스턴트와 ROS2 로봇을 연동하여 음성/메시지로 로봇을 제어하는 시스템을 구현한다.
-
-### (4) 문제 해결
-실제 로봇 문제에 대해 분석하고 해결책을 설계 및 구현할 수 있다.
-
-### (5) 프로젝트 수행
-팀 프로젝트를 통해 종합적인 로봇 시스템을 설계하고 구현할 수 있다.
-
----
-
-## 3. 연계 직무분야 (Related Job Fields)
-
-| 분야 | 직무 |
-|------|------|
-| 🤖 로봇 엔지니어 | 로봇 개발, 제어, 유지보수 |
-| 👁️ 컴퓨터 비전 엔지니어 | 이미지 처리,物体인식, 시각 navegação |
-| 🧠 AI/ML 엔지니어 | 딥러닝, 강화학습, 자연어 처리 |
-| 🏭 자동화 엔지니어 | 스마트 팩토리, 산업용 로봇 |
-| 🚗 자율주행 엔지니어 | SLAM, 경로 계획, 센서 퓨전 |
-
----
-
-## 4. 수업에 특별히 참고하여야할 사항 (Special Notes)
-
-### ⚠️ 중요 공지
-
-1. **실습 환경**: 개인 노트북 또는 서버 사용 권장
-   - 로봇 학습 과정에서 OS를 다시 설치해야 할 수 있음
-
-2. **GitHub 제출**: 매주 실습 및 과제 코드를 GitHub에 업로드
-   - 본 학기: 공개 저장소 (이후 비공개로 변경 가능)
-
-3. **시험**: 필기 시험 (公式, 개념, 계산)
-   - 양면 A4 용지 2장 지참 가능
-
-4. **팀 프로젝트**:
-   - 2~4인 팀 구성
-   - 제5주选题 및 분담 계획 제출
-   - 제14주 데모 Day
-
-5. **AI 도구 활용**: GitHub Copilot, ChatGPT 등 활용 권장
-
----
-
-## 5. 주별 수업 계획 (Weekly Schedule)
-
-| 주 | 주제 | 내용 |
-|----|------|------|
-| 1 |课程介绍 | 로봇+AI 소개, PyBullet 실습 환경 |
-| 2 | ROS2 기초 | 노드, 토픽, 메시지 |
-| 3 | Python 프로그래밍 | Python 기초, ROS2 Python 라이브러리 |
-| 4 | 운동학 | 좌표계,里程计, 역운동학 |
-| 5 | 센서와感知 | 카메라, 라이다, 센서 데이터 처리 |
-| 6 | 폐루프 제어 | PID 제어, 속도 제어 |
-| 7 | 중간復習 | 전반知識 정리 |
-| 8 | **중간고사** | 필기 (公式/개념/계산) |
-| 9 | 음성 상호작용 | STT/TTS, ROS2 음성 제어 |
-| 10 | 제스처 제어 | 手势 인식 기초 |
-| 11 | 운동 경로 계획 | A* 알고리즘, 내비게이션 |
-| 12 | 시각 인식 | 이미지 처리, 물체 检测 |
-| 13 | 팀 프로젝트 | 프로젝트 디버깅 지도 |
-| 14 | 팀 프로젝트 데모 | 프로젝트 발표 |
-| 15 | **기말고사** | 필기 (公式/개념/계산) |
-
----
-
-## 6. 평가 방식 (Grading)
-
-| 항목 | 비율 | 비고 |
-|------|------|------|
-| 출석 및 과제 | 20% | GitHub 제출 |
-| 중간고사 | 30% | 제8주 |
-| 기말고사 | 30% | 제15주 |
-| 팀 프로젝트 | 20% | 제13-14주 |
-
----
-
-## 7. 참고 사항 (Additional Notes)
-
-- 💡 **AI 도구 활용 적극 권장**
-- 🖥️ **PyBullet 웹 시뮬레이션** 활용 (설치 불필요)
-- 📱 **OpenCLAW** 활용 (멀티플랫폼 AI 어시스턴트)
-- 🌐 **GitHub** 로 코드 관리
-
----
-
-*수업에 적극적으로 참여하시고 많은 질문을 해주세요!*
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI로봇 교과목 Syllabus - 신한대학교</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            font-family: 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif; 
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%); 
+            min-height: 100vh; 
+            color: #fff;
+            padding: 30px;
+        }
+        .container { 
+            max-width: 900px; 
+            margin: 0 auto; 
+            background: #1e1e30;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+        }
+        h1 { 
+            text-align: center; 
+            color: #00d4ff;
+            margin-bottom: 30px;
+            font-size: 28px;
+        }
+        h2 {
+            color: #00d4ff;
+            margin: 30px 0 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #333;
+        }
+        h3 {
+            color: #ff6b6b;
+            margin: 20px 0 10px;
+            font-size: 16px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+        th, td {
+            border: 1px solid #444;
+            padding: 12px;
+            text-align: left;
+        }
+        th {
+            background: #2a2a4e;
+            color: #00d4ff;
+        }
+        tr:nth-child(even) {
+            background: #252540;
+        }
+        .highlight {
+            background: rgba(0, 212, 255, 0.1);
+            border: 1px solid #00d4ff;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        .note {
+            background: #2a2a4e;
+            border-radius: 10px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+        .note-title {
+            color: #ffaa00;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        ul, ol {
+            margin: 10px 0 10px 20px;
+        }
+        li {
+            margin: 8px 0;
+        }
+        .emoji {
+            margin-right: 8px;
+        }
+        a {
+            color: #00d4ff;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🤖 AI로봇 교과목 Syllabus</h1>
+        
+        <h2>1. 교과목 소개 (Course Introduction)</h2>
+        <table>
+            <tr>
+                <th>항목</th>
+                <th>내용</th>
+            </tr>
+            <tr>
+                <td>교과목명</td>
+                <td>AI로봇 (AI Robotics)</td>
+            </tr>
+            <tr>
+                <td>학점</td>
+                <td>3학점</td>
+            </tr>
+            <tr>
+                <td>수업 형태</td>
+                <td>이론 + 실습</td>
+            </tr>
+            <tr>
+                <td>수업시간</td>
+                <td>주 1회, 3시간/회 (총 15주)</td>
+            </tr>
+            <tr>
+                <td>선수과목</td>
+                <td>없음 (초급 과정)</td>
+            </tr>
+            <tr>
+                <td>교재</td>
+                <td>자체 제작 교재 + 온라인 자료</td>
+            </tr>
+        </table>
+        
+        <div class="highlight">
+            <strong>수업 목표</strong>: AI 어시스턴트를 활용하여 ROS2 로봇을 제어하는 방법을 학습합니다.
+        </div>
+        
+        <h2>2. 교육목표 (Course Objectives)</h2>
+        
+        <h3>(1) 기초 이해</h3>
+        <p>로봇 공학, AI, ROS2의 기본 개념과 원리를 이해한다.</p>
+        
+        <h3>(2) 프로그래밍 역량</h3>
+        <p>Python 프로그래밍 능력을 갖추고 로봇 제어 코드를 작성할 수 있다.</p>
+        
+        <h3>(3) 시스템 구현</h3>
+        <p>AI 어시스턴트와 ROS2 로봇을 연동하여 음성/메시지로 로봇을 제어하는 시스템을 구현한다.</p>
+        
+        <h3>(4) 문제 해결</h3>
+        <p>실제 로봇 문제에 대해 분석하고 해결책을 설계 및 구현할 수 있다.</p>
+        
+        <h3>(5) 프로젝트 수행</h3>
+        <p>팀 프로젝트를 통해 종합적인 로봇 시스템을 설계하고 구현할 수 있다.</p>
+        
+        <h2>3. 연계 직무분야 (Related Job Fields)</h2>
+        <table>
+            <tr>
+                <th>분야</th>
+                <th>직무</th>
+            </tr>
+            <tr>
+                <td>🤖 로봇 엔지니어</td>
+                <td>로봇 개발, 제어, 유지보수</td>
+            </tr>
+            <tr>
+                <td>👁️ 컴퓨터 비전 엔지니어</td>
+                <td>이미지 처리, 물체 인식, 시각 내비게이션</td>
+            </tr>
+            <tr>
+                <td>🧠 AI/ML 엔지니어</td>
+                <td>딥러닝, 강화학습, 자연어 처리</td>
+            </tr>
+            <tr>
+                <td>🏭 자동화 엔지니어</td>
+                <td>스마트 팩토리, 산업용 로봇</td>
+            </tr>
+            <tr>
+                <td>🚗 자율주행 엔지니어</td>
+                <td>SLAM, 경로 계획, 센서 퓨전</td>
+            </tr>
+        </table>
+        
+        <h2>4. 수업에 특별히 참고하여야할 사항 (Special Notes)</h2>
+        
+        <div class="note">
+            <div class="note-title">⚠️ 중요 공지</div>
+            
+            <ol>
+                <li><strong>실습 환경</strong>: 개인 노트북 또는 서버 사용 권장
+                    <ul>
+                        <li>로봇 학습 과정에서 OS를 다시 설치해야 할 수 있음</li>
+                    </ul>
+                </li>
+                <li><strong>GitHub 제출</strong>: 매주 실습 및 과제 코드를 GitHub에 업로드
+                    <ul>
+                        <li>본 학기: 공개 저장소 (이후 비공개로 변경 가능)</li>
+                    </ul>
+                </li>
+                <li><strong>시험</strong>: 필기 시험 (공식, 개념, 계산)
+                    <ul>
+                        <li>양면 A4 용지 2장 지참 가능</li>
+                    </ul>
+                </li>
+                <li><strong>팀 프로젝트</strong>:
+                    <ul>
+                        <li>2~4인 팀 구성</li>
+                        <li>제5주选题 및 분담 계획 제출</li>
+                        <li>제14주 데모 Day</li>
+                    </ul>
+                </li>
+                <li><strong>AI 도구 활용</strong>: GitHub Copilot, ChatGPT 등 활용 권장</li>
+            </ol>
+        </div>
+        
+        <h2>5. 주별 수업 계획 (Weekly Schedule)</h2>
+        <table>
+            <tr>
+                <th>주</th>
+                <th>주제</th>
+                <th>내용</th>
+            </tr>
+            <tr>
+                <td>1</td>
+                <td>课程介绍</td>
+                <td>로봇+AI 소개, PyBullet 실습 환경</td>
+            </tr>
+            <tr>
+                <td>2</td>
+                <td>ROS2 기초</td>
+                <td>노드, 토픽, 메시지</td>
+            </tr>
+            <tr>
+                <td>3</td>
+                <td>Python 프로그래밍</td>
+                <td>Python 기초, ROS2 Python 라이브러리</td>
+            </tr>
+            <tr>
+                <td>4</td>
+                <td>운동학</td>
+                <td>좌표계, Odometry, 역운동학</td>
+            </tr>
+            <tr>
+                <td>5</td>
+                <td>센서와 인지</td>
+                <td>카메라, 라이다, 센서 데이터 처리</td>
+            </tr>
+            <tr>
+                <td>6</td>
+                <td>폐루프 제어</td>
+                <td>PID 제어, 속도 제어</td>
+            </tr>
+            <tr>
+                <td>7</td>
+                <td>중간復習</td>
+                <td>전반 지식 정리</td>
+            </tr>
+            <tr>
+                <td>8</td>
+                <td><strong>중간고사</strong></td>
+                <td>필기 (공식/개념/계산)</td>
+            </tr>
+            <tr>
+                <td>9</td>
+                <td>음성 상호작용</td>
+                <td>STT/TTS, ROS2 음성 제어</td>
+            </tr>
+            <tr>
+                <td>10</td>
+                <td>제스처 제어</td>
+                <td>손동작 인식 기초</td>
+            </tr>
+            <tr>
+                <td>11</td>
+                <td>운동 경로 계획</td>
+                <td>A* 알고리즘, 내비게이션</td>
+            </tr>
+            <tr>
+                <td>12</td>
+                <td>시각 인식</td>
+                <td>이미지 처리, 물체 검출</td>
+            </tr>
+            <tr>
+                <td>13</td>
+                <td>팀 프로젝트</td>
+                <td>프로젝트 디버깅 지도</td>
+            </tr>
+            <tr>
+                <td>14</td>
+                <td>팀 프로젝트 데모</td>
+                <td>프로젝트 발표</td>
+            </tr>
+            <tr>
+                <td>15</td>
+                <td><strong>기말고사</strong></td>
+                <td>필기 (공식/개념/계산)</td>
+            </tr>
+        </table>
+        
+        <h2>6. 평가 방식 (Grading)</h2>
+        <table>
+            <tr>
+                <th>항목</th>
+                <th>비율</th>
+                <th>비고</th>
+            </tr>
+            <tr>
+                <td>출석 및 과제</td>
+                <td>20%</td>
+                <td>GitHub 제출</td>
+            </tr>
+            <tr>
+                <td>중간고사</td>
+                <td>30%</td>
+                <td>제8주</td>
+            </tr>
+            <tr>
+                <td>기말고사</td>
+                <td>30%</td>
+                <td>제15주</td>
+            </tr>
+            <tr>
+                <td>팀 프로젝트</td>
+                <td>20%</td>
+                <td>제13-14주</td>
+            </tr>
+        </table>
+        
+        <h2>7. 참고 사항 (Additional Notes)</h2>
+        <ul>
+            <li>💡 <strong>AI 도구 활용 적극 권장</strong>: GitHub Copilot, ChatGPT 등</li>
+            <li>🖥️ <strong>PyBullet 웹 시뮬레이션</strong> 활용 (설치 불필요)</li>
+            <li>📱 <strong>OpenCLAW</strong> 활용 (멀티플랫폼 AI 어시스턴트)</li>
+            <li>🌐 <strong>GitHub</strong> 로 코드 관리</li>
+        </ul>
+        
+        <div class="highlight" style="margin-top: 30px;">
+            <p style="text-align: center; font-size: 18px;">
+                <em>수업에 적극적으로 참여하시고 많은 질문을 해주세요!</em> 🚀
+            </p>
+        </div>
+        
+    </div>
+</body>
+</html>
