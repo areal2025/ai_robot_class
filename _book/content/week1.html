@@ -357,7 +357,10 @@
                                 <section class="normal markdown-section">
                                 
                                 <h1 id="第1周：课程介绍与仿真环境搭建">第1周：课程介绍与仿真环境搭建</h1>
-<p><img src="https://www.ros.org/wp-content/uploads/2016/05/ros2-logo-1-300x300.png" alt="ROS2 Logo"></img></p>
+<p><img src="https://docs.ros.org/en/humble/_static/ros2-logo.png" alt="ROS2 Logo"></img></p>
+<blockquote>
+<p>图片来源：ROS2官方文档</p>
+</blockquote>
 <p><strong>课时</strong>: 6小时（第一次课3小时 + 第二次课3小时）</p>
 <hr></hr>
 <h2 id="📋-本周课程表">📋 本周课程表</h2>
@@ -476,7 +479,21 @@ Week 1-3    Week 4-7      Week 8-12    Week 13-15
 <li>控制器（处理信息）</li>
 </ul>
 </blockquote>
-<h4 id="🏭-机器人发展历程">🏭 机器人发展历程</h4>
+<h4 id="🤖-机器人系统构成图示">🤖 机器人系统构成图示</h4>
+<pre><code>┌─────────────────────────────────────────────────────────────────┐
+│                        机器人系统                                │
+│                                                                 │
+│    ┌─────────────┐          ┌─────────────┐                    │
+│    │   传感器    │  ──────→ │   控制器    │  ──────→  ┌─────────────┐
+│    │ (摄像头/    │          │   (大脑)    │          │   执行器    │
+│    │  雷达/麦克)│          │  (计算机)   │          │ (电机/舵机) │
+│    └─────────────┘          └─────────────┘          └─────────────┘
+│         ↑                        ↑                         ↑
+│         │                        │                         │
+│    感知环境 ──────────────→ 处理信息 ──────────────→ 执行动作
+│                                                                 │
+└─────────────────────────────────────────────────────────────────┘
+</code></pre><h4 id="🏭-机器人发展历程">🏭 机器人发展历程</h4>
 <pre><code>时间线：
 ┌─────────────────────────────────────────────────────────────┐
 │                                                             │
@@ -490,6 +507,23 @@ Week 1-3    Week 4-7      Week 8-12    Week 13-15
 │ └────┘  └────┘  └────┘  └────┘  └────┘  └────┘           │
 │                                                             │
 └─────────────────────────────────────────────────────────────┘
+</code></pre><h4 id="🤖-vs-🧠-机器人-vs-ai-对比">🤖 vs 🧠 机器人 vs AI 对比</h4>
+<pre><code>┌──────────────────────────┬──────────────────────────┐
+│        机器人 (Robot)      │      人工智能 (AI)        │
+├──────────────────────────┼──────────────────────────┤
+│                          │                          │
+│  🦾 物理身体             │  🧠 虚拟大脑              │
+│  👀 传感器               │  📊 算法/模型             │
+│  ⚙️ 执行器               │  💻 计算设备             │
+│  - 需要硬件              │  - 依赖软件/算力          │
+│  - 与物理世界交互        │  - 处理信息/决策          │
+│                          │                          │
+└──────────────────────────┴──────────────────────────┘
+
+                    ┌─────────────┐
+                    │   AI + 机器人  │
+                    │  = 有智能的机器 │
+                    └─────────────┘
 </code></pre><h4 id="🔬-现代机器人的分类">🔬 现代机器人的分类</h4>
 <table>
 <thead>
@@ -927,6 +961,96 @@ Week 1-3    Week 4-7      Week 8-12    Week 13-15
 </table>
 <blockquote>
 <p><strong>重要结论</strong>：本课程要教的就是如何把<strong>AI（大脑）</strong>和<strong>机器人（身体）</strong>结合起来！</p>
+</blockquote>
+<hr></hr>
+<h2 id="13-ros2系统概述（60分钟）">1.3 ROS2系统概述（60分钟）</h2>
+<h3 id="🐧-ros2-与-ubuntu-的关系">🐧 ROS2 与 Ubuntu 的关系</h3>
+<blockquote>
+<p><strong>为什么ROS2通常在Ubuntu上运行？</strong></p>
+</blockquote>
+<p>ROS2与Ubuntu Linux有着密不可分的关系，理解这一点对学习ROS2非常重要：</p>
+<table>
+<thead>
+<tr>
+<th>方面</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>🏭 开发公司</td>
+<td>ROS2由Open Robotics开发，Ubuntu由Canonical开发</td>
+</tr>
+<tr>
+<td>📦 官方支持</td>
+<td>ROS2官方推荐和测试都在Ubuntu上进行</td>
+</tr>
+<tr>
+<td>🔧 系统依赖</td>
+<td>ROS2很多工具和库基于Linux特性开发</td>
+</tr>
+<tr>
+<td>🖥️ 运行环境</td>
+<td>工业界90%以上的ROS2应用运行在Ubuntu上</td>
+</tr>
+<tr>
+<td>🎓 学习环境</td>
+<td>Ubuntu是最容易安装ROS2的操作系统</td>
+</tr>
+</tbody>
+</table>
+<h4 id="ubuntu-版本与-ros2-对应">Ubuntu 版本与 ROS2 对应</h4>
+<pre><code>┌─────────────────────────────────────────────────────────────────┐
+│                    Ubuntu 与 ROS2 版本对应                       │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                 │
+│  Ubuntu 20.04 (Focal)  ──────→  ROS2 Foxy                      │
+│  Ubuntu 22.04 (Jammy)  ──────→  ROS2 Humble (推荐 ⭐)          │
+│  Ubuntu 24.04 (Noble)  ──────→  ROS2 Jazzy                    │
+│                                                                 │
+│  推荐使用：Ubuntu 22.04 + ROS2 Humble                          │
+│  (稳定性好，文档丰富，兼容性强)                                    │
+│                                                                 │
+└─────────────────────────────────────────────────────────────────┘
+</code></pre><h4 id="🖥️-在windows上运行ros2的方式对比">🖥️ 在Windows上运行ROS2的方式对比</h4>
+<table>
+<thead>
+<tr>
+<th>方式</th>
+<th>难度</th>
+<th>性能</th>
+<th>推荐度</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>WSL2 + Ubuntu</strong></td>
+<td>⭐⭐</td>
+<td>好</td>
+<td>⭐⭐⭐ 推荐</td>
+</tr>
+<tr>
+<td>Docker</td>
+<td>⭐⭐</td>
+<td>中</td>
+<td>⭐⭐⭐ 推荐</td>
+</tr>
+<tr>
+<td>Ubuntu双系统</td>
+<td>⭐⭐⭐</td>
+<td>最好</td>
+<td>⭐⭐</td>
+</tr>
+<tr>
+<td>Windows原生</td>
+<td>⭐⭐</td>
+<td>差</td>
+<td>⭐</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>💡 <strong>结论</strong>：学习ROS2推荐使用 <strong>WSL2 + Ubuntu 22.04</strong>，既能在Windows环境下开发，又能获得原生Ubuntu的体验！</p>
 </blockquote>
 <hr></hr>
 <h2 id="13-ros2系统概述（60分钟）">1.3 ROS2系统概述（60分钟）</h2>
@@ -1550,6 +1674,9 @@ subscription = node.create_subscription(
 <hr></hr>
 <h2 id="21-docker原理与安装（50分钟）">2.1 Docker原理与安装（50分钟）</h2>
 <p><img src="https://www.docker.com/wp-content/uploads/2022/03/Moby-logo.png" alt="Docker Logo"></img></p>
+<blockquote>
+<p>📷 Docker官方 logo</p>
+</blockquote>
 <h3 id="211-为什么要用docker？">2.1.1 为什么要用Docker？</h3>
 <h4 id="🐳-docker是什么？">🐳 Docker是什么？</h4>
 <blockquote>
@@ -2619,7 +2746,7 @@ ros2 run turtlesim turtlesim_node
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"第1周：课程介绍与仿真环境搭建","level":"2.1","depth":1,"next":{"title":"第2周：ROS2通信机制基础","level":"2.2","depth":1,"path":"content/week2.md","ref":"content/week2.md","articles":[]},"previous":{"title":"课程简介","level":"1.1","depth":1,"path":"README.md","ref":"README.md","articles":[]},"dir":"ltr"},"config":{"plugins":[],"root":".","styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","author":"Your Name","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56},"embedFonts":false},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"AI机器人课程","language":"zh-hans","gitbook":"*","description":"15周ROS2机器人编程入门课程"},"file":{"path":"content/week1.md","mtime":"2026-03-10T03:22:08.253Z","type":"markdown"},"gitbook":{"version":"6.1.6","time":"2026-03-10T03:22:16.156Z"},"basePath":"..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"第1周：课程介绍与仿真环境搭建","level":"2.1","depth":1,"next":{"title":"第2周：ROS2通信机制基础","level":"2.2","depth":1,"path":"content/week2.md","ref":"content/week2.md","articles":[]},"previous":{"title":"课程简介","level":"1.1","depth":1,"path":"README.md","ref":"README.md","articles":[]},"dir":"ltr"},"config":{"plugins":[],"root":".","styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","author":"Your Name","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56},"embedFonts":false},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"AI机器人课程","language":"zh-hans","gitbook":"*","description":"15周ROS2机器人编程入门课程"},"file":{"path":"content/week1.md","mtime":"2026-03-10T03:26:20.616Z","type":"markdown"},"gitbook":{"version":"6.1.6","time":"2026-03-10T03:26:27.186Z"},"basePath":"..","book":{"language":""}});
         });
     </script>
 </div>
