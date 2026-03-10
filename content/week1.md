@@ -1053,6 +1053,43 @@ wsl -l -v  # 查看WSL版本
 - ✅ 可以用VS Code远程开发
 - ⚠️ GPU需要配置（WSL2 + CUDA）
 
+##### Windows 原生安装 (不推荐用于AI学习，仅供参考)
+
+> ⚠️ **注意**：Windows原生安装ROS2主要用于工业场景，不推荐用于AI/深度学习开发。
+> 推荐使用 **WSL2** 或 **Docker** 方案。
+
+```powershell
+# Windows 原生安装 ROS2 Humble (需要管理员权限)
+
+# 1. 安装 Chocolatey (包管理器)
+Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
+
+# 2. 使用 Chocolatey 安装 ROS2
+choco install ros-humble -y
+
+# 或者手动下载安装：
+# 访问 https://github.com/ros2/ros2/releases
+# 下载 ros-humble-*.zip 并解压到 C:\opt\ros
+
+# 3. 设置环境变量
+# 在 PowerShell 中运行：
+# C:\opt\ros\humble\setup.ps1
+
+# 4. 安装 VcXsrv (用于图形界面)
+choco install vcxsrv -y
+```
+
+**缺点**：
+- ❌ AI/深度学习支持差
+- ❌ 图形界面配置复杂
+- ❌ 与Docker/WSL相比不够灵活
+
+**适用场景**：
+- 工业现场部署
+- 与Windows硬件交互
+- 只学习基础概念
+
+
 **AI计算**：
 ```bash
 # WSL2中安装CUDA
@@ -1449,3 +1486,120 @@ ros2 doctor
 ---
 
 *第1周结束！🎉 下周我们将学习ROS2的通信机制*
+
+---
+
+## 📝 第1周作业：ROS2环境搭建与验证
+
+### 🎯 作业目标
+
+1. 完成ROS2环境搭建（选择适合你的方式）
+2. 运行Turtlesim并截图
+3. 提交到GitHub
+
+### 📋 提交格式
+
+请在GitHub上创建仓库，目录结构如下：
+
+```
+├── README.md
+├── 安装记录.md
+└── turtletsim截图.png
+```
+
+### 📄 README.md 内容要求
+
+```markdown
+# AI机器人课程 - 第1周作业
+
+## 基本信息
+- 姓名: XXX
+- 学号: XXX
+- 日期: 2026-XX-XX
+
+## 环境信息
+- 操作系统: Windows 11 / macOS / Ubuntu 22.04 / 其他
+- ROS2版本: Humble / Jazzy
+- 安装方式: Docker / WSL2 / 原生 / 双系统 / 其他
+
+## 运行结果
+- Turtlesim截图: 附件
+- 是否遇到问题: 是/否
+```
+
+### 📝 安装记录.md 内容要求
+
+请详细记录你的安装过程：
+
+```markdown
+# ROS2 安装记录
+
+## 选择的方式
+[ ] Docker
+[ ] WSL2
+[ ] Ubuntu双系统
+[ ] Windows原生
+[ ] macOS
+[ ] 其他: _______
+
+## 安装步骤
+1. 第一步: ...
+2. 第二步: ...
+3. 第三步: ...
+
+## 遇到的问题
+[ ] 无问题
+[ ] 有问题，描述如下:
+- 问题1: ...
+- 问题2: ...
+
+## 尝试的解决方法
+- 尝试方法1: ...
+- 尝试方法2: ...
+- 结果: 成功/失败
+
+## 参考资料
+- 参考1: 链接
+- 参考2: 链接
+```
+
+### 🖼️ turtlesim截图.png
+
+运行以下命令启动小乌龟：
+
+```bash
+# 方式1: Docker (推荐)
+docker run -it --rm -v /tmp/wsl:/wsl --network host osrf/ros:humble-desktop bash
+# 在容器内运行:
+source /opt/ros/humble/setup.bash
+ros2 run turtlesim turtlesim_node
+
+# 方式2: 本机安装
+ros2 run turtlesim turtlesim_node
+```
+
+启动后，截图保存为 `turtlesim截图.png`
+
+### ✅ 评分标准
+
+| 项目 | 分数 | 要求 |
+|------|------|------|
+| 安装记录完整 | 60% | 记录安装方式、步骤、参考资料 |
+| Turtlesim截图 | 30% | 包含运行中的小乌龟窗口 |
+| 问题记录 | 10% | 如遇问题，需记录解决过程 |
+
+### 💡 提示
+
+- **推荐安装方式**: Docker > WSL2 > Ubuntu双系统
+- 遇到问题先搜索，尝试多种解决方案
+- 即使问题未解决，记录过程也有助于加分
+- 鼓励在讨论区分享经验、互相帮助
+
+### 📦 提交方式
+
+1. 在GitHub创建新仓库: `ai-robotics-hw1-姓名`
+2. 提交上述文件
+3. 将仓库链接提交
+
+> 💡 **小贴士**：如果实在无法完成安装，可以使用课程提供的在线演示环境完成截图
+

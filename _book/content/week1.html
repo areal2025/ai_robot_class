@@ -1724,6 +1724,42 @@ wsl -l -v  <span class="hljs-comment"># 查看WSL版本</span>
 <li>✅ 可以用VS Code远程开发</li>
 <li>⚠️ GPU需要配置（WSL2 + CUDA）</li>
 </ul>
+<h5 id="windows-原生安装-不推荐用于ai学习，仅供参考">Windows 原生安装 (不推荐用于AI学习，仅供参考)</h5>
+<blockquote>
+<p>⚠️ <strong>注意</strong>：Windows原生安装ROS2主要用于工业场景，不推荐用于AI/深度学习开发。
+推荐使用 <strong>WSL2</strong> 或 <strong>Docker</strong> 方案。</p>
+</blockquote>
+<pre><code class="lang-powershell"><span class="hljs-comment"># Windows 原生安装 ROS2 Humble (需要管理员权限)</span>
+
+<span class="hljs-comment"># 1. 安装 Chocolatey (包管理器)</span>
+<span class="hljs-built_in">Set-ExecutionPolicy</span> Bypass <span class="hljs-literal">-Scope</span> <span class="hljs-keyword">Process</span> <span class="hljs-literal">-Force</span>; [<span class="hljs-type">System.Net.ServicePointManager</span>]::SecurityProtocol = [<span class="hljs-type">System.Net.ServicePointManager</span>]::SecurityProtocol <span class="hljs-operator">-bor</span> <span class="hljs-number">3072</span>; <span class="hljs-built_in">iex</span> ((<span class="hljs-built_in">New-Object</span> System.Net.WebClient).DownloadString(<span class="hljs-string">'https://community.chocolatey.org/install.ps1'</span>))
+
+<span class="hljs-comment"># 2. 使用 Chocolatey 安装 ROS2</span>
+choco install ros<span class="hljs-literal">-humble</span> <span class="hljs-literal">-y</span>
+
+<span class="hljs-comment"># 或者手动下载安装：</span>
+<span class="hljs-comment"># 访问 https://github.com/ros2/ros2/releases</span>
+<span class="hljs-comment"># 下载 ros-humble-*.zip 并解压到 C:\opt\ros</span>
+
+<span class="hljs-comment"># 3. 设置环境变量</span>
+<span class="hljs-comment"># 在 PowerShell 中运行：</span>
+<span class="hljs-comment"># C:\opt\ros\humble\setup.ps1</span>
+
+<span class="hljs-comment"># 4. 安装 VcXsrv (用于图形界面)</span>
+choco install vcxsrv <span class="hljs-literal">-y</span>
+</code></pre>
+<p><strong>缺点</strong>：</p>
+<ul>
+<li>❌ AI/深度学习支持差</li>
+<li>❌ 图形界面配置复杂</li>
+<li>❌ 与Docker/WSL相比不够灵活</li>
+</ul>
+<p><strong>适用场景</strong>：</p>
+<ul>
+<li>工业现场部署</li>
+<li>与Windows硬件交互</li>
+<li>只学习基础概念</li>
+</ul>
 <p><strong>AI计算</strong>：</p>
 <pre><code class="lang-bash"><span class="hljs-comment"># WSL2中安装CUDA</span>
 wsl -d Ubuntu-22.04
@@ -2257,6 +2293,123 @@ ros2 doctor
 </blockquote>
 <hr></hr>
 <p><em>第1周结束！🎉 下周我们将学习ROS2的通信机制</em></p>
+<hr></hr>
+<h2 id="📝-第1周作业：ros2环境搭建与验证">📝 第1周作业：ROS2环境搭建与验证</h2>
+<h3 id="🎯-作业目标">🎯 作业目标</h3>
+<ol>
+<li>完成ROS2环境搭建（选择适合你的方式）</li>
+<li>运行Turtlesim并截图</li>
+<li>提交到GitHub</li>
+</ol>
+<h3 id="📋-提交格式">📋 提交格式</h3>
+<p>请在GitHub上创建仓库，目录结构如下：</p>
+<pre><code>├── README.md
+├── 安装记录.md
+└── turtletsim截图.png
+</code></pre><h3 id="📄-readmemd-内容要求">📄 README.md 内容要求</h3>
+<pre><code class="lang-markdown"><span class="hljs-section"># AI机器人课程 - 第1周作业</span>
+
+<span class="hljs-section">## 基本信息</span>
+<span class="hljs-bullet">-</span> 姓名: XXX
+<span class="hljs-bullet">-</span> 学号: XXX
+<span class="hljs-bullet">-</span> 日期: 2026-XX-XX
+
+<span class="hljs-section">## 环境信息</span>
+<span class="hljs-bullet">-</span> 操作系统: Windows 11 / macOS / Ubuntu 22.04 / 其他
+<span class="hljs-bullet">-</span> ROS2版本: Humble / Jazzy
+<span class="hljs-bullet">-</span> 安装方式: Docker / WSL2 / 原生 / 双系统 / 其他
+
+<span class="hljs-section">## 运行结果</span>
+<span class="hljs-bullet">-</span> Turtlesim截图: 附件
+<span class="hljs-bullet">-</span> 是否遇到问题: 是/否
+</code></pre>
+<h3 id="📝-安装记录md-内容要求">📝 安装记录.md 内容要求</h3>
+<p>请详细记录你的安装过程：</p>
+<pre><code class="lang-markdown"><span class="hljs-section"># ROS2 安装记录</span>
+
+<span class="hljs-section">## 选择的方式</span>
+[ ] Docker
+[ ] WSL2
+[ ] Ubuntu双系统
+[ ] Windows原生
+[ ] macOS
+[ ] 其他: <span class="hljs-strong">____</span><span class="hljs-strong">___
+
+## 安装步骤
+1. 第一步: ...
+2. 第二步: ...
+3. 第三步: ...
+
+## 遇到的问题
+[ ] 无问题
+[ ] 有问题，描述如下:
+- 问题1: ...
+- 问题2: ...
+
+## 尝试的解决方法
+- 尝试方法1: ...
+- 尝试方法2: ...
+- 结果: 成功/失败
+
+## 参考资料
+- 参考1: 链接
+- 参考2: 链接
+</span></code></pre>
+<h3 id="🖼️-turtlesim截图png">🖼️ turtlesim截图.png</h3>
+<p>运行以下命令启动小乌龟：</p>
+<pre><code class="lang-bash"><span class="hljs-comment"># 方式1: Docker (推荐)</span>
+docker run -it --<span class="hljs-built_in">rm</span> -v /tmp/wsl:/wsl --network host osrf/ros:humble-desktop bash
+<span class="hljs-comment"># 在容器内运行:</span>
+<span class="hljs-built_in">source</span> /opt/ros/humble/setup.bash
+ros2 run turtlesim turtlesim_node
+
+<span class="hljs-comment"># 方式2: 本机安装</span>
+ros2 run turtlesim turtlesim_node
+</code></pre>
+<p>启动后，截图保存为 <code>turtlesim截图.png</code></p>
+<h3 id="✅-评分标准">✅ 评分标准</h3>
+<table>
+<thead>
+<tr>
+<th>项目</th>
+<th>分数</th>
+<th>要求</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>安装记录完整</td>
+<td>60%</td>
+<td>记录安装方式、步骤、参考资料</td>
+</tr>
+<tr>
+<td>Turtlesim截图</td>
+<td>30%</td>
+<td>包含运行中的小乌龟窗口</td>
+</tr>
+<tr>
+<td>问题记录</td>
+<td>10%</td>
+<td>如遇问题，需记录解决过程</td>
+</tr>
+</tbody>
+</table>
+<h3 id="💡-提示">💡 提示</h3>
+<ul>
+<li><strong>推荐安装方式</strong>: Docker &gt; WSL2 &gt; Ubuntu双系统</li>
+<li>遇到问题先搜索，尝试多种解决方案</li>
+<li>即使问题未解决，记录过程也有助于加分</li>
+<li>鼓励在讨论区分享经验、互相帮助</li>
+</ul>
+<h3 id="📦-提交方式">📦 提交方式</h3>
+<ol>
+<li>在GitHub创建新仓库: <code>ai-robotics-hw1-姓名</code></li>
+<li>提交上述文件</li>
+<li>将仓库链接提交</li>
+</ol>
+<blockquote>
+<p>💡 <strong>小贴士</strong>：如果实在无法完成安装，可以使用课程提供的在线演示环境完成截图</p>
+</blockquote>
 
                                 
                                 </section>
@@ -2300,7 +2453,7 @@ ros2 doctor
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"第1周：课程介绍与仿真环境搭建","level":"2.1","depth":1,"next":{"title":"第2周：ROS2通信机制基础","level":"2.2","depth":1,"path":"content/week2.md","ref":"content/week2.md","articles":[]},"previous":{"title":"课程简介","level":"1.1","depth":1,"path":"README.md","ref":"README.md","articles":[]},"dir":"ltr"},"config":{"plugins":[],"root":".","styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","author":"Your Name","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56},"embedFonts":false},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"AI机器人课程","language":"zh-hans","gitbook":"*","description":"15周ROS2机器人编程入门课程"},"file":{"path":"content/week1.md","mtime":"2026-02-28T11:01:26.202Z","type":"markdown"},"gitbook":{"version":"6.1.6","time":"2026-03-04T14:58:50.632Z"},"basePath":"..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"第1周：课程介绍与仿真环境搭建","level":"2.1","depth":1,"next":{"title":"第2周：ROS2通信机制基础","level":"2.2","depth":1,"path":"content/week2.md","ref":"content/week2.md","articles":[]},"previous":{"title":"课程简介","level":"1.1","depth":1,"path":"README.md","ref":"README.md","articles":[]},"dir":"ltr"},"config":{"plugins":[],"root":".","styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","author":"Your Name","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56},"embedFonts":false},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"AI机器人课程","language":"zh-hans","gitbook":"*","description":"15周ROS2机器人编程入门课程"},"file":{"path":"content/week1.md","mtime":"2026-03-10T03:14:52.071Z","type":"markdown"},"gitbook":{"version":"6.1.6","time":"2026-03-10T03:15:15.246Z"},"basePath":"..","book":{"language":""}});
         });
     </script>
 </div>
