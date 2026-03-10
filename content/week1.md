@@ -637,16 +637,24 @@ openclaw server
 
 ### 📋 提交格式
 
-请在GitHub上创建仓库，目录结构如下：
+请在GitHub上创建仓库，命名格式：`ai-robot-w01-姓名`
+
+目录结构如下：
 
 ```
+ai-robot-w01-姓名/
 ├── README.md
-├── 安装记录.md
+├── week1-安装记录.md
 └── 截图/
     ├── python-version.png
     ├── ros2-turtlesim.png
     └── openclaw-running.png (可选)
 ```
+
+> 💡 **说明**：
+> - `w01` 表示第1周作业
+> - 后续每周作业依次为 `w02`, `w03`, ...
+> - 所有作业提交到同一个仓库的不同分支或文件夹
 
 ### 📄 README.md 内容要求
 
