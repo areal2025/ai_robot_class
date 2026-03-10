@@ -1,8 +1,8 @@
-# 第2周：ROS2通信机制基础
+# 第2周：ROS2基本命令介绍和通信机制基础
 
 ![ROS2 Communication](https://docs.ros.org/en/humble/_images/topic__single_1.png)
 
-**课时**: 6小时（第一次课3小时 + 第二次课3小时）
+**课时**: 2小时50分钟（含10分钟休息）
 
 ---
 
@@ -10,23 +10,181 @@
 
 | 次序 | 时间 | 主题 | 内容 |
 |------|------|------|------|
-| 第1次 | 3小时 | 核心概念深入 | 节点与话题深入理解、Pub/Sub模型 |
-| 第2次 | 3小时 | 命令行实战 | 用命令行控制机器人画圆 |
+| 第1次 | 1小时20分钟 | ROS2基本命令 | 节点/话题/服务命令、工作目录、编译 |
+| 第2次 | 1小时20分钟 | 通信机制基础 | 节点与话题深入理解、Pub/Sub模型 |
 
 ---
 
-## 第一次课：核心概念深入（3小时）
+## 第一次课：ROS2基本命令（1小时20分钟）
 
 ### ⏱️ 时间分配
 
 | 环节 | 时间 | 内容 |
 |------|------|------|
-| 复习 | 20分钟 | 上周内容回顾、提问 |
-| 深入概念1 | 40分钟 | 节点(Node)深入理解 |
-| 深入概念2 | 50分钟 | 话题(Topic)深入理解 |
-| 茶歇 | 10分钟 | 休息 |
-| 演示 | 30分钟 | 探索Turtlesim的节点和话题 |
-| 总结 | 30分钟 | 本周小结 |
+| 复习 | 10分钟 | 上周内容回顾 |
+| 基本命令 | 30分钟 | 节点/话题/服务命令 |
+| 工作目录 | 15分钟 | 工作空间、编译命令 |
+| 实战 | 20分钟 | 练习使用命令 |
+| 总结 | 5分钟 | 本周小结 |
+
+---
+
+## 1.1 ROS2 基本命令概述
+
+> ROS2提供了一套完整的命令行工具，用于管理和操作节点、话题、服务等。
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                      ROS2 命令体系                                │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                 │
+│   ros2 pkg    → 包管理                                          │
+│   ros2 node   → 节点管理                                        │
+│   ros2 topic  → 话题管理                                        │
+│   ros2 service→ 服务管理                                        │
+│   ros2 action → 动作管理                                        │
+│   ros2 param  → 参数管理                                        │
+│   ros2 launch → 启动管理                                        │
+│   ros2 bag    → 录制/回放                                      │
+│                                                                 │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+## 1.2 节点命令（Node Commands）
+
+### 查看节点
+
+```bash
+# 列出所有运行中的节点
+ros2 node list
+
+# 查看节点信息
+ros2 node info /节点名称
+```
+
+**示例：**
+```bash
+$ ros2 node list
+/turtlesim
+/teleop_turtle
+```
+
+### 运行节点
+
+```bash
+# 运行一个包中的节点
+ros2 run <包名> <节点名>
+
+# 示例：运行小乌龟
+ros2 run turtlesim turtlesim_node
+ros2 run turtlesim turtle_teleop_key
+```
+
+## 1.3 话题命令（Topic Commands）
+
+### 查看话题
+
+```bash
+# 列出所有话题
+ros2 topic list
+
+# 查看话题信息
+ros2 topic info /话题名称
+
+# 查看话题消息类型
+ros2 topic type /话题名称
+```
+
+**示例：**
+```bash
+$ ros2 topic list
+/turtle1/cmd_vel
+/turtle1/pose
+/turtle1/color_sensor
+
+$ ros2 topic info /turtle1/cmd_vel
+Type: geometry_msgs/msg/Twist
+Publisher count: 1
+Subscription count: 1
+```
+
+### 发布话题
+
+```bash
+# 发布消息到话题
+ros2 topic pub <话题名> <消息类型> "<数据>"
+
+# 示例：让小乌龟前进
+ros2 topic pub /turtle1/cmd_vel geometry_msgs/msg/Twist "{linear: {x: 1.0, y: 0.0, z: 0.0}, angular: {x: 0.0, y: 0.0, z: 0.0}}"
+```
+
+### 监听话题
+
+```bash
+# 监听话题消息
+ros2 topic echo <话题名>
+
+# 示例：监听小乌龟位置
+ros2 topic echo /turtle1/pose
+```
+
+## 1.4 服务命令（Service Commands）
+
+```bash
+# 列出所有服务
+ros2 service list
+
+# 调用服务
+ros2 service call <服务名> <服务类型> "<数据>"
+```
+
+## 1.5 工作空间与编译命令
+
+### 工作空间结构
+
+```
+workspace/
+├── src/              # 源代码目录
+│   ├── package1/
+│   ├── package2/
+│   └── ...
+├── build/            # 编译输出
+├── install/          # 安装目录
+└── log/             # 编译日志
+```
+
+### 编译命令
+
+```bash
+# 进入工作空间
+cd ~/ros2_ws
+
+# 编译所有包
+colcon build
+
+# 编译指定包
+colcon build --packages-select <包名>
+
+# 只编译修改过的包（更快）
+colcon build --packages-up-to <包名>
+
+# 清理编译
+colcon clean
+```
+
+### 环境设置
+
+```bash
+# source 安装目录（每次打开终端需要）
+source install/setup.bash
+
+# 或使用 zsh
+source install/setup.zsh
+```
+
+---
+
+## 第二次课：通信机制深入（1小时20分钟）
 
 ---
 
@@ -244,18 +402,17 @@ ros2 topic echo /turtle1/pose
 
 ---
 
-## 第二次课：命令行实战（3小时）
+## 第二次课：通信机制深入（1小时20分钟）
 
 ### ⏱️ 时间分配
 
 | 环节 | 时间 | 内容 |
 |------|------|------|
-| 复习 | 20分钟 | 提问巩固 |
-| 讲解 | 40分钟 | 速度控制原理 |
-| 演示 | 30分钟 | 命令行发布速度 |
-| 实践 | 60分钟 | 画圆实验 |
-| 茶歇 | 10分钟 | 休息 |
-| 实践 | 60分钟 | 综合练习 |
+| 复习 | 10分钟 | 提问巩固基本命令 |
+| 节点深入 | 20分钟 | 节点特性、通信模式 |
+| 话题深入 | 20分钟 | 发布/订阅模型 |
+| 实战 | 25分钟 | Turtlesim话题实验 |
+| 总结 | 5分钟 | 本周小结 |
 
 ---
 

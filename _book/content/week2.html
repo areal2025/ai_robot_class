@@ -356,9 +356,9 @@
     
                                 <section class="normal markdown-section">
                                 
-                                <h1 id="第2周：ros2通信机制基础">第2周：ROS2通信机制基础</h1>
+                                <h1 id="第2周：ros2基本命令介绍和通信机制基础">第2周：ROS2基本命令介绍和通信机制基础</h1>
 <p><img src="https://docs.ros.org/en/humble/_images/topic__single_1.png" alt="ROS2 Communication"></img></p>
-<p><strong>课时</strong>: 6小时（第一次课3小时 + 第二次课3小时）</p>
+<p><strong>课时</strong>: 2小时50分钟（含10分钟休息）</p>
 <hr></hr>
 <h2 id="📋-本周课程表">📋 本周课程表</h2>
 <table>
@@ -373,20 +373,20 @@
 <tbody>
 <tr>
 <td>第1次</td>
-<td>3小时</td>
-<td>核心概念深入</td>
-<td>节点与话题深入理解、Pub/Sub模型</td>
+<td>1小时20分钟</td>
+<td>ROS2基本命令</td>
+<td>节点/话题/服务命令、工作目录、编译</td>
 </tr>
 <tr>
 <td>第2次</td>
-<td>3小时</td>
-<td>命令行实战</td>
-<td>用命令行控制机器人画圆</td>
+<td>1小时20分钟</td>
+<td>通信机制基础</td>
+<td>节点与话题深入理解、Pub/Sub模型</td>
 </tr>
 </tbody>
 </table>
 <hr></hr>
-<h2 id="第一次课：核心概念深入（3小时）">第一次课：核心概念深入（3小时）</h2>
+<h2 id="第一次课：ros2基本命令（1小时20分钟）">第一次课：ROS2基本命令（1小时20分钟）</h2>
 <h3 id="⏱️-时间分配">⏱️ 时间分配</h3>
 <table>
 <thead>
@@ -399,36 +399,149 @@
 <tbody>
 <tr>
 <td>复习</td>
-<td>20分钟</td>
-<td>上周内容回顾、提问</td>
-</tr>
-<tr>
-<td>深入概念1</td>
-<td>40分钟</td>
-<td>节点(Node)深入理解</td>
-</tr>
-<tr>
-<td>深入概念2</td>
-<td>50分钟</td>
-<td>话题(Topic)深入理解</td>
-</tr>
-<tr>
-<td>茶歇</td>
 <td>10分钟</td>
-<td>休息</td>
+<td>上周内容回顾</td>
 </tr>
 <tr>
-<td>演示</td>
+<td>基本命令</td>
 <td>30分钟</td>
-<td>探索Turtlesim的节点和话题</td>
+<td>节点/话题/服务命令</td>
+</tr>
+<tr>
+<td>工作目录</td>
+<td>15分钟</td>
+<td>工作空间、编译命令</td>
+</tr>
+<tr>
+<td>实战</td>
+<td>20分钟</td>
+<td>练习使用命令</td>
 </tr>
 <tr>
 <td>总结</td>
-<td>30分钟</td>
+<td>5分钟</td>
 <td>本周小结</td>
 </tr>
 </tbody>
 </table>
+<hr></hr>
+<h2 id="11-ros2-基本命令概述">1.1 ROS2 基本命令概述</h2>
+<blockquote>
+<p>ROS2提供了一套完整的命令行工具，用于管理和操作节点、话题、服务等。</p>
+</blockquote>
+<pre><code>┌─────────────────────────────────────────────────────────────────┐
+│                      ROS2 命令体系                                │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                 │
+│   ros2 pkg    → 包管理                                          │
+│   ros2 node   → 节点管理                                        │
+│   ros2 topic  → 话题管理                                        │
+│   ros2 service→ 服务管理                                        │
+│   ros2 action → 动作管理                                        │
+│   ros2 param  → 参数管理                                        │
+│   ros2 launch → 启动管理                                        │
+│   ros2 bag    → 录制/回放                                      │
+│                                                                 │
+└─────────────────────────────────────────────────────────────────┘
+</code></pre><h2 id="12-节点命令（node-commands）">1.2 节点命令（Node Commands）</h2>
+<h3 id="查看节点">查看节点</h3>
+<pre><code class="lang-bash"><span class="hljs-comment"># 列出所有运行中的节点</span>
+ros2 node list
+
+<span class="hljs-comment"># 查看节点信息</span>
+ros2 node info /节点名称
+</code></pre>
+<p><strong>示例：</strong></p>
+<pre><code class="lang-bash">$ ros2 node list
+/turtlesim
+/teleop_turtle
+</code></pre>
+<h3 id="运行节点">运行节点</h3>
+<pre><code class="lang-bash"><span class="hljs-comment"># 运行一个包中的节点</span>
+ros2 run &lt;包名&gt; &lt;节点名&gt;
+
+<span class="hljs-comment"># 示例：运行小乌龟</span>
+ros2 run turtlesim turtlesim_node
+ros2 run turtlesim turtle_teleop_key
+</code></pre>
+<h2 id="13-话题命令（topic-commands）">1.3 话题命令（Topic Commands）</h2>
+<h3 id="查看话题">查看话题</h3>
+<pre><code class="lang-bash"><span class="hljs-comment"># 列出所有话题</span>
+ros2 topic list
+
+<span class="hljs-comment"># 查看话题信息</span>
+ros2 topic info /话题名称
+
+<span class="hljs-comment"># 查看话题消息类型</span>
+ros2 topic <span class="hljs-built_in">type</span> /话题名称
+</code></pre>
+<p><strong>示例：</strong></p>
+<pre><code class="lang-bash">$ ros2 topic list
+/turtle1/cmd_vel
+/turtle1/pose
+/turtle1/color_sensor
+
+$ ros2 topic info /turtle1/cmd_vel
+Type: geometry_msgs/msg/Twist
+Publisher count: 1
+Subscription count: 1
+</code></pre>
+<h3 id="发布话题">发布话题</h3>
+<pre><code class="lang-bash"><span class="hljs-comment"># 发布消息到话题</span>
+ros2 topic pub &lt;话题名&gt; &lt;消息类型&gt; <span class="hljs-string">"&lt;数据&gt;"</span>
+
+<span class="hljs-comment"># 示例：让小乌龟前进</span>
+ros2 topic pub /turtle1/cmd_vel geometry_msgs/msg/Twist <span class="hljs-string">"{linear: {x: 1.0, y: 0.0, z: 0.0}, angular: {x: 0.0, y: 0.0, z: 0.0}}"</span>
+</code></pre>
+<h3 id="监听话题">监听话题</h3>
+<pre><code class="lang-bash"><span class="hljs-comment"># 监听话题消息</span>
+ros2 topic <span class="hljs-built_in">echo</span> &lt;话题名&gt;
+
+<span class="hljs-comment"># 示例：监听小乌龟位置</span>
+ros2 topic <span class="hljs-built_in">echo</span> /turtle1/pose
+</code></pre>
+<h2 id="14-服务命令（service-commands）">1.4 服务命令（Service Commands）</h2>
+<pre><code class="lang-bash"><span class="hljs-comment"># 列出所有服务</span>
+ros2 service list
+
+<span class="hljs-comment"># 调用服务</span>
+ros2 service call &lt;服务名&gt; &lt;服务类型&gt; <span class="hljs-string">"&lt;数据&gt;"</span>
+</code></pre>
+<h2 id="15-工作空间与编译命令">1.5 工作空间与编译命令</h2>
+<h3 id="工作空间结构">工作空间结构</h3>
+<pre><code>workspace/
+├── src/              # 源代码目录
+│   ├── package1/
+│   ├── package2/
+│   └── ...
+├── build/            # 编译输出
+├── install/          # 安装目录
+└── log/             # 编译日志
+</code></pre><h3 id="编译命令">编译命令</h3>
+<pre><code class="lang-bash"><span class="hljs-comment"># 进入工作空间</span>
+<span class="hljs-built_in">cd</span> ~/ros2_ws
+
+<span class="hljs-comment"># 编译所有包</span>
+colcon build
+
+<span class="hljs-comment"># 编译指定包</span>
+colcon build --packages-select &lt;包名&gt;
+
+<span class="hljs-comment"># 只编译修改过的包（更快）</span>
+colcon build --packages-up-to &lt;包名&gt;
+
+<span class="hljs-comment"># 清理编译</span>
+colcon clean
+</code></pre>
+<h3 id="环境设置">环境设置</h3>
+<pre><code class="lang-bash"><span class="hljs-comment"># source 安装目录（每次打开终端需要）</span>
+<span class="hljs-built_in">source</span> install/setup.bash
+
+<span class="hljs-comment"># 或使用 zsh</span>
+<span class="hljs-built_in">source</span> install/setup.zsh
+</code></pre>
+<hr></hr>
+<h2 id="第二次课：通信机制深入（1小时20分钟）">第二次课：通信机制深入（1小时20分钟）</h2>
 <hr></hr>
 <h2 id="11-节点深入理解（40分钟）">1.1 节点深入理解（40分钟）</h2>
 <h3 id="111-节点的特性">1.1.1 节点的特性</h3>
@@ -596,7 +709,7 @@ ros2 topic <span class="hljs-built_in">echo</span> /turtle1/pose
 <span class="hljs-comment"># angular_velocity: 0.0</span>
 </code></pre>
 <hr></hr>
-<h2 id="第二次课：命令行实战（3小时）">第二次课：命令行实战（3小时）</h2>
+<h2 id="第二次课：通信机制深入（1小时20分钟）">第二次课：通信机制深入（1小时20分钟）</h2>
 <h3 id="⏱️-时间分配">⏱️ 时间分配</h3>
 <table>
 <thead>
@@ -609,33 +722,28 @@ ros2 topic <span class="hljs-built_in">echo</span> /turtle1/pose
 <tbody>
 <tr>
 <td>复习</td>
-<td>20分钟</td>
-<td>提问巩固</td>
-</tr>
-<tr>
-<td>讲解</td>
-<td>40分钟</td>
-<td>速度控制原理</td>
-</tr>
-<tr>
-<td>演示</td>
-<td>30分钟</td>
-<td>命令行发布速度</td>
-</tr>
-<tr>
-<td>实践</td>
-<td>60分钟</td>
-<td>画圆实验</td>
-</tr>
-<tr>
-<td>茶歇</td>
 <td>10分钟</td>
-<td>休息</td>
+<td>提问巩固基本命令</td>
 </tr>
 <tr>
-<td>实践</td>
-<td>60分钟</td>
-<td>综合练习</td>
+<td>节点深入</td>
+<td>20分钟</td>
+<td>节点特性、通信模式</td>
+</tr>
+<tr>
+<td>话题深入</td>
+<td>20分钟</td>
+<td>发布/订阅模型</td>
+</tr>
+<tr>
+<td>实战</td>
+<td>25分钟</td>
+<td>Turtlesim话题实验</td>
+</tr>
+<tr>
+<td>总结</td>
+<td>5分钟</td>
+<td>本周小结</td>
 </tr>
 </tbody>
 </table>
@@ -1014,7 +1122,7 @@ docker compose up
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"第2周：ROS2通信机制基础","level":"2.2","depth":1,"next":{"title":"第3周：Python编程与机器人控制入门","level":"2.3","depth":1,"path":"content/week3.md","ref":"content/week3.md","articles":[]},"previous":{"title":"第1周：课程介绍与仿真环境搭建","level":"2.1","depth":1,"path":"content/week1.md","ref":"content/week1.md","articles":[]},"dir":"ltr"},"config":{"plugins":[],"root":".","styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","author":"Your Name","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56},"embedFonts":false},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"AI机器人课程","language":"zh-hans","gitbook":"*","description":"15周ROS2机器人编程入门课程"},"file":{"path":"content/week2.md","mtime":"2026-03-02T09:40:56.181Z","type":"markdown"},"gitbook":{"version":"6.1.6","time":"2026-03-10T05:20:13.072Z"},"basePath":"..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"第2周：ROS2通信机制基础","level":"2.2","depth":1,"next":{"title":"第3周：Python编程与机器人控制入门","level":"2.3","depth":1,"path":"content/week3.md","ref":"content/week3.md","articles":[]},"previous":{"title":"第1周：课程介绍与仿真环境搭建","level":"2.1","depth":1,"path":"content/week1.md","ref":"content/week1.md","articles":[]},"dir":"ltr"},"config":{"plugins":[],"root":".","styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","author":"Your Name","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56},"embedFonts":false},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"AI机器人课程","language":"zh-hans","gitbook":"*","description":"15周ROS2机器人编程入门课程"},"file":{"path":"content/week2.md","mtime":"2026-03-10T05:22:41.275Z","type":"markdown"},"gitbook":{"version":"6.1.6","time":"2026-03-10T05:22:54.042Z"},"basePath":"..","book":{"language":""}});
         });
     </script>
 </div>
