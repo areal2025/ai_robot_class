@@ -666,6 +666,26 @@ pip install -r requirements.txt
 python -m openclaw.server
 ```
 
+**方案四：百度AI Studio云端部署（免费GPU）**
+
+> 百度飞桨AI Studio提供免费GPU算力，可以云端运行OpenCLAW！
+
+| 项目 | 说明 |
+|------|------|
+| 官网 | https://aistudio.baidu.com |
+| 算力 | 免费GPU (V100/P40) |
+| 存储 | 100GB免费存储 |
+| 部署模型 | Ernie 5.0 / ChatGLM 等 |
+
+**部署步骤：**
+
+1. 访问 https://aistudio.baidu.com/projectdetail/10043604
+2. Fork项目到自己的账户
+3. 启动环境（选择GPU算力）
+4. 运行OpenCLAW + Ernie 5.0
+
+> 💡 **优势**：无需本地GPU，在线即可运行大模型！
+
 ### 2.3.3 连接飞书机器人
 
 > 免费Token连接，无需付费！
