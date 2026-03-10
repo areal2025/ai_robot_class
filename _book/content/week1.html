@@ -1813,6 +1813,121 @@ ros2 run turtlesim turtle_teleop_key
 </li>
 </ol>
 <p>参考教程：<a href="https://blog.csdn.net/qq_51908382/article/details/140607102" target="_blank">https://blog.csdn.net/qq_51908382/article/details/140607102</a></p>
+<hr></hr>
+<h4 id="💡-windows命令行使用小贴士">💡 Windows命令行使用小贴士</h4>
+<p>由于WSL2需要在Windows命令行中操作，以下是一些实用技巧：</p>
+<h5 id="常用快捷键">常用快捷键</h5>
+<table>
+<thead>
+<tr>
+<th>快捷键</th>
+<th>功能</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Win + X</code> → <code>A</code></td>
+<td>以管理员身份打开终端</td>
+</tr>
+<tr>
+<td><code>Win + R</code> → <code>cmd</code></td>
+<td>快速打开命令提示符</td>
+</tr>
+<tr>
+<td><code>Ctrl + C</code></td>
+<td>终止当前命令</td>
+</tr>
+<tr>
+<td><code>Ctrl + V</code></td>
+<td>粘贴（CMD中默认不可用，需右键粘贴）</td>
+</tr>
+<tr>
+<td><code>Tab</code></td>
+<td>自动补全命令/路径</td>
+</tr>
+</tbody>
+</table>
+<h5 id="cmd-vs-powershell-vs-wsl终端">CMD vs PowerShell vs WSL终端</h5>
+<table>
+<thead>
+<tr>
+<th>工具</th>
+<th>特点</th>
+<th>适用场景</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CMD</td>
+<td>传统Windows命令</td>
+<td>简单系统命令</td>
+</tr>
+<tr>
+<td>PowerShell</td>
+<td>功能强大</td>
+<td>系统管理、脚本</td>
+</tr>
+<tr>
+<td>WSL Ubuntu终端</td>
+<td>完整Linux环境</td>
+<td>运行ROS2、Python</td>
+</tr>
+</tbody>
+</table>
+<h5 id="wsl终端使用技巧">WSL终端使用技巧</h5>
+<pre><code class="lang-bash"><span class="hljs-comment"># 打开WSL Ubuntu</span>
+wsl  <span class="hljs-comment"># 或 wsl -d Ubuntu-22.04</span>
+
+<span class="hljs-comment"># 在当前目录打开WSL</span>
+wsl .
+
+<span class="hljs-comment"># 查看WSL状态</span>
+wsl -l -v
+
+<span class="hljs-comment"># 关闭WSL</span>
+<span class="hljs-built_in">exit</span>
+
+<span class="hljs-comment"># 在Windows文件管理器中访问Linux文件</span>
+explorer.exe .
+</code></pre>
+<h5 id="⚠️-常见问题">⚠️ 常见问题</h5>
+<ol>
+<li><p><strong>粘贴命令失败</strong></p>
+<ul>
+<li>解决：右键标题栏 → 编辑 → 粘贴</li>
+</ul>
+</li>
+<li><p><strong>中文字符显示乱码</strong></p>
+<ul>
+<li>解决：<code>chcp 65001</code> 切换到UTF-8</li>
+</ul>
+</li>
+<li><p><strong>找不到wsl命令</strong></p>
+<ul>
+<li>解决：以管理员身份运行PowerShell</li>
+</ul>
+</li>
+<li><p><strong>WSL占用C盘空间</strong></p>
+<ul>
+<li>解决：<code>wsl --export</code> 导出到D盘，<code>wsl --import</code> 导入</li>
+</ul>
+</li>
+</ol>
+<h5 id="📝-推荐：使用windows-terminal">📝 推荐：使用Windows Terminal</h5>
+<blockquote>
+<p>Windows Terminal 是微软官方的终端工具，比CMD更强大：</p>
+</blockquote>
+<ol>
+<li>从Microsoft Store搜索"Windows Terminal"安装</li>
+<li>支持多标签页</li>
+<li>支持WSL直接切换</li>
+<li>支持深色/浅色主题</li>
+<li>支持粘贴复制更方便</li>
+</ol>
+<p>安装后：</p>
+<pre><code class="lang-powershell"><span class="hljs-comment"># 在Windows Terminal中直接打开WSL</span>
+wt.exe wsl
+</code></pre>
 <h1 id="安装nvidia-cuda-toolkit-for-wsl">安装NVIDIA CUDA Toolkit for WSL</h1>
 <pre><code>
 ##### macOS (Intel / Apple Silicon)
@@ -2504,7 +2619,7 @@ ros2 run turtlesim turtlesim_node
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"第1周：课程介绍与仿真环境搭建","level":"2.1","depth":1,"next":{"title":"第2周：ROS2通信机制基础","level":"2.2","depth":1,"path":"content/week2.md","ref":"content/week2.md","articles":[]},"previous":{"title":"课程简介","level":"1.1","depth":1,"path":"README.md","ref":"README.md","articles":[]},"dir":"ltr"},"config":{"plugins":[],"root":".","styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","author":"Your Name","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56},"embedFonts":false},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"AI机器人课程","language":"zh-hans","gitbook":"*","description":"15周ROS2机器人编程入门课程"},"file":{"path":"content/week1.md","mtime":"2026-03-10T03:16:42.071Z","type":"markdown"},"gitbook":{"version":"6.1.6","time":"2026-03-10T03:16:48.757Z"},"basePath":"..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"第1周：课程介绍与仿真环境搭建","level":"2.1","depth":1,"next":{"title":"第2周：ROS2通信机制基础","level":"2.2","depth":1,"path":"content/week2.md","ref":"content/week2.md","articles":[]},"previous":{"title":"课程简介","level":"1.1","depth":1,"path":"README.md","ref":"README.md","articles":[]},"dir":"ltr"},"config":{"plugins":[],"root":".","styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","author":"Your Name","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56},"embedFonts":false},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"AI机器人课程","language":"zh-hans","gitbook":"*","description":"15周ROS2机器人编程入门课程"},"file":{"path":"content/week1.md","mtime":"2026-03-10T03:22:08.253Z","type":"markdown"},"gitbook":{"version":"6.1.6","time":"2026-03-10T03:22:16.156Z"},"basePath":"..","book":{"language":""}});
         });
     </script>
 </div>

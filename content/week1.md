@@ -1163,6 +1163,79 @@ ros2 run turtlesim turtlesim_node
 ```
 
 参考教程：https://blog.csdn.net/qq_51908382/article/details/140607102
+
+---
+
+#### 💡 Windows命令行使用小贴士
+
+由于WSL2需要在Windows命令行中操作，以下是一些实用技巧：
+
+##### 常用快捷键
+
+| 快捷键 | 功能 |
+|--------|------|
+| `Win + X` → `A` | 以管理员身份打开终端 |
+| `Win + R` → `cmd` | 快速打开命令提示符 |
+| `Ctrl + C` | 终止当前命令 |
+| `Ctrl + V` | 粘贴（CMD中默认不可用，需右键粘贴） |
+| `Tab` | 自动补全命令/路径 |
+
+##### CMD vs PowerShell vs WSL终端
+
+| 工具 | 特点 | 适用场景 |
+|------|------|----------|
+| CMD | 传统Windows命令 | 简单系统命令 |
+| PowerShell | 功能强大 | 系统管理、脚本 |
+| WSL Ubuntu终端 | 完整Linux环境 | 运行ROS2、Python |
+
+##### WSL终端使用技巧
+
+```bash
+# 打开WSL Ubuntu
+wsl  # 或 wsl -d Ubuntu-22.04
+
+# 在当前目录打开WSL
+wsl .
+
+# 查看WSL状态
+wsl -l -v
+
+# 关闭WSL
+exit
+
+# 在Windows文件管理器中访问Linux文件
+explorer.exe .
+```
+
+##### ⚠️ 常见问题
+
+1. **粘贴命令失败**
+   - 解决：右键标题栏 → 编辑 → 粘贴
+
+2. **中文字符显示乱码**
+   - 解决：`chcp 65001` 切换到UTF-8
+
+3. **找不到wsl命令**
+   - 解决：以管理员身份运行PowerShell
+
+4. **WSL占用C盘空间**
+   - 解决：`wsl --export` 导出到D盘，`wsl --import` 导入
+
+##### 📝 推荐：使用Windows Terminal
+
+> Windows Terminal 是微软官方的终端工具，比CMD更强大：
+
+1. 从Microsoft Store搜索"Windows Terminal"安装
+2. 支持多标签页
+3. 支持WSL直接切换
+4. 支持深色/浅色主题
+5. 支持粘贴复制更方便
+
+安装后：
+```powershell
+# 在Windows Terminal中直接打开WSL
+wt.exe wsl
+```
 # 安装NVIDIA CUDA Toolkit for WSL
 ```
 
