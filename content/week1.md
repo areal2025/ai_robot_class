@@ -672,7 +672,7 @@ python -m openclaw.server
 
 1. **创建飞书应用**
    - 打开 https://open.feishu.cn/
-   - 创建企业自建应用
+   - 创建个人自建应用
    - 添加机器人能力
 
 2. **获取凭证**
