@@ -145,13 +145,33 @@ Week 1-3    Week 4-7      Week 8-12    Week 13-15
 
 #### 🔬 现代机器人的分类
 
-| 类型 | 示例图片 | 代表产品 | 应用场景 |
-|------|---------|---------|---------|
-| **工业机器人** | <img src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=300" width="200"/> | 焊接机械臂、装配机器人 (FAUNC, ABB, KUKA) | 工厂生产线、汽车制造 |
-| **服务机器人** | <img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=300" width="200"/> | 扫地机器人(科沃斯、iRobot)、送餐机器人 | 餐饮、酒店、家庭服务 |
-| **特种机器人** | <img src="https://images.unsplash.com/photo-1508614589041-895b88991e3e?w=300" width="200"/> | 无人机(DJI)、深海探测器、波士顿动力Spot | 危险环境、救援勘探 |
-| **人形机器人** | <img src="https://images.unsplash.com/photo-1485827404703-89b55fcc595e?w=300" width="200"/> | Atlas (波士顿动力)、Optimus (特斯拉)、ASIMO | 研究、展示、危险任务 |
-| **自动驾驶** | <img src="https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?w=300" width="200"/> | Tesla、Waymo、小马智行 | 交通出行、物流运输 |
+**工业机器人**  
+![工业机器人](https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=400)  
+代表产品：焊接机械臂、装配机器人 (FAUNC, ABB, KUKA) | 应用场景：工厂生产线、汽车制造
+
+---
+
+**服务机器人**  
+![服务机器人](https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400)  
+代表产品：扫地机器人(科沃斯、iRobot)、送餐机器人 | 应用场景：餐饮、酒店、家庭服务
+
+---
+
+**特种机器人**  
+![特种机器人](https://images.unsplash.com/photo-1508614589041-895b88991e3e?w=400)  
+代表产品：无人机(DJI)、深海探测器、波士顿动力Spot | 应用场景：危险环境、救援勘探
+
+---
+
+**人形机器人**  
+![人形机器人](https://images.unsplash.com/photo-1485827404703-89b55fcc595e?w=400)  
+代表产品：Atlas (波士顿动力)、Optimus (特斯拉)、ASIMO | 应用场景：研究、展示、危险任务
+
+---
+
+**自动驾驶**  
+![自动驾驶](https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?w=400)  
+代表产品：Tesla、Waymo、小马智行 | 应用场景：交通出行、物流运输
 
 ### 1.2.2 什么是人工智能？
 
