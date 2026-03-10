@@ -147,11 +147,11 @@ Week 1-3    Week 4-7      Week 8-12    Week 13-15
 
 | 类型 | 示例图片 | 代表产品 | 应用场景 |
 |------|---------|---------|---------|
-| **工业机器人** | <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/FANUC_6-axis_welding_robots.jpg/400px-FANUC_6-axis_welding_robots.jpg" width="200"/> | 焊接机械臂、装配机器人 (FAUNC, ABB, KUKA) | 工厂生产线、汽车制造 |
-| **服务机器人** | <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/83/IRobot_Roomba_560.jpg/400px-IRobot_Roomba_560.jpg" width="200"/> | 扫地机器人(科沃斯、iRobot)、送餐机器人 | 餐饮、酒店、家庭服务 |
-| **特种机器人** | <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/DJI_Mavic_3_20230504.jpg/400px-DJI_Mavic_3_20230504.jpg" width="200"/> | 无人机(DJI)、深海探测器、波士顿动力Spot | 危险环境、救援勘探 |
-| **人形机器人** | <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6c/Atlas_from_Boston_Dynamics.jpg/400px-Atlas_from_Boston_Dynamics.jpg" width="200"/> | Atlas (波士顿动力)、Optimus (特斯拉)、ASIMO | 研究、展示、危险任务 |
-| **自动驾驶** | <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/46/Google_Waymo_Autonomous_Vehicle.jpg/400px-Google_Waymo_Autonomous_Vehicle.jpg" width="200"/> | Tesla、Waymo、小马智行 | 交通出行、物流运输 |
+| **工业机器人** | <img src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=300" width="200"/> | 焊接机械臂、装配机器人 (FAUNC, ABB, KUKA) | 工厂生产线、汽车制造 |
+| **服务机器人** | <img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=300" width="200"/> | 扫地机器人(科沃斯、iRobot)、送餐机器人 | 餐饮、酒店、家庭服务 |
+| **特种机器人** | <img src="https://images.unsplash.com/photo-1508614589041-895b88991e3e?w=300" width="200"/> | 无人机(DJI)、深海探测器、波士顿动力Spot | 危险环境、救援勘探 |
+| **人形机器人** | <img src="https://images.unsplash.com/photo-1485827404703-89b55fcc595e?w=300" width="200"/> | Atlas (波士顿动力)、Optimus (特斯拉)、ASIMO | 研究、展示、危险任务 |
+| **自动驾驶** | <img src="https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?w=300" width="200"/> | Tesla、Waymo、小马智行 | 交通出行、物流运输 |
 
 ### 1.2.2 什么是人工智能？
 
