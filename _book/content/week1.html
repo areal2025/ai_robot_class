@@ -1763,22 +1763,73 @@ choco install vcxsrv <span class="hljs-literal">-y</span>
 <p><strong>AI计算</strong>：</p>
 <pre><code class="lang-bash"><span class="hljs-comment"># WSL2中安装CUDA</span>
 wsl -d Ubuntu-22.04
-<span class="hljs-comment"># 安装NVIDIA CUDA Toolkit for WSL</span>
 </code></pre>
-<h5 id="macos-intel--apple-silicon">macOS (Intel / Apple Silicon)</h5>
-<pre><code class="lang-bash"><span class="hljs-comment"># macOS安装ROS2（通过Homebrew）</span>
+<h4 id="📖-wsl2-安装-ros2-详细教程（推荐）">📖 WSL2 安装 ROS2 详细教程（推荐）</h4>
+<p>以下是中国区用户常用的简化安装方式：</p>
+<hr></hr>
+<p><strong>第一步：安装WSL</strong></p>
+<p>方法一：PowerShell命令行安装</p>
+<pre><code class="lang-powershell"><span class="hljs-comment"># 以管理员身份打开PowerShell，运行：</span>
+wsl <span class="hljs-literal">--install</span>
+wsl <span class="hljs-literal">--set-default-version</span> <span class="hljs-number">2</span>
+wsl <span class="hljs-literal">--install</span> <span class="hljs-literal">-d</span> Ubuntu<span class="hljs-literal">-22</span>.<span class="hljs-number">04</span>
+</code></pre>
+<p>方法二：手动启用WSL功能</p>
+<ol>
+<li>打开"控制面板" → "程序" → "程序和功能" → "启用或关闭Windows功能"</li>
+<li>勾选"适用于Linux的Windows子系统"和"虚拟机平台"</li>
+<li>重启计算机</li>
+<li>在Microsoft Store中搜索并安装Ubuntu 22.04</li>
+</ol>
+<hr></hr>
+<p><strong>第二步：安装ROS2（一键安装）</strong></p>
+<p>在Ubuntu终端中运行：</p>
+<pre><code class="lang-bash">wget http://fishros.com/install -O fishros &amp;&amp; bash fishros
+</code></pre>
+<p>选择 <code>1. 一键安装</code> 即可完成ROS2安装。</p>
+<hr></hr>
+<p><strong>第三步：运行小海龟</strong></p>
+<pre><code class="lang-bash"><span class="hljs-comment"># 启动小海龟节点（会弹出图形界面）</span>
+ros2 run turtlesim turtlesim_node
 
-<span class="hljs-comment"># 1. 安装Homebrew</span>
-/bin/bash -c <span class="hljs-string">"<span class="hljs-subst">$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)</span>"</span>
+<span class="hljs-comment"># 另开一个终端，启动键盘控制</span>
+ros2 run turtlesim turtle_teleop_key
+</code></pre>
+<p>使用键盘 ↑↓←→ 方向键控制小海龟移动。</p>
+<hr></hr>
+<p><strong>⚠️ 常见问题：无法显示图形界面</strong></p>
+<p>如果小海龟窗口无法显示，需要安装X服务器：</p>
+<ol>
+<li><p>下载并安装 <a href="https://sourceforge.net/projects/vcxsrv/" target="_blank">VcXsrv</a> 或 <a href="https://apps.microsoft.com/store/detail/x410/9n9w17nbgnk0" target="_blank">X410</a></p>
+</li>
+<li><p>配置WSL环境变量：</p>
+<pre><code class="lang-bash"><span class="hljs-built_in">echo</span> <span class="hljs-string">'export DISPLAY=$(grep -oP "(?&lt;=nameserver ).+" /etc/resolv.conf):0'</span> &gt;&gt; ~/.bashrc
+<span class="hljs-built_in">source</span> ~/.bashrc
+</code></pre>
+</li>
+<li><p>重新运行小海龟：</p>
+<pre><code class="lang-bash">ros2 run turtlesim turtlesim_node
+</code></pre>
+</li>
+</ol>
+<p>参考教程：<a href="https://blog.csdn.net/qq_51908382/article/details/140607102" target="_blank">https://blog.csdn.net/qq_51908382/article/details/140607102</a></p>
+<h1 id="安装nvidia-cuda-toolkit-for-wsl">安装NVIDIA CUDA Toolkit for WSL</h1>
+<pre><code>
+##### macOS (Intel / Apple Silicon)
 
-<span class="hljs-comment"># 2. 安装ROS2</span>
+```bash
+# macOS安装ROS2（通过Homebrew）
+
+# 1. 安装Homebrew
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+
+# 2. 安装ROS2
 brew update
 brew install ros/humble/ros-humble-desktop
 
-<span class="hljs-comment"># 3. 环境配置</span>
-<span class="hljs-built_in">source</span> /opt/ros/humble/setup.bash
-</code></pre>
-<p><strong>AI计算</strong>：</p>
+# 3. 环境配置
+source /opt/ros/humble/setup.bash
+</code></pre><p><strong>AI计算</strong>：</p>
 <ul>
 <li><strong>Intel Mac</strong>: 可以通过Docker使用NVIDIA GPU（如有）</li>
 <li><strong>Apple Silicon (M1/M2/M3)</strong>: <ul>
@@ -2453,7 +2504,7 @@ ros2 run turtlesim turtlesim_node
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"第1周：课程介绍与仿真环境搭建","level":"2.1","depth":1,"next":{"title":"第2周：ROS2通信机制基础","level":"2.2","depth":1,"path":"content/week2.md","ref":"content/week2.md","articles":[]},"previous":{"title":"课程简介","level":"1.1","depth":1,"path":"README.md","ref":"README.md","articles":[]},"dir":"ltr"},"config":{"plugins":[],"root":".","styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","author":"Your Name","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56},"embedFonts":false},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"AI机器人课程","language":"zh-hans","gitbook":"*","description":"15周ROS2机器人编程入门课程"},"file":{"path":"content/week1.md","mtime":"2026-03-10T03:14:52.071Z","type":"markdown"},"gitbook":{"version":"6.1.6","time":"2026-03-10T03:15:15.246Z"},"basePath":"..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"第1周：课程介绍与仿真环境搭建","level":"2.1","depth":1,"next":{"title":"第2周：ROS2通信机制基础","level":"2.2","depth":1,"path":"content/week2.md","ref":"content/week2.md","articles":[]},"previous":{"title":"课程简介","level":"1.1","depth":1,"path":"README.md","ref":"README.md","articles":[]},"dir":"ltr"},"config":{"plugins":[],"root":".","styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","author":"Your Name","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56},"embedFonts":false},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"AI机器人课程","language":"zh-hans","gitbook":"*","description":"15周ROS2机器人编程入门课程"},"file":{"path":"content/week1.md","mtime":"2026-03-10T03:16:42.071Z","type":"markdown"},"gitbook":{"version":"6.1.6","time":"2026-03-10T03:16:48.757Z"},"basePath":"..","book":{"language":""}});
         });
     </script>
 </div>

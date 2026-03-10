@@ -1094,6 +1094,75 @@ choco install vcxsrv -y
 ```bash
 # WSL2中安装CUDA
 wsl -d Ubuntu-22.04
+```
+
+#### 📖 WSL2 安装 ROS2 详细教程（推荐）
+
+以下是中国区用户常用的简化安装方式：
+
+---
+
+**第一步：安装WSL**
+
+方法一：PowerShell命令行安装
+```powershell
+# 以管理员身份打开PowerShell，运行：
+wsl --install
+wsl --set-default-version 2
+wsl --install -d Ubuntu-22.04
+```
+
+方法二：手动启用WSL功能
+1. 打开"控制面板" → "程序" → "程序和功能" → "启用或关闭Windows功能"
+2. 勾选"适用于Linux的Windows子系统"和"虚拟机平台"
+3. 重启计算机
+4. 在Microsoft Store中搜索并安装Ubuntu 22.04
+
+---
+
+**第二步：安装ROS2（一键安装）**
+
+在Ubuntu终端中运行：
+```bash
+wget http://fishros.com/install -O fishros && bash fishros
+```
+
+选择 `1. 一键安装` 即可完成ROS2安装。
+
+---
+
+**第三步：运行小海龟**
+
+```bash
+# 启动小海龟节点（会弹出图形界面）
+ros2 run turtlesim turtlesim_node
+
+# 另开一个终端，启动键盘控制
+ros2 run turtlesim turtle_teleop_key
+```
+
+使用键盘 ↑↓←→ 方向键控制小海龟移动。
+
+---
+
+**⚠️ 常见问题：无法显示图形界面**
+
+如果小海龟窗口无法显示，需要安装X服务器：
+
+1. 下载并安装 [VcXsrv](https://sourceforge.net/projects/vcxsrv/) 或 [X410](https://apps.microsoft.com/store/detail/x410/9n9w17nbgnk0)
+
+2. 配置WSL环境变量：
+```bash
+echo 'export DISPLAY=$(grep -oP "(?<=nameserver ).+" /etc/resolv.conf):0' >> ~/.bashrc
+source ~/.bashrc
+```
+
+3. 重新运行小海龟：
+```bash
+ros2 run turtlesim turtlesim_node
+```
+
+参考教程：https://blog.csdn.net/qq_51908382/article/details/140607102
 # 安装NVIDIA CUDA Toolkit for WSL
 ```
 
