@@ -454,7 +454,9 @@ Week 1-3    Week 4-7      Week 8-12    Week 13-15
 
 ## 2.1 Python3 开发环境搭建（25分钟）
 
-### 2.1.1 安装 Anaconda（Python发行版）
+> 💡 **选择适合你的Python环境**：以下方式任选其一
+
+### 2.1.1 方案一：Anaconda + VSCode（推荐）
 
 > Anaconda是一个集成的Python环境，包含Python解释器和常用库，方便管理。
 
@@ -470,7 +472,20 @@ wget https://repo.anaconda.com/archive/Anaconda3-2024.02-Linux-x86_64.sh
 bash Anaconda3-2024.02-Linux-x86_64.sh
 ```
 
-### 2.1.2 安装 VSCode
+### 2.1.2 方案二：直接安装Python + IDE
+
+```bash
+# 安装Python
+# Windows: https://www.python.org/downloads/
+# macOS: brew install python3
+# Linux: sudo apt install python3 python3-pip
+
+# IDE选择
+# VSCode: https://code.visualstudio.com/ (推荐)
+# PyCharm: https://www.jetbrains.com/pycharm/download/
+```
+
+### 2.1.3 安装 VSCode
 
 ```bash
 # Windows/Mac/Linux 通用
@@ -514,7 +529,9 @@ nvidia-smi
 
 ## 2.2 ROS2 环境搭建（30分钟）
 
-### 2.2.1 为什么选择WSL2？
+> 💡 **选择适合你的ROS2环境**：以下方式任选其一
+
+### 2.2.1 方案一：WSL2 + Ubuntu + ROS2（推荐 for Windows）
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
@@ -530,9 +547,7 @@ nvidia-smi
 └─────────────────────────────────────────────────────────────────┘
 ```
 
-### 2.2.2 WSL2 + Ubuntu + ROS2 一键安装
-
-> 最简单的安装方式，使用一键脚本：
+**一键安装**：
 
 ```bash
 # 1. 以管理员身份打开PowerShell
@@ -547,17 +562,51 @@ bash fishros
 
 > 📌 选择 **1. 一键安装** 即可自动完成ROS2安装！
 
-### 2.2.3 手动安装（备选）
+### 2.2.2 方案二：Ubuntu 双系统
 
-如果一键安装失败，可以手动安装：
+> 如果你的电脑有多余的硬盘空间，可以安装Ubuntu双系统，获得最佳性能
 
 ```bash
-# Ubuntu 22.04
+# 1. 下载Ubuntu 22.04
+https://ubuntu.com/download/desktop
+
+# 2. 使用Rufus制作启动U盘
+https://rufus.ie/
+
+# 3. 安装Ubuntu
+
+# 4. 安装ROS2
 sudo apt update
 sudo apt install ros-humble-desktop
+```
 
-# 环境配置
-source /opt/ros/humble/setup.bash
+### 2.2.3 方案三：Docker 容器（for Mac/Windows）
+
+```bash
+# 拉取ROS2镜像
+docker pull osrf/ros:humble-desktop
+
+# 运行
+docker run -it --rm -e DISPLAY=$DISPLAY -v /tmp/.X11-unix:/tmp/.X11-unix osrf/ros:humble-desktop
+```
+
+### 2.2.4 方案四：虚拟机
+
+> 使用VMware或VirtualBox安装Ubuntu
+
+1. 下载VMware Workstation Player (免费) 或 VirtualBox (免费)
+2. 下载Ubuntu 22.04镜像
+3. 创建虚拟机，安装Ubuntu
+4. 在Ubuntu中安装ROS2
+
+### 2.2.5 验证ROS2安装
+
+```bash
+# 启动小乌龟
+ros2 run turtlesim turtlesim_node
+
+# 另一个终端启动控制
+ros2 run turtlesim turtle_teleop_key
 ```
 
 ### 2.2.4 验证ROS2安装
@@ -574,6 +623,8 @@ ros2 run turtlesim turtle_teleop_key
 
 ## 2.3 OpenCLAW 环境搭建（15分钟）
 
+> ⚠️ **可选内容**：OpenCLAW是进阶内容，初学者可以先跳过，后续课程会用到
+
 ### 2.3.1 什么是OpenCLAW？
 
 > OpenCLAW是一个开源的AI助手框架，可以将AI大模型与机器人系统连接，实现自然语言控制。
@@ -584,9 +635,11 @@ ros2 run turtlesim turtle_teleop_key
 - 🤖 支持ROS2机器人
 - 🔌 支持多种AI模型
 
-### 2.3.2 安装OpenCLAW
+### 2.3.2 安装OpenCLAW（任选其一）
 
-**方式一：Docker安装（推荐）**
+> 💡 **选择适合你的方式**：
+
+**方案一：Docker安装（推荐）**
 
 ```bash
 # 拉取镜像
@@ -596,11 +649,21 @@ docker pull openclaw/openclaw:latest
 docker run -d -p 8080:8080 openclaw/openclaw
 ```
 
-**方式二：pip安装**
+**方案二：pip安装**
 
 ```bash
 pip install openclaw
 openclaw server
+```
+
+**方案三：手动编译**
+
+```bash
+# 克隆代码
+git clone https://github.com/openclaw/openclaw.git
+cd openclaw
+pip install -r requirements.txt
+python -m openclaw.server
 ```
 
 ### 2.3.3 连接飞书机器人
