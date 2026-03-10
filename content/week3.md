@@ -1074,6 +1074,34 @@ p.loadURDF("plane.urdf")
 cube_start_pos = [0, 0, 0.5]
 cube_start_orientation = p.getQuaternionFromEuler([0, 0, 0])
 
+### 加载Panda机械臂（pybullet_robots）
+
+> PyBullet还提供了预训练的机器人模型，可以直接加载！
+
+**安装 pybullet_robots：**
+
+```bash
+pip install pybullet-robots
+```
+
+**运行Panda机械臂：**
+
+```bash
+python -m pybullet_robots.panda.loadpanda
+```
+
+![Panda机械臂](https://camo.githubusercontent.com/837d0d87cff7e21664178a8e2e3aacdbeb832f03e36fdbfe2928eee00b0057f2/68747470733a2f2f707962756c6c65742e6f72672f776f726470726573732f77702d636f6e74656e742f75706c6f6164732f323031392f30332f63726f707065642d707962756c6c65742e706e67)
+
+> 💡 **效果**：运行命令后会弹出一个3D窗口，显示Panda机械臂模型，可以交互控制
+
+**主要功能：**
+- 🎯 7自由度机械臂
+- 🖐️ 夹爪末端执行器
+- 🎮 支持位置/速度/力控制
+- 📐 逆运动学求解
+
+---
+
 # 创建一个移动机器人（两个轮子+身体）
 robot_id = p.createMultiBody(
     baseMass=0,

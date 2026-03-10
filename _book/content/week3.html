@@ -1446,99 +1446,99 @@ p.loadURDF(<span class="hljs-string">"plane.urdf"</span>)
 cube_start_pos = [<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0.5</span>]
 cube_start_orientation = p.getQuaternionFromEuler([<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>])
 
-<span class="hljs-comment"># 创建一个移动机器人（两个轮子+身体）</span>
-robot_id = p.createMultiBody(
-    baseMass=<span class="hljs-number">0</span>,
-    baseCollisionShapeIndex=p.createCollisionShape(p.BoxShape, halfExtents=[<span class="hljs-number">0.5</span>, <span class="hljs-number">0.3</span>, <span class="hljs-number">0.1</span>]),
-    basePosition=[<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0.1</span>]
+<span class="hljs-comment">### 加载Panda机械臂（pybullet_robots）</span>
+
+&gt; PyBullet还提供了预训练的机器人模型，可以直接加载！
+
+**安装 pybullet_robots：**
+
+```bash
+pip install pybullet-robots
+</code></pre>
+<p><strong>运行Panda机械臂：</strong></p>
+<pre><code class="lang-bash">python -m pybullet_robots.panda.loadpanda
+</code></pre>
+<p><img src="https://camo.githubusercontent.com/837d0d87cff7e21664178a8e2e3aacdbeb832f03e36fdbfe2928eee00b0057f2/68747470733a2f2f707962756c6c65742e6f72672f776f726470726573732f77702d636f6e74656e742f75706c6f6164732f323031392f30332f63726f707065642d707962756c6c65742e706e67" alt="Panda机械臂"></img></p>
+<blockquote>
+<p>💡 <strong>效果</strong>：运行命令后会弹出一个3D窗口，显示Panda机械臂模型，可以交互控制</p>
+</blockquote>
+<p><strong>主要功能：</strong></p>
+<ul>
+<li>🎯 7自由度机械臂</li>
+<li>🖐️ 夹爪末端执行器</li>
+<li>🎮 支持位置/速度/力控制</li>
+<li>📐 逆运动学求解</li>
+</ul>
+<hr></hr>
+<h1 id="创建一个移动机器人（两个轮子身体）">创建一个移动机器人（两个轮子+身体）</h1>
+<p>robot_id = p.createMultiBody(
+    baseMass=0,
+    baseCollisionShapeIndex=p.createCollisionShape(p.BoxShape, halfExtents=[0.5, 0.3, 0.1]),
+    basePosition=[0, 0, 0.1]
+)</p>
+<h1 id="设置参数">设置参数</h1>
+<p>max_force = 20
+max_velocity = 3</p>
+<p>print("机器人仿真开始！")
+print("使用applyJointMotor2Control来控制轮子")</p>
+<h1 id="控制循环">控制循环</h1>
+<p>while True:</p>
+<pre><code># 前进
+p.setJointMotorControl2(
+    bodyUniqueId=robot_id,
+    jointIndex=0,  # 左轮
+    controlMode=p.VELOCITY_CONTROL,
+    targetVelocity=max_velocity,
+    force=max_force
 )
 
-<span class="hljs-comment"># 设置参数</span>
-max_force = <span class="hljs-number">20</span>
-max_velocity = <span class="hljs-number">3</span>
+p.setJointMotorControl2(
+    bodyUniqueId=robot_id,
+    jointIndex=1,  # 右轮
+    controlMode=p.VELOCITY_CONTROL,
+    targetVelocity=max_velocity,
+    force=max_force
+)
 
-<span class="hljs-built_in">print</span>(<span class="hljs-string">"机器人仿真开始！"</span>)
-<span class="hljs-built_in">print</span>(<span class="hljs-string">"使用applyJointMotor2Control来控制轮子"</span>)
+p.stepSimulation()
+time.sleep(1./240.)
+</code></pre><pre><code>
+### PyBullet vs ROS2仿真
 
-<span class="hljs-comment"># 控制循环</span>
-<span class="hljs-keyword">while</span> <span class="hljs-literal">True</span>:
-    <span class="hljs-comment"># 前进</span>
-    p.setJointMotorControl2(
-        bodyUniqueId=robot_id,
-        jointIndex=<span class="hljs-number">0</span>,  <span class="hljs-comment"># 左轮</span>
-        controlMode=p.VELOCITY_CONTROL,
-        targetVelocity=max_velocity,
-        force=max_force
-    )
+| 特性 | PyBullet | ROS2 (Gazebo) |
+|------|---------|---------------|
+| 编程方式 | 纯Python | C++/Python + ROS2 API |
+| 物理精度 | 中等 | 高 |
+| 传感器仿真 | 基本 | 完整 |
+| 与ROS集成 | 需手动 | 原生支持 |
+| 学习曲线 | 简单 | 较难 |
+| 适用场景 | 学习/原型 | 产品开发 |
 
-    p.setJointMotorControl2(
-        bodyUniqueId=robot_id,
-        jointIndex=<span class="hljs-number">1</span>,  <span class="hljs-comment"># 右轮</span>
-        controlMode=p.VELOCITY_CONTROL,
-        targetVelocity=max_velocity,
-        force=max_force
-    )
+### 何时使用PyBullet？
 
-    p.stepSimulation()
-    time.sleep(<span class="hljs-number">1.</span>/<span class="hljs-number">240.</span>)
-</code></pre>
-<h3 id="pybullet-vs-ros2仿真">PyBullet vs ROS2仿真</h3>
-<table>
-<thead>
-<tr>
-<th>特性</th>
-<th>PyBullet</th>
-<th>ROS2 (Gazebo)</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>编程方式</td>
-<td>纯Python</td>
-<td>C++/Python + ROS2 API</td>
-</tr>
-<tr>
-<td>物理精度</td>
-<td>中等</td>
-<td>高</td>
-</tr>
-<tr>
-<td>传感器仿真</td>
-<td>基本</td>
-<td>完整</td>
-</tr>
-<tr>
-<td>与ROS集成</td>
-<td>需手动</td>
-<td>原生支持</td>
-</tr>
-<tr>
-<td>学习曲线</td>
-<td>简单</td>
-<td>较难</td>
-</tr>
-<tr>
-<td>适用场景</td>
-<td>学习/原型</td>
-<td>产品开发</td>
-</tr>
-</tbody>
-</table>
-<h3 id="何时使用pybullet？">何时使用PyBullet？</h3>
-<p>✅ 当你想快速验证算法时<br></br>✅ 当你学习机器人运动学时<br></br>✅ 当你需要简单的3D可视化时<br></br>✅ 当你不想配置复杂的ROS环境时  </p>
-<p>❌ 当你需要精确的传感器仿真时<br></br>❌ 当你需要与真实ROS机器人集成时<br></br>❌ 当你需要高保真物理仿真时  </p>
-<hr></hr>
-<h3 id="🎯-练习：尝试运行pybullet">🎯 练习：尝试运行PyBullet</h3>
-<pre><code class="lang-bash"><span class="hljs-comment"># 1. 安装</span>
+✅ 当你想快速验证算法时  
+✅ 当你学习机器人运动学时  
+✅ 当你需要简单的3D可视化时  
+✅ 当你不想配置复杂的ROS环境时  
+
+❌ 当你需要精确的传感器仿真时  
+❌ 当你需要与真实ROS机器人集成时  
+❌ 当你需要高保真物理仿真时  
+
+---
+
+### 🎯 练习：尝试运行PyBullet
+
+```bash
+# 1. 安装
 pip install pybullet
 
-<span class="hljs-comment"># 2. 运行示例</span>
+# 2. 运行示例
 python3 -m pybullet_envs.examples.enjoy_TF_AntBulletEnv
 
-<span class="hljs-comment"># 3. 查看内置示例</span>
+# 3. 查看内置示例
 python3 -m pybullet_data.gdf_loader
-</code></pre>
-<h2 id="15-rosclaw与openclaw集成控制">1.5 RosClaw与OpenClaw集成控制</h2>
+</code></pre><h2 id="15-rosclaw与openclaw集成控制">1.5 RosClaw与OpenClaw集成控制</h2>
 <h3 id="151-rosclaw项目介绍">1.5.1 RosClaw项目介绍</h3>
 <blockquote>
 <p><strong>RosClaw</strong> = ROS2 + OpenClaw 的结合，让你可以用消息应用控制机器人！</p>
@@ -1940,7 +1940,7 @@ Agent 发送反馈给用户
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"第3周：Python编程与机器人控制入门","level":"2.3","depth":1,"next":{"title":"第4周：机器人运动学基础（二维）","level":"3.1","depth":1,"path":"content/week4.md","ref":"content/week4.md","articles":[]},"previous":{"title":"第2周：ROS2通信机制基础","level":"2.2","depth":1,"path":"content/week2.md","ref":"content/week2.md","articles":[]},"dir":"ltr"},"config":{"plugins":[],"root":".","styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","author":"Your Name","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56},"embedFonts":false},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"AI机器人课程","language":"zh-hans","gitbook":"*","description":"15周ROS2机器人编程入门课程"},"file":{"path":"content/week3.md","mtime":"2026-03-02T10:36:49.274Z","type":"markdown"},"gitbook":{"version":"6.1.6","time":"2026-03-10T05:12:41.255Z"},"basePath":"..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"第3周：Python编程与机器人控制入门","level":"2.3","depth":1,"next":{"title":"第4周：机器人运动学基础（二维）","level":"3.1","depth":1,"path":"content/week4.md","ref":"content/week4.md","articles":[]},"previous":{"title":"第2周：ROS2通信机制基础","level":"2.2","depth":1,"path":"content/week2.md","ref":"content/week2.md","articles":[]},"dir":"ltr"},"config":{"plugins":[],"root":".","styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","author":"Your Name","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56},"embedFonts":false},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"AI机器人课程","language":"zh-hans","gitbook":"*","description":"15周ROS2机器人编程入门课程"},"file":{"path":"content/week3.md","mtime":"2026-03-10T05:20:05.545Z","type":"markdown"},"gitbook":{"version":"6.1.6","time":"2026-03-10T05:20:13.072Z"},"basePath":"..","book":{"language":""}});
         });
     </script>
 </div>
