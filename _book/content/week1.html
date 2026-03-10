@@ -2587,13 +2587,57 @@ ros2 doctor
 <hr></hr>
 <p><em>第1周结束！🎉 下周我们将学习ROS2的通信机制</em></p>
 <hr></hr>
-<h2 id="📝-第1周作业：ros2环境搭建与验证">📝 第1周作业：ROS2环境搭建与验证</h2>
+<h2 id="📝-第1周作业：ros2环境搭建">📝 第1周作业：ROS2环境搭建</h2>
 <h3 id="🎯-作业目标">🎯 作业目标</h3>
 <ol>
-<li>完成ROS2环境搭建（选择适合你的方式）</li>
-<li>运行Turtlesim并截图</li>
+<li>完成ROS2环境搭建（任选一种方式）</li>
+<li>运行示例代码（Turtlesim）并截图</li>
 <li>提交到GitHub</li>
 </ol>
+<h3 id="📋-可选环境搭建方式">📋 可选环境搭建方式</h3>
+<p>请选择<strong>一种</strong>适合你的方式进行环境配置：</p>
+<table>
+<thead>
+<tr>
+<th>方式</th>
+<th>说明</th>
+<th>难度</th>
+<th>推荐度</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>WSL2 + Ubuntu</strong></td>
+<td>在Windows中运行Ubuntu子系统</td>
+<td>⭐⭐</td>
+<td>⭐⭐⭐ 推荐</td>
+</tr>
+<tr>
+<td><strong>Ubuntu虚拟机</strong></td>
+<td>在VMware/VirtualBox中安装Ubuntu</td>
+<td>⭐⭐⭐</td>
+<td>⭐⭐</td>
+</tr>
+<tr>
+<td><strong>Ubuntu双系统</strong></td>
+<td>在真实机器上安装Ubuntu</td>
+<td>⭐⭐⭐</td>
+<td>⭐⭐⭐</td>
+</tr>
+<tr>
+<td><strong>Docker</strong></td>
+<td>在Windows/Mac中运行ROS2容器</td>
+<td>⭐⭐</td>
+<td>⭐⭐⭐ 推荐</td>
+</tr>
+<tr>
+<td><strong>macOS + Docker</strong></td>
+<td>在Mac中运行ROS2容器</td>
+<td>⭐⭐</td>
+<td>⭐⭐</td>
+</tr>
+</tbody>
+</table>
 <h3 id="📋-提交格式">📋 提交格式</h3>
 <p>请在GitHub上创建仓库，目录结构如下：</p>
 <pre><code>├── README.md
@@ -2746,7 +2790,7 @@ ros2 run turtlesim turtlesim_node
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"第1周：课程介绍与仿真环境搭建","level":"2.1","depth":1,"next":{"title":"第2周：ROS2通信机制基础","level":"2.2","depth":1,"path":"content/week2.md","ref":"content/week2.md","articles":[]},"previous":{"title":"课程简介","level":"1.1","depth":1,"path":"README.md","ref":"README.md","articles":[]},"dir":"ltr"},"config":{"plugins":[],"root":".","styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","author":"Your Name","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56},"embedFonts":false},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"AI机器人课程","language":"zh-hans","gitbook":"*","description":"15周ROS2机器人编程入门课程"},"file":{"path":"content/week1.md","mtime":"2026-03-10T03:26:20.616Z","type":"markdown"},"gitbook":{"version":"6.1.6","time":"2026-03-10T03:26:27.186Z"},"basePath":"..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"第1周：课程介绍与仿真环境搭建","level":"2.1","depth":1,"next":{"title":"第2周：ROS2通信机制基础","level":"2.2","depth":1,"path":"content/week2.md","ref":"content/week2.md","articles":[]},"previous":{"title":"课程简介","level":"1.1","depth":1,"path":"README.md","ref":"README.md","articles":[]},"dir":"ltr"},"config":{"plugins":[],"root":".","styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","author":"Your Name","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56},"embedFonts":false},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"AI机器人课程","language":"zh-hans","gitbook":"*","description":"15周ROS2机器人编程入门课程"},"file":{"path":"content/week1.md","mtime":"2026-03-10T03:42:01.038Z","type":"markdown"},"gitbook":{"version":"6.1.6","time":"2026-03-10T03:42:11.422Z"},"basePath":"..","book":{"language":""}});
         });
     </script>
 </div>
